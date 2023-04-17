@@ -23,7 +23,6 @@ Route::middleware(['auth:admin'])->group(function (){
 
     Route::get('index', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('index');
 
-    Route::get('listProduct', [\App\Http\Controllers\Admin\Product\ProductController::class, 'listProduct'])->name('list.product');
-
+    Route::resource('products', \App\Http\Controllers\Admin\Product\ProductController::class);
 });
 

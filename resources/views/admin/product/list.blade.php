@@ -26,7 +26,7 @@
                 <td>
                     <ul class="list-inline m-0">
                         <li class="list-inline-item">
-                            <a href="#" class="btn btn-success btn-sm rounded-0"><i class="bi bi-pencil"></i></a>
+                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-success btn-sm rounded-0"><i class="bi bi-pencil"></i></a>
                         </li>
                         <li class="list-inline-item">
                             <form action="" method="post">
