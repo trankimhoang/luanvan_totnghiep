@@ -61,15 +61,9 @@ class ProductController extends Controller
      */
     public function edit($id): View
     {
-        $products = Product::find($id);
-        $products = Product::query()->join('values', 'products.id', '=', 'values.product_id')
-            ->join('attributes', 'values.attribute_id', 'attributes.id')
-            ->where('products.parent_id', '=', $id)->get();
+        $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
 
-//        print_r($product->toArray());
-
-        return view ('admin.product.edit', compact('products'));
-
+        return view ('admin.product.edit', compact('product'));
 
     }
 
@@ -82,7 +76,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $a = $request->toArray();
+
+        $b = 1;
     }
 
     /**

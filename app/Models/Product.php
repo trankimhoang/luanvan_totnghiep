@@ -17,4 +17,17 @@ class Product extends Model
       'quantity',
       'parent_id'
     ];
+
+    public function listProductChild() {
+        return $this->hasMany(Product::class, 'parent_id')->with(['listAttribute']);
+    }
+
+    public function listAttribute() {
+        return $this->belongsToMany(
+            Attribute::class,
+            'values',
+            'product_id',
+            'attribute_id'
+        )->withPivot('text_value');
+    }
 }
