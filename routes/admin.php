@@ -16,6 +16,11 @@ Route::middleware(['guest:admin'])->group(function (){
     Route::get('login', [\App\Http\Controllers\Admin\AuthController::class, 'showFormLogin'])->name('login');
     Route::post('login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.post');
 
+    Route::get('forget-password', [\App\Http\Controllers\Admin\ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+    Route::post('forget-password', [\App\Http\Controllers\Admin\ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+    Route::get('reset-password/{token}', [\App\Http\Controllers\Admin\ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+    Route::post('reset-password', [\App\Http\Controllers\Admin\ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
 });
 
 Route::middleware(['auth:admin'])->group(function (){

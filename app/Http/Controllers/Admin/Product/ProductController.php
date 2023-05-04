@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin\Product;
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProductController extends Controller
@@ -76,9 +78,17 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $a = $request->toArray();
+        try {
+            $data = $request->all();
+            $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
+            $product->fill($data);
 
-        $b = 1;
+            $product->save();
+            return redirect()->route('admin.products.index')->with('success', 'Sua thanh cong product ' . $product->id);
+        }catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 
     /**
