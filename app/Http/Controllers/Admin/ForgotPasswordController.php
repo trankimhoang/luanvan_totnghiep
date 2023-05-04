@@ -20,18 +20,18 @@ class ForgotPasswordController extends Controller
     public function submitForgetPasswordForm(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users',
+            'email' => 'required|email|exists:admins',
         ]);
 
         $token = Str::random(64);
 
-        DB::table('password_resets')->insert([
+        DB::table('admin_password_resets')->insert([
             'email' => $request->email,
             'token' => $token,
             'created_at' => Carbon::now()
         ]);
 
-        Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
+        Mail::send('emails.admin_forget_password', ['token' => $token], function($message) use($request){
             $message->to($request->email);
             $message->subject('Reset Password');
         });
@@ -46,12 +46,12 @@ class ForgotPasswordController extends Controller
     public function submitResetPasswordForm(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users',
-            'password' => 'required|string|min:6|confirmed',
+            'email' => 'required|email|exists:admins',
+            'password' => 'required|string|confirmed',
             'password_confirmation' => 'required'
         ]);
 
-        $updatePassword = DB::table('password_resets')
+        $updatePassword = DB::table('admin_password_resets')
             ->where([
                 'email' => $request->email,
                 'token' => $request->token

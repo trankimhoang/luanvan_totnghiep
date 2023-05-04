@@ -98,6 +98,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
+                                        <a href="{{ route('admin.forget.password.get') }}">Reset Password</a>
+                                    </div>
+                                    <div class="col-12">
                                         <input type="submit" name="submit" class="btn btn-primary w-100" value="Login">
 
                                     </div>

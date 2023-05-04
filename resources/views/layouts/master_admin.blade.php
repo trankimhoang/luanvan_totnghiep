@@ -14,7 +14,6 @@
     <link href="{{ asset('theme/admin/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="{{ asset('theme/admin/assets/font/font.css') }}" rel="stylesheet">
 
     <!-- Vendor CSS Files -->
