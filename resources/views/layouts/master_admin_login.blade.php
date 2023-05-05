@@ -28,13 +28,6 @@
     <!-- Template Main CSS File -->
     <link href="{{ asset('theme/admin/assets/css/style.css') }}" rel="stylesheet">
 
-    <!-- =======================================================
-    * Template Name: NiceAdmin
-    * Updated: Mar 09 2023 with Bootstrap v5.2.3
-    * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
 </head>
 
 <body>
@@ -50,7 +43,7 @@
                         <div class="d-flex justify-content-center py-4">
                             <a href="index.html" class="logo d-flex align-items-center w-auto">
                                 <img src="{{ asset('theme/admin/assets/img/logo.png') }}" alt="">
-                                <span class="d-none d-lg-block">Admin Manager</span>
+                                <span class="d-none d-lg-block">Quản Trị Viên</span>
                             </a>
                         </div><!-- End Logo -->
 

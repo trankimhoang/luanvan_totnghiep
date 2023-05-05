@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 class ForgotPasswordController extends Controller
 {
     public function showForgetPasswordForm() {
-        return view('admin.auth.forgetPassword');
+        return view('admin.auth.forget_password');
     }
 
     public function submitForgetPasswordForm(Request $request)
@@ -36,11 +36,11 @@ class ForgotPasswordController extends Controller
             $message->subject('Reset Password');
         });
 
-        return back()->with('message', 'We have e-mailed your password reset link!');
+        return back()->with('message', 'Kiểm tra email để tiến hành đổi mật khẩu');
     }
 
     public function showResetPasswordForm($token) {
-        return view('admin.auth.forgetPasswordLink', ['token' => $token]);
+        return view('admin.auth.reset_password', ['token' => $token]);
     }
 
     public function submitResetPasswordForm(Request $request)
@@ -67,6 +67,6 @@ class ForgotPasswordController extends Controller
 
         DB::table('password_resets')->where(['email'=> $request->email])->delete();
 
-        return redirect('admin/login')->with('message', 'Your password has been changed!');
+        return redirect('admin/login')->with('message', 'Thay đổi mật khẩu thành công!');
     }
 }
