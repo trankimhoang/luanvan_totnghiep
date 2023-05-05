@@ -12,17 +12,19 @@
     <table class="table table-bordered border border-primary">
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Price</th>
-            <th>Quantity</th>
+            <th>Tên sản phẩm</th>
+            <th>Ảnh đại diện</th>
+            <th>Gia</th>
+            <th>Số lượng</th>
             <th>Action</th>
         </tr>
         @foreach($listProduct as $product)
             <tr>
                 <td>{{ $product->id }}</td>
                 <td>{{ $product->name }}</td>
-                <td>{{ $product->image }}</td>
+                <td>
+                    <img src="{{ $product->getImage() }}" alt="" width="128px" style="text-align: center">
+                </td>
                 <td>{{ $product->price }}</td>
                 <td>{{ $product->quantity }}</td>
                 <td>
@@ -36,9 +38,6 @@
                                 @method('')
                                 <button type="submit" class="btn btn-danger btn-sm rounded-0"><i class="bi bi-trash"></i></button>
                             </form>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#" class="btn btn-success btn-sm rounded-0"><i class="ri-eye-fill"></i></a>
                         </li>
                     </ul>
                 </td>

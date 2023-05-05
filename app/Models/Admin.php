@@ -19,4 +19,12 @@ class Admin extends Authenticatable
         'password',
         'image',
     ];
+
+    public function getImage(): string {
+        if (!empty($this->image) && is_file(public_path($this->image))) {
+            return asset($this->image);
+        }
+
+        return asset('images/not_found.jpg');
+    }
 }

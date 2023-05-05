@@ -203,7 +203,7 @@
             <li class="nav-item dropdown pe-3">
 
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="{{ asset('theme/admin/assets/img/profile-img.jpg') }}" alt="Profile" class="rounded-circle">
+                    <img src="{{ \Illuminate\Support\Facades\Auth::guard('admin')->user()->getImage() }}" alt="Profile" class="rounded-circle">
                     <span class="d-none d-md-block dropdown-toggle ps-2">{{ \Illuminate\Support\Facades\Auth::guard('admin')->user()->name }}</span>
                 </a><!-- End Profile Iamge Icon -->
 
@@ -409,6 +409,18 @@
 {{--        </nav>--}}
 {{--    </div><!-- End Page Title -->--}}
 
+    @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session()->get('success') }}
+        </div>
+    @endif
+
+    @if(session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session()->get('error') }}
+        </div>
+    @endif
+
     @yield('content')
 
 </main><!-- End #main -->
@@ -434,6 +446,8 @@
 
 <!-- Template Main JS File -->theme/admin/
 <script src="{{ asset('theme/admin/assets/js/main.js') }}"></script>
+<script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
+@yield('js')
 
 </body>
 

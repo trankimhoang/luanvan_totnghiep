@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\CreateAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,16 +40,23 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(CreateAdminRequest $request): RedirectResponse
     {
         try {
             $admin = new Admin();
             $admin->setAttribute('name', $request->get('name'));
             $admin->setAttribute('email', $request->get('email'));
             $admin->setAttribute('password', Hash::make($request->get('password')));
+
+            if ($request->has('image')) {
+                $imagePath = 'admin_images/' . $admin->getAttribute('id');
+                $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
+                $admin->setAttribute('image', $imageUrl);
+                $admin->save();
+            }
             $admin->save();
 
-            return redirect()->route('admin.admin.index')->with('success', __('Add success'));
+            return redirect()->route('admin.admins.index')->with('success', 'Thêm thành công');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
@@ -112,7 +120,7 @@ class AdminController extends Controller
 
             $admin->save();
 
-            return redirect()->route('admin.admin.index')->with('success', __('Edit success', ['id'=>$id]));
+            return redirect()->route('admin.admins.index')->with('success', 'Sửa thành công');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
@@ -131,7 +139,7 @@ class AdminController extends Controller
             $admin = Admin::find($id);
             $admin->delete();
 
-            return redirect()->back()->with('success', __('Delete success', ['id' => $id]));
+            return redirect()->back()->with('success', 'Xóa thành công');
         }catch (\Exception $exception){
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());

@@ -30,4 +30,12 @@ class Product extends Model
             'attribute_id'
         )->withPivot('text_value');
     }
+
+    public function getImage(): string {
+        if (!empty($this->image) && is_file(public_path($this->image))) {
+            return asset($this->image);
+        }
+
+        return asset('images/not_found.jpg');
+    }
 }
