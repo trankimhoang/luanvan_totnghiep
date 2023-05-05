@@ -242,7 +242,7 @@
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">
                             <i class="bi bi-box-arrow-right"></i>
-                            <span>Sign Out</span>
+                            <span>Đăng xuất</span>
                         </a>
                     </li>
 
@@ -262,23 +262,41 @@
         <li class="nav-item">
             <a class="nav-link " href="{{ route('admin.index') }}">
                 <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
+                <span>Trang chủ</span>
             </a>
         </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Product</span><i class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link collapsed" data-bs-target="#components-product" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Sản phẩm</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <ul id="components-product" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="components-alerts.html">
-                        <i class="bi bi-circle"></i><span>Add Product</span>
+                        <i class="bi bi-circle"></i><span>Thêm sản phẩm</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.products.index') }}">
-                        <i class="bi bi-circle"></i><span>List Product</span>
+                        <i class="bi bi-circle"></i><span>Danh sách sản phẩm</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-admin" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-admin" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.admins.index') }}">
+                        <i class="bi bi-circle"></i><span>Danh sách quản trị viên</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.admins.create') }}">
+                        <i class="bi bi-circle"></i><span>Thêm quản trị viên</span>
                     </a>
                 </li>
             </ul>
@@ -398,11 +416,7 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        &copy; Copyright <strong><span>Tran Kim Hoang</span></strong>. All Rights Reserved
     </div>
 </footer><!-- End Footer -->
 

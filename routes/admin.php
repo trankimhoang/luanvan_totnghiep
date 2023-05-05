@@ -21,6 +21,8 @@ Route::middleware(['guest:admin'])->group(function (){
     Route::get('reset-password/{token}', [\App\Http\Controllers\Admin\ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
     Route::post('reset-password', [\App\Http\Controllers\Admin\ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
+    Route::resource('admins', 'Admin\AdminController');
+
 });
 
 Route::middleware(['auth:admin'])->group(function (){
