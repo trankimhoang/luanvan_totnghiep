@@ -13,7 +13,7 @@
     <form action="{{ route('admin.attributes.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="form-group pt-3">
-            <label for="name">Tên thuộc tính</label>
+            <label for="name">Tên thuộc tính @include('admin.include.required_icon')</label>
             <input type="text" name="name" class="form-control">
             @error('name')
             <p class="alert alert-danger">{{ $message }}</p>

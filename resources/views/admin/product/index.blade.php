@@ -43,7 +43,7 @@
                             <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-success btn-sm rounded-0"><i class="bi bi-pencil"></i></a>
                         </li>
                         <li class="list-inline-item">
-                            <form action="" method="post">
+                            <form action="{{ route('admin.products.destroy', $product->id ) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="submit" class="btn btn-danger btn-sm rounded-0"><i class="bi bi-trash"></i></button>

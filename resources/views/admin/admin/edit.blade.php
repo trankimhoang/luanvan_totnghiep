@@ -14,7 +14,7 @@
         @csrf
         @method('put')
         <div class="form-group">
-            <label for="name">Tên quản trị viên</label>
+            <label for="name">Tên quản trị viên @include('admin.include.required_icon')</label>
             <input type="text" name="name" class="form-control" value="{{ old('name', $admin->name) }}">
             @error('name')
             <p class="alert alert-danger">{{ $message }}</p>
@@ -22,7 +22,7 @@
         </div>
 
         <div class="form-group pt-3">
-            <label for="email">Email</label>
+            <label for="email">Email @include('admin.include.required_icon')</label>
             <input type="text" name="email" class="form-control" value="{{ old('email', $admin->email) }}">
             @error('email')
             <p class="alert alert-danger">{{ $message }}</p>

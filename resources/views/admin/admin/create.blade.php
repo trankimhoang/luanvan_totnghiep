@@ -13,7 +13,7 @@
     <form action="{{ route('admin.admins.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="form-group pt-3">
-            <label for="name">Tên quản trị viên</label>
+            <label for="name">Tên quản trị viên @include('admin.include.required_icon')</label>
             <input type="text" name="name" class="form-control">
             @error('name')
             <p class="alert alert-danger">{{ $message }}</p>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="form-group pt-3">
-            <label for="email">Email</label>
+            <label for="email">Email @include('admin.include.required_icon')</label>
             <input type="text" name="email" class="form-control">
             @error('email')
             <p class="alert alert-danger">{{ $message }}</p>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group pt-3">
-            <label for="password">{{ __('Password') }}</label>
+            <label for="password">Mật khẩu @include('admin.include.required_icon')</label>
             <input type="password" name="password" class="form-control">
             @error('password')
             <p class="alert alert-danger">{{ $message }}</p>
@@ -38,7 +38,7 @@
 
         <div class="form-group pt-3">
             <img src="" width="256px" class="img-preview">
-            <label for="image">Avatar</label>
+            <label for="image">Ảnh đại diện @include('admin.include.required_icon')</label>
             <input type="file" name="image" id="image" class="form-control">
             @error('image')
             <p class="alert alert-danger">{{ $message }}</p>

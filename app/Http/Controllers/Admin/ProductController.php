@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ProductRequest;
+use App\Models\Admin;
+use App\Models\Attribute;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,7 +42,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(ProductRequest $request): RedirectResponse
     {
         try {
             $product = new Product();
@@ -50,13 +53,15 @@ class ProductController extends Controller
             $product->setAttribute('price_new', $request->get('price_new'));
             $product->setAttribute('quantity', $request->get('quantity'));
 
+            $product->save();
+
             if ($request->has('image')) {
                 $imagePath = 'product_images/' . $product->getAttribute('id');
                 $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
                 $product->setAttribute('image', $imageUrl);
                 $product->save();
             }
-            $product->save();
+
 
             return redirect()->route('admin.products.index')->with('success', 'Thêm thành công');
         } catch (\Exception $exception) {
@@ -85,8 +90,9 @@ class ProductController extends Controller
     public function edit($id): View
     {
         $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
+        $listAttr = Attribute::all()->toArray();
 
-        return view ('admin.product.edit', compact('product'));
+        return view ('admin.product.edit', compact('product', 'listAttr'));
 
     }
 
@@ -116,10 +122,18 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
-        //
+        try {
+            $admin = Product::find($id);
+            $admin->delete();
+
+            return redirect()->back()->with('success', 'Xóa thành công');
+        }catch (\Exception $exception){
+            Log::error($exception->getMessage());
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 }
