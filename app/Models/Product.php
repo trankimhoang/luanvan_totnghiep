@@ -12,10 +12,13 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-      'name',
-      'price',
-      'quantity',
-      'parent_id'
+        'name',
+        'description',
+        'price',
+        'price_new',
+        'quantity',
+        'image',
+        'status'
     ];
 
     public function listProductChild() {

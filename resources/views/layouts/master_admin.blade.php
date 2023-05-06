@@ -272,7 +272,7 @@
             </a>
             <ul id="components-product" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="components-alerts.html">
+                    <a href="{{ route('admin.products.create') }}">
                         <i class="bi bi-circle"></i><span>Thêm sản phẩm</span>
                     </a>
                 </li>
@@ -297,6 +297,24 @@
                 <li>
                     <a href="{{ route('admin.admins.create') }}">
                         <i class="bi bi-circle"></i><span>Thêm quản trị viên</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-attr" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Thuộc tính</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-attr" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.attributes.index') }}">
+                        <i class="bi bi-circle"></i><span>Danh sách thuộc tính</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.attributes.create') }}">
+                        <i class="bi bi-circle"></i><span>Thêm thuộc tính</span>
                     </a>
                 </li>
             </ul>

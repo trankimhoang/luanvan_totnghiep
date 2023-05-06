@@ -1,21 +1,26 @@
 @extends('layouts.master_admin')
 @section('content')
     <div class="pagetitle">
-        <h1>List Product</h1>
+        <h1>Danh sách sản phẩm</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
+                <li class="breadcrumb-item active">Danh sách</li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Trang chủ</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
+
+    <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-2">Thêm sản phẩm</a>
     <table class="table table-bordered border border-primary">
         <tr>
             <th>ID</th>
             <th>Tên sản phẩm</th>
             <th>Ảnh đại diện</th>
-            <th>Gia</th>
+            <th>Mô tả</th>
+            <th>Giá gốc</th>
+            <th>Giá sau KM</th>
             <th>Số lượng</th>
+            <th>Trạng thái</th>
             <th>Action</th>
         </tr>
         @foreach($listProduct as $product)
@@ -25,8 +30,13 @@
                 <td>
                     <img src="{{ $product->getImage() }}" alt="" width="128px" style="text-align: center">
                 </td>
+                <td>{{ $product->description }}</td>
                 <td>{{ $product->price }}</td>
+                <td>{{ $product->price_new }}</td>
                 <td>{{ $product->quantity }}</td>
+                <td>
+                    {{ mapStatusProduct($product->status) }}
+                </td>
                 <td>
                     <ul class="list-inline m-0">
                         <li class="list-inline-item">
@@ -35,7 +45,7 @@
                         <li class="list-inline-item">
                             <form action="" method="post">
                                 @csrf
-                                @method('')
+                                @method('delete')
                                 <button type="submit" class="btn btn-danger btn-sm rounded-0"><i class="bi bi-trash"></i></button>
                             </form>
                         </li>

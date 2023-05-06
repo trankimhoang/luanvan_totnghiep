@@ -13,3 +13,12 @@ function updateImage($imageFile, $imageName, $imagePath) {
 
     return '';
 }
+
+function mapStatusProduct($status){
+    $array = [
+       0 => 'Off',
+       1 => 'On'
+    ];
+
+    return $array[$status] ?? '';
+}

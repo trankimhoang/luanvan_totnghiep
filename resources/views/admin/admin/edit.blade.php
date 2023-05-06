@@ -16,11 +16,17 @@
         <div class="form-group">
             <label for="name">Tên quản trị viên</label>
             <input type="text" name="name" class="form-control" value="{{ old('name', $admin->name) }}">
+            @error('name')
+            <p class="alert alert-danger">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="form-group pt-3">
             <label for="email">Email</label>
-            <input type="text" name="email" class="form-control" value="{{ old('name', $admin->email) }}">
+            <input type="text" name="email" class="form-control" value="{{ old('email', $admin->email) }}">
+            @error('email')
+            <p class="alert alert-danger">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="form-group pt-3">
@@ -34,8 +40,7 @@
 
         <div class="form-group pt-3">
             <label for="password">Mật khẩu</label>
-            <input type="password" name="password" class="form-control" value="{{ old('password') }}"
-                   autocomplete="off">
+            <input type="password" name="password" class="form-control" value="{{ old('password') }}" autocomplete="off">
         </div>
 
         <div class="form-group pt-3">

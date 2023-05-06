@@ -28,8 +28,10 @@ Route::middleware(['auth:admin'])->group(function (){
 
     Route::get('index', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('index');
 
-    Route::resource('products', \App\Http\Controllers\Admin\Product\ProductController::class);
+    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
 
     Route::resource('admins', \App\Http\Controllers\Admin\AdminController::class);
+
+    Route::resource('attributes', \App\Http\Controllers\Admin\AttributeController::class);
 });
 
