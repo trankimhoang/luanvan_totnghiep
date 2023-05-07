@@ -29,6 +29,11 @@ Route::middleware(['auth:admin'])->group(function (){
     Route::get('index', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('index');
 
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    Route::get('render-product-child-new-row',
+        [\App\Http\Controllers\Admin\ProductController::class, 'renderProductChildNewRow']
+    )->name('products.render-product-child-new-row');
+
+
 
     Route::resource('admins', \App\Http\Controllers\Admin\AdminController::class);
 

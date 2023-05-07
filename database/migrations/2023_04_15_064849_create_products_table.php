@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255)->comment('ten san pham');
+            $table->string('name', 255)->nullable()->comment('ten san pham');
             $table->double('price')->default(0)->comment('gia goc cua san pham');
             $table->integer('quantity')->default(0)->comment('so luong');
 

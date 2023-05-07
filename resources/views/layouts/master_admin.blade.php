@@ -465,6 +465,7 @@
 <!-- Template Main JS File -->theme/admin/
 <script src="{{ asset('theme/admin/assets/js/main.js') }}"></script>
 <script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
+<script src="{{ asset('js/loadingoverlay.min.js') }}"></script>
 @yield('js')
 
 </body>

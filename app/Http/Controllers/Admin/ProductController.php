@@ -3,25 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\ProductRequest;
-use App\Models\Admin;
+use App\Http\Requests\Admin\ProductStoreRequest;
+use App\Http\Requests\Admin\ProductUpdateRequest;
 use App\Models\Attribute;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
-class ProductController extends Controller
-{
+class ProductController extends Controller {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index(): View
-    {
+    public function index(): View {
         $listProduct = Product::query()->where('parent_id', '=', null)->get();
         return view('admin.product.index', compact('listProduct'));
     }
@@ -31,19 +31,17 @@ class ProductController extends Controller
      *
      * @return View
      */
-    public function create(): View
-    {
+    public function create(): View {
         return view('admin.product.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param ProductStoreRequest $request
      * @return RedirectResponse
      */
-    public function store(ProductRequest $request): RedirectResponse
-    {
+    public function store(ProductStoreRequest $request): RedirectResponse {
         try {
             $product = new Product();
             $product->setAttribute('name', $request->get('name'));
@@ -52,7 +50,6 @@ class ProductController extends Controller
             $product->setAttribute('price', $request->get('price'));
             $product->setAttribute('price_new', $request->get('price_new'));
             $product->setAttribute('quantity', $request->get('quantity'));
-
             $product->save();
 
             if ($request->has('image')) {
@@ -61,7 +58,6 @@ class ProductController extends Controller
                 $product->setAttribute('image', $imageUrl);
                 $product->save();
             }
-
 
             return redirect()->route('admin.products.index')->with('success', 'Thêm thành công');
         } catch (\Exception $exception) {
@@ -73,67 +69,151 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id): View
-    {
+    public function edit($id): View {
         $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
         $listAttr = Attribute::all()->toArray();
 
-        return view ('admin.product.edit', compact('product', 'listAttr'));
+        return view('admin.product.edit', compact('product', 'listAttr'));
 
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return RedirectResponse
+     * @param ProductUpdateRequest $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function update(Request $request, $id): RedirectResponse
-    {
+    public function update(ProductUpdateRequest $request, int $id): JsonResponse {
         try {
             $data = $request->all();
             $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
             $product->fill($data);
-
             $product->save();
-            return redirect()->route('admin.products.index')->with('success', 'Sua thanh cong product ' . $product->id);
-        }catch (\Exception $exception) {
+
+            // update product child
+            DB::beginTransaction();
+            if (!empty($data['list_product_child'])) {
+                $listProductChild = $data['list_product_child'];
+
+                DB::table('values')
+                    ->whereIn('product_id', array_keys($listProductChild))
+                    ->delete();
+
+                foreach ($listProductChild as $productChildId => $productChild) {
+                    $listAttr = $productChild['list_attr'] ?? [];
+                    $productUpdateData = [];
+
+                    if (!empty($productChild['price'])) {
+                        $productUpdateData['price'] = $productChild['price'];
+                    }
+
+                    if (!empty($productChild['price_new'])) {
+                        $productUpdateData['price_new'] = $productChild['price_new'];
+                    }
+
+                    if (!empty($productChild['quantity'])) {
+                        $productUpdateData['quantity'] = $productChild['quantity'];
+                    }
+
+                    DB::table('products')
+                        ->where('id', '=', $productChildId)
+                        ->update($productUpdateData);
+
+                    if (!empty($listAttr)) {
+                        foreach ($listAttr as $attrId => $attrValue) {
+                            DB::table('values')
+                                ->insert([
+                                    'product_id' => $productChildId,
+                                    'attribute_id' => $attrId,
+                                    'text_value' => $attrValue
+                                ]);
+                        }
+                    }
+                }
+            }
+            DB::commit();
+
+            $listProductChildNew = $data['list_product_child_new'] ?? [];
+
+            if (!empty($listProductChildNew)) {
+                $listProductChildNewInsertAttr = [];
+
+                foreach ($listProductChildNew as $productChildNew) {
+                    $listAttr = $productChildNew['list_attr'] ?? [];
+                    unset($productChildNew['list_attr']);
+                    $productChildNew['parent_id'] = $id;
+                    $productChildNewId = DB::table('products')
+                        ->insertGetId($productChildNew);
+
+                    if (!empty($listAttr)) {
+                        foreach ($listAttr as $attrId => $attrValue) {
+                            $listProductChildNewInsertAttr[] = [
+                                'product_id' => $productChildNewId,
+                                'attribute_id' => $attrId,
+                                'text_value' => $attrValue
+                            ];
+                        }
+                    }
+                }
+
+                if (!empty($listProductChildNewInsertAttr)) {
+                    DB::table('values')->insert($listProductChildNewInsertAttr);
+                }
+            }
+
+            // end product child
+
+            Session::flash('success', 'Cap nhat thanh cong');
+            return response()->json([
+                'success' => true,
+                'url' => route('admin.products.edit', $id)
+            ]);
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage());
-            return redirect()->back()->with('error', $exception->getMessage());
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'mgs' => $exception->getMessage()
+            ]);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return RedirectResponse
      */
-    public function destroy($id): RedirectResponse
-    {
+    public function destroy($id): RedirectResponse {
         try {
             $admin = Product::find($id);
             $admin->delete();
 
             return redirect()->back()->with('success', 'Xóa thành công');
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function renderProductChildNewRow() {
+        $productIdNew = time() * rand(11111, 9999999) * rand(22222, 999999);
+        $listAttr = Attribute::all()->toArray();
+
+        return view('admin.product._product_child_new', compact('productIdNew', 'listAttr'));
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('values', function (Blueprint $table) {
             $table->integer('product_id')->comment('id product trong table product');
             $table->integer('attribute_id')->comment('id attribute trong table attribute');
-            $table->string('text_value');
+            $table->string('text_value')->nullable();
 
             $table->primary(['product_id', 'attribute_id']);
 
