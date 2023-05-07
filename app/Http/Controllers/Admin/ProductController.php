@@ -105,6 +105,12 @@ class ProductController extends Controller {
             $product->save();
 
             // update product child
+            if (!empty($data['product_child_id_delete'])) {
+                DB::table('products')
+                    ->whereIn('id', $data['product_child_id_delete'])
+                    ->delete();
+            }
+
             DB::beginTransaction();
             if (!empty($data['list_product_child'])) {
                 $listProductChild = $data['list_product_child'];

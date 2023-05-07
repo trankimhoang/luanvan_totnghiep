@@ -127,7 +127,9 @@
                                value="{{ $productChild->quantity }}">
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger">
+                        <button type="button"
+                                data-id="{{ $productChild->id }}"
+                                class="btn btn-danger btn-delete-product-child">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>
@@ -152,6 +154,16 @@
         $(document).ready(function () {
             $('#image').change(function (event) {
                 $(".img-preview").fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
+            });
+
+            $('body').on('click', '.btn-delete-product-child', function () {
+                const id = $(this).attr('data-id');
+
+                if (id !== '') {
+                    $('#form-main').append(`<input type="hidden" value="${id}" name="product_child_id_delete[]">`);
+                }
+
+                $(this).parents('tr').remove();
             });
 
             $('#btn-add-product-child-new').click(function () {
