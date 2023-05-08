@@ -51,67 +51,6 @@
 <div class="body-wrapper">
     <!-- Begin Header Area -->
     <header>
-        <!-- Begin Header Top Area -->
-        <div class="header-top">
-            <div class="container">
-                <div class="row">
-                    <!-- Begin Header Top Left Area -->
-                    <div class="col-lg-3 col-md-4">
-                        <div class="header-top-left">
-                            <ul class="phone-wrap">
-                                <li><span>Telephone Enquiry:</span><a href="#">(+123) 123 321 345</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Header Top Left Area End Here -->
-                    <!-- Begin Header Top Right Area -->
-                    <div class="col-lg-9 col-md-8">
-                        <div class="header-top-right">
-                            <ul class="ht-menu">
-                                <!-- Begin Setting Area -->
-                                <li>
-                                    <div class="ht-setting-trigger"><span>Setting</span></div>
-                                    <div class="setting ht-setting">
-                                        <ul class="ht-setting-list">
-                                            <li><a href="login-register.html">My Account</a></li>
-                                            <li><a href="checkout.html">Checkout</a></li>
-                                            <li><a href="login-register.html">Sign In</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <!-- Setting Area End Here -->
-                                <!-- Begin Currency Area -->
-                                <li>
-                                    <span class="currency-selector-wrapper">Currency :</span>
-                                    <div class="ht-currency-trigger"><span>USD $</span></div>
-                                    <div class="currency ht-currency">
-                                        <ul class="ht-setting-list">
-                                            <li><a href="#">EUR €</a></li>
-                                            <li class="active"><a href="#">USD $</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <!-- Currency Area End Here -->
-                                <!-- Begin Language Area -->
-                                <li>
-                                    <span class="language-selector-wrapper">Language :</span>
-                                    <div class="ht-language-trigger"><span>English</span></div>
-                                    <div class="language ht-language">
-                                        <ul class="ht-setting-list">
-                                            <li class="active"><a href="#"><img src="images/menu/flag-icon/1.jpg" alt="">English</a></li>
-                                            <li><a href="#"><img src="images/menu/flag-icon/2.jpg" alt="">Français</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <!-- Language Area End Here -->
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Header Top Right Area End Here -->
-                </div>
-            </div>
-        </div>
-        <!-- Header Top Area End Here -->
         <!-- Begin Header Middle Area -->
         <div class="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">
             <div class="container">
@@ -120,7 +59,7 @@
                     <div class="col-lg-3">
                         <div class="logo pb-sm-30 pb-xs-30">
                             <a href="index.html">
-                                <img src="images/menu/logo/1.jpg" alt="">
+                                <img src="{{ asset('theme/user/images/menu/logo/1.jpg') }}" alt="">
                             </a>
                         </div>
                     </div>
@@ -282,128 +221,12 @@
                         <div class="hb-menu hb-menu-2 d-xl-block">
                             <nav>
                                 <ul>
-                                    <li class="dropdown-holder"><a href="index.html">Home</a>
-                                        <ul class="hb-dropdown">
-                                            <li><a href="index.html">Home One</a></li>
-                                            <li class="active"><a href="index-2.html">Home Two</a></li>
-                                            <li><a href="index-3.html">Home Three</a></li>
-                                            <li><a href="index-4.html">Home Four</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="megamenu-holder"><a href="shop-left-sidebar.html">Shop</a>
-                                        <ul class="megamenu hb-megamenu">
-                                            <li><a href="shop-left-sidebar.html">Shop Page Layout</a>
-                                                <ul>
-                                                    <li><a href="shop-3-column.html">Shop 3 Column</a></li>
-                                                    <li><a href="shop-4-column.html">Shop 4 Column</a></li>
-                                                    <li><a href="shop-left-sidebar.html">Shop Left Sidebar</a></li>
-                                                    <li><a href="shop-right-sidebar.html">Shop Right Sidebar</a></li>
-                                                    <li><a href="shop-list.html">Shop List</a></li>
-                                                    <li><a href="shop-list-left-sidebar.html">Shop List Left Sidebar</a></li>
-                                                    <li><a href="shop-list-right-sidebar.html">Shop List Right Sidebar</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="single-product-gallery-left.html">Single Product Style</a>
-                                                <ul>
-                                                    <li><a href="single-product-carousel.html">Single Product Carousel</a></li>
-                                                    <li><a href="single-product-gallery-left.html">Single Product Gallery Left</a></li>
-                                                    <li><a href="single-product-gallery-right.html">Single Product Gallery Right</a></li>
-                                                    <li><a href="single-product-tab-style-top.html">Single Product Tab Style Top</a></li>
-                                                    <li><a href="single-product-tab-style-left.html">Single Product Tab Style Left</a></li>
-                                                    <li><a href="single-product-tab-style-right.html">Single Product Tab Style Right</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="single-product.html">Single Products</a>
-                                                <ul>
-                                                    <li><a href="single-product.html">Single Product</a></li>
-                                                    <li><a href="single-product-sale.html">Single Product Sale</a></li>
-                                                    <li><a href="single-product-group.html">Single Product Group</a></li>
-                                                    <li><a href="single-product-normal.html">Single Product Normal</a></li>
-                                                    <li><a href="single-product-affiliate.html">Single Product Affiliate</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown-holder"><a href="blog-left-sidebar.html">Blog</a>
-                                        <ul class="hb-dropdown">
-                                            <li class="sub-dropdown-holder"><a href="blog-left-sidebar.html">Blog Grid View</a>
-                                                <ul class="hb-dropdown hb-sub-dropdown">
-                                                    <li><a href="blog-2-column.html">Blog 2 Column</a></li>
-                                                    <li><a href="blog-3-column.html">Blog 3 Column</a></li>
-                                                    <li><a href="blog-left-sidebar.html">Grid Left Sidebar</a></li>
-                                                    <li><a href="blog-right-sidebar.html">Grid Right Sidebar</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="sub-dropdown-holder"><a href="blog-list-left-sidebar.html">Blog List View</a>
-                                                <ul class="hb-dropdown hb-sub-dropdown">
-                                                    <li><a href="blog-list.html">Blog List</a></li>
-                                                    <li><a href="blog-list-left-sidebar.html">List Left Sidebar</a></li>
-                                                    <li><a href="blog-list-right-sidebar.html">List Right Sidebar</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="sub-dropdown-holder"><a href="blog-details-left-sidebar.html">Blog Details</a>
-                                                <ul class="hb-dropdown hb-sub-dropdown">
-                                                    <li><a href="blog-details-left-sidebar.html">Left Sidebar</a></li>
-                                                    <li><a href="blog-details-right-sidebar.html">Right Sidebar</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="sub-dropdown-holder"><a href="blog-gallery-format.html">Blog Format</a>
-                                                <ul class="hb-dropdown hb-sub-dropdown">
-                                                    <li><a href="blog-audio-format.html">Blog Audio Format</a></li>
-                                                    <li><a href="blog-video-format.html">Blog Video Format</a></li>
-                                                    <li><a href="blog-gallery-format.html">Blog Gallery Format</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="megamenu-static-holder"><a href="index.html">Pages</a>
-                                        <ul class="megamenu hb-megamenu">
-                                            <li><a href="blog-left-sidebar.html">Blog Layouts</a>
-                                                <ul>
-                                                    <li><a href="blog-2-column.html">Blog 2 Column</a></li>
-                                                    <li><a href="blog-3-column.html">Blog 3 Column</a></li>
-                                                    <li><a href="blog-left-sidebar.html">Grid Left Sidebar</a></li>
-                                                    <li><a href="blog-right-sidebar.html">Grid Right Sidebar</a></li>
-                                                    <li><a href="blog-list.html">Blog List</a></li>
-                                                    <li><a href="blog-list-left-sidebar.html">List Left Sidebar</a></li>
-                                                    <li><a href="blog-list-right-sidebar.html">List Right Sidebar</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="blog-details-left-sidebar.html">Blog Details Pages</a>
-                                                <ul>
-                                                    <li><a href="blog-details-left-sidebar.html">Left Sidebar</a></li>
-                                                    <li><a href="blog-details-right-sidebar.html">Right Sidebar</a></li>
-                                                    <li><a href="blog-audio-format.html">Blog Audio Format</a></li>
-                                                    <li><a href="blog-video-format.html">Blog Video Format</a></li>
-                                                    <li><a href="blog-gallery-format.html">Blog Gallery Format</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="index.html">Other Pages</a>
-                                                <ul>
-                                                    <li><a href="login-register.html">My Account</a></li>
-                                                    <li><a href="checkout.html">Checkout</a></li>
-                                                    <li><a href="compare.html">Compare</a></li>
-                                                    <li><a href="wishlist.html">Wishlist</a></li>
-                                                    <li><a href="shopping-cart.html">Shopping Cart</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="index.html">Other Pages 2</a>
-                                                <ul>
-                                                    <li><a href="contact.html">Contact</a></li>
-                                                    <li><a href="about-us.html">About Us</a></li>
-                                                    <li><a href="faq.html">FAQ</a></li>
-                                                    <li><a href="404.html">404 Error</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="about-us.html">About Us</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
-                                    <!-- Begin Header Bottom Menu Information Area -->
-                                    <li class="hb-info f-right p-0 d-sm-none d-lg-block">
-                                        <span>6688 London, Greater London BAS 23JK, UK</span>
-                                    </li>
-                                    <!-- Header Bottom Menu Information Area End Here -->
+                                    <li><a href="#">Home</a></li>
+                                    <li><a href="#">Shop</a></li>
+                                    <li><a href="#">Blog</a></li>
+                                    <li><a href="#">Pages</a></li>
+                                    <li><a href="#">About Us</a></li>
+                                    <li><a href="#">Contact</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -442,7 +265,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 pb-sm-55 pb-xs-55">
                             <div class="li-shipping-inner-box">
                                 <div class="shipping-icon">
-                                    <img src="images/shipping-icon/1.png" alt="Shipping Icon">
+                                    <img src="{{ asset('theme/user/images/shipping-icon/1.png') }}" alt="Shipping Icon">
                                 </div>
                                 <div class="shipping-text">
                                     <h2>Free Delivery</h2>
@@ -455,7 +278,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 pb-sm-55 pb-xs-55">
                             <div class="li-shipping-inner-box">
                                 <div class="shipping-icon">
-                                    <img src="images/shipping-icon/2.png" alt="Shipping Icon">
+                                    <img src="{{ asset('theme/user/images/shipping-icon/2.png') }}" alt="Shipping Icon">
                                 </div>
                                 <div class="shipping-text">
                                     <h2>Safe Payment</h2>
@@ -468,7 +291,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 pb-xs-30">
                             <div class="li-shipping-inner-box">
                                 <div class="shipping-icon">
-                                    <img src="images/shipping-icon/3.png" alt="Shipping Icon">
+                                    <img src="{{ asset('theme/user/images/shipping-icon/3.png') }}" alt="Shipping Icon">
                                 </div>
                                 <div class="shipping-text">
                                     <h2>Shop with Confidence</h2>
@@ -481,7 +304,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 pb-xs-30">
                             <div class="li-shipping-inner-box">
                                 <div class="shipping-icon">
-                                    <img src="images/shipping-icon/4.png" alt="Shipping Icon">
+                                    <img src="{{ asset('theme/user/images/shipping-icon/4.png') }}" alt="Shipping Icon">
                                 </div>
                                 <div class="shipping-text">
                                     <h2>24/7 Help Center</h2>
@@ -504,7 +327,7 @@
                         <!-- Begin Footer Logo Area -->
                         <div class="col-lg-4 col-md-6">
                             <div class="footer-logo">
-                                <img src="images/menu/logo/1.jpg" alt="Footer Logo">
+                                <img src="{{ asset('theme/user/images/menu/logo/1.jpg') }}" alt="Footer Logo">
                                 <p class="info">
                                     We are a team of designers and developers that create high quality HTML Template & Woocommerce, Shopify Theme.
                                 </p>
@@ -556,51 +379,13 @@
                             <div class="footer-block">
                                 <h3 class="footer-block-title">Follow Us</h3>
                                 <ul class="social-link">
-                                    <li class="twitter">
-                                        <a href="https://twitter.com/" data-toggle="tooltip" target="_blank" title="Twitter">
-                                            <i class="fa fa-twitter"></i>
-                                        </a>
-                                    </li>
-                                    <li class="rss">
-                                        <a href="https://rss.com/" data-toggle="tooltip" target="_blank" title="RSS">
-                                            <i class="fa fa-rss"></i>
-                                        </a>
-                                    </li>
-                                    <li class="google-plus">
-                                        <a href="https://www.plus.google.com/discover" data-toggle="tooltip" target="_blank" title="Google +">
-                                            <i class="fa fa-google-plus"></i>
-                                        </a>
-                                    </li>
                                     <li class="facebook">
                                         <a href="https://www.facebook.com/" data-toggle="tooltip" target="_blank" title="Facebook">
                                             <i class="fa fa-facebook"></i>
                                         </a>
                                     </li>
-                                    <li class="youtube">
-                                        <a href="https://www.youtube.com/" data-toggle="tooltip" target="_blank" title="Youtube">
-                                            <i class="fa fa-youtube"></i>
-                                        </a>
-                                    </li>
-                                    <li class="instagram">
-                                        <a href="https://www.instagram.com/" data-toggle="tooltip" target="_blank" title="Instagram">
-                                            <i class="fa fa-instagram"></i>
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
-                            <!-- Begin Footer Newsletter Area -->
-                            <div class="footer-newsletter">
-                                <h4>Sign up to newsletter</h4>
-                                <form action="#" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="footer-subscribe-form validate" target="_blank" novalidate>
-                                    <div id="mc_embed_signup_scroll">
-                                        <div id="mc-form" class="mc-form subscribe-form form-group" >
-                                            <input id="mc-email" type="email" autocomplete="off" placeholder="Enter your email" />
-                                            <button  class="btn" id="mc-submit">Subscribe</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- Footer Newsletter Area End Here -->
                         </div>
                         <!-- Footer Block Area End Here -->
                     </div>
@@ -613,41 +398,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <!-- Begin Footer Links Area -->
-                        <div class="footer-links">
-                            <ul>
-                                <li><a href="#">Online Shopping</a></li>
-                                <li><a href="#">Promotions</a></li>
-                                <li><a href="#">My Orders</a></li>
-                                <li><a href="#">Help</a></li>
-                                <li><a href="#">Customer Service</a></li>
-                                <li><a href="#">Support</a></li>
-                                <li><a href="#">Most Populars</a></li>
-                                <li><a href="#">New Arrivals</a></li>
-                                <li><a href="#">Special Products</a></li>
-                                <li><a href="#">Manufacturers</a></li>
-                                <li><a href="#">Our Stores</a></li>
-                                <li><a href="#">Shipping</a></li>
-                                <li><a href="#">Payments</a></li>
-                                <li><a href="#">Warantee</a></li>
-                                <li><a href="#">Refunds</a></li>
-                                <li><a href="#">Checkout</a></li>
-                                <li><a href="#">Discount</a></li>
-                                <li><a href="#">Refunds</a></li>
-                                <li><a href="#">Policy Shipping</a></li>
-                            </ul>
-                        </div>
-                        <!-- Footer Links Area End Here -->
-                        <!-- Begin Footer Payment Area -->
-                        <div class="copyright text-center">
-                            <a href="#">
-                                <img src="images/payment/1.png" alt="">
-                            </a>
-                        </div>
-                        <!-- Footer Payment Area End Here -->
                         <!-- Begin Copyright Area -->
                         <div class="copyright text-center pt-25">
-                            <span><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></span>
+                            <span><a href="#">Tran Kim Hoang</a></span>
                         </div>
                         <!-- Copyright Area End Here -->
                     </div>

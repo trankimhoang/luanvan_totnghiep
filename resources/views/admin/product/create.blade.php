@@ -25,11 +25,7 @@
             <select name="category_id" class="form-control form-select">
                 <option value="">---</option>
                 @foreach($listCategory as $category)
-                    @if($category->id == $product->category_id)
-                        <option selected value="{{ $category->id }}">{{ $category->name }}</option>
-                    @else
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endif
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
             @error('category_id')

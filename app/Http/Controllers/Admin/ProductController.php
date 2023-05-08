@@ -105,6 +105,12 @@ class ProductController extends Controller {
             $data = $request->all();
             $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
             $product->fill($data);
+
+            if ($request->has('image')) {
+                $imagePath = 'product_images/' . $product->getAttribute('id');
+                $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
+                $product->setAttribute('image', $imageUrl);
+            }
             $product->save();
 
             // update product child
