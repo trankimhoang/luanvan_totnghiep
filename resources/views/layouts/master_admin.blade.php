@@ -318,6 +318,24 @@
                     </a>
                 </li>
             </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-cate" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Loai san pham</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-cate" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.categories.index') }}">
+                        <i class="bi bi-circle"></i><span>Danh sách loai</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.categories.create') }}">
+                        <i class="bi bi-circle"></i><span>Thêm loai</span>
+                    </a>
+                </li>
+            </ul>
         </li><!-- End Components Nav -->
 
         <li class="nav-item">

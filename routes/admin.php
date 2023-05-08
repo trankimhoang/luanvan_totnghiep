@@ -33,10 +33,10 @@ Route::middleware(['auth:admin'])->group(function (){
         [\App\Http\Controllers\Admin\ProductController::class, 'renderProductChildNewRow']
     )->name('products.render-product-child-new-row');
 
-
-
     Route::resource('admins', \App\Http\Controllers\Admin\AdminController::class);
 
     Route::resource('attributes', \App\Http\Controllers\Admin\AttributeController::class);
+
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
 });
 
