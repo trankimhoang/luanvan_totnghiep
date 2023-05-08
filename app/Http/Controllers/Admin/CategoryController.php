@@ -44,10 +44,9 @@ class CategoryController extends Controller
         try {
             $category = new Category();
             $category->setAttribute('name', $request->get('name'));
-
             $category->save();
 
-            return redirect()->route('admin.categories.edit')->with('success', 'Thêm thành công');
+            return redirect()->route('admin.categories.edit', $category->id)->with('success', 'Thêm thành công');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());

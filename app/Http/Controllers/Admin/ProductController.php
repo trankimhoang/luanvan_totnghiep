@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductStoreRequest;
 use App\Http\Requests\Admin\ProductUpdateRequest;
 use App\Models\Attribute;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +33,8 @@ class ProductController extends Controller {
      * @return View
      */
     public function create(): View {
-        return view('admin.product.create');
+        $listCategory = Category::all();
+        return view('admin.product.create', compact('listCategory'));
     }
 
     /**
@@ -85,8 +87,9 @@ class ProductController extends Controller {
     public function edit($id): View {
         $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
         $listAttr = Attribute::all()->toArray();
+        $listCategory = Category::all();
 
-        return view('admin.product.edit', compact('product', 'listAttr'));
+        return view('admin.product.edit', compact('product', 'listAttr', 'listCategory'));
 
     }
 

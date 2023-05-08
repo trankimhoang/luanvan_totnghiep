@@ -21,6 +21,23 @@
         </div>
 
         <div class="form-group pt-3">
+            <label for="category_id">Loai @include('admin.include.required_icon')</label>
+            <select name="category_id" class="form-control form-select">
+                <option value="">---</option>
+                @foreach($listCategory as $category)
+                    @if($category->id == $product->category_id)
+                        <option selected value="{{ $category->id }}">{{ $category->name }}</option>
+                    @else
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endif
+                @endforeach
+            </select>
+            @error('category_id')
+            <p class="alert alert-danger">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="form-group pt-3">
             <label for="description">Mô tả</label>
             <textarea name="description" cols="30" rows="10" class="form-control"></textarea>
             @error('description')

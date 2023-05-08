@@ -18,7 +18,8 @@ class Product extends Model
         'price_new',
         'quantity',
         'image',
-        'status'
+        'status',
+        'category_id'
     ];
 
     public function listProductChild() {
