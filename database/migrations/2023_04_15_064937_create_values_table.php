@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('values', function (Blueprint $table) {
-            $table->integer('product_id')->comment('id product trong table product');
-            $table->integer('attribute_id')->comment('id attribute trong table attribute');
+            $table->unsignedBigInteger('product_id')->comment('id product trong table product');
+            $table->unsignedBigInteger('attribute_id')->comment('id attribute trong table attribute');
             $table->string('text_value')->nullable();
-
             $table->primary(['product_id', 'attribute_id']);
-
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade');
         });
     }
 
