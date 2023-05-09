@@ -566,6 +566,7 @@
 <script src="{{ asset('theme/user/js/scrollUp.min.js') }}"></script>
 <!-- Main/Activator js -->
 <script src="{{ asset('theme/user/js/main.js') }}"></script>
+@yield('js')
 </body>
 
 <!-- index-231:38-->

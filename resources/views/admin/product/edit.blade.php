@@ -162,9 +162,15 @@
             <button type="submit" class="btn btn-primary" form="form-main">Lưu</button>
         </div>
     </form>
+    <style>
+        .tag-error {
+            margin-top: 10px;
+        }
+    </style>
 @endsection
 
 @section('js')
+    <script src="{{ asset('lib/axios.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#image').change(function (event) {
@@ -198,36 +204,41 @@
 
             $('#form-main').submit(function (event) {
                 event.preventDefault();
-                const data = $(this).serializeArray();
-                $('.tag-error').hide();
+                let formData = new FormData(document.getElementById('form-main'));
                 $.LoadingOverlay('show');
-                console.log(data);
 
-                $.ajax({
-                    url: $(this).attr('action'),
-                    method: 'POST',
-                    data: data,
-                    success: function (data) {
-                        $.LoadingOverlay('hide');
-                        if (data.hasOwnProperty('success') && data.success && data.hasOwnProperty('url')) {
-                            window.location.replace(data.url);
-                        } else if (data.hasOwnProperty('mgs')) {
-                            alert(data.mgs);
-                        }
-                    },
-                    error: function (data) {
-                        $.LoadingOverlay('hide');
-                        if (data.hasOwnProperty('responseJSON')) {
-                            const dataError = data.responseJSON.errors;
+                $('.ckeditor').each(function () {
+                    formData.append($(this).attr('name'), CKEDITOR.instances[$(this).attr('name')].getData());
+                });
 
-                            Object.entries(dataError).forEach(entry => {
-                                const [key, value] = entry;
-                                const elementError = $('#' + key + '-error');
-                                elementError.show();
-                                elementError.text(value[0] ?? '');
+                axios.post($(this).attr('action'), formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(function (response) {
+                    if (response.data.success) {
+                        window.location.replace(response.data.url);
+                    }
+                }).catch(function (err) {
+                    let mess_errors = err.response.data.errors;
+                    let scroll_flag = false;
+                    $.LoadingOverlay('hide');
+                    $('.error-text').text('');
+
+                    Object.keys(mess_errors).forEach(function (key) {
+                        $(`#${key}-error`).show();
+
+                        if (!scroll_flag) {
+                            scroll_flag = true;
+
+                            document.getElementById(`${key}-error`).scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
                             });
                         }
-                    }
+
+                        $(`#${key}-error`).text(mess_errors[key]);
+                    });
                 });
             });
         });

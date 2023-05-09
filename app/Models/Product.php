@@ -26,6 +26,21 @@ class Product extends Model
         return $this->hasMany(Product::class, 'parent_id')->with(['listAttribute']);
     }
 
+    public function attributeTitle() {
+        $listAttr = $this->listAttribute;
+        $title = '';
+
+        foreach ($listAttr as $key => $attr) {
+            if ($key == 0) {
+                $title .= $attr->pivot->text_value;
+            } else {
+                $title .= ' - ' . $attr->pivot->text_value;
+            }
+        }
+
+        return $title;
+    }
+
     public function listAttribute() {
         return $this->belongsToMany(
             Attribute::class,

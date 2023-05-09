@@ -14,3 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [\App\Http\Controllers\Web\HomeController::class, 'index'])->name('index');
+
+Route::get('product/{id}', [\App\Http\Controllers\Web\ProductController::class, 'detail'])->name('detail');
