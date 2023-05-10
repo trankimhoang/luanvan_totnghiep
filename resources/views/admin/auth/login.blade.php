@@ -6,8 +6,6 @@
         <p class="text-center small">Nhập email và mật khẩu để đăng nhập</p>
     </div>
 
-
-
     <form class="row g-3 needs-validation" novalidate action="{{ route('admin.login.post') }}" method="post">
         @csrf
         <div class="col-12">

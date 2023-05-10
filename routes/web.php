@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::get('login', [\App\Http\Controllers\Web\AuthController::class, 'showFormLogin'])->name('login');
+Route::post('login', [\App\Http\Controllers\Web\AuthController::class, 'login'])->name('login.post');
+
+
 Route::get('/', [\App\Http\Controllers\Web\HomeController::class, 'index'])->name('index');
 
 Route::get('product/{id}', [\App\Http\Controllers\Web\ProductController::class, 'detail'])->name('detail');
+
+

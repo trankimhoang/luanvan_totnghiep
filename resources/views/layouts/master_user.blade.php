@@ -74,7 +74,7 @@
                                     <div class="setting ht-setting">
                                         <ul class="ht-setting-list">
                                             <li><a href="login-register.html">My Account</a></li>
-                                            <li><a href="login-register.html">Sign In</a></li>
+                                            <li><a href="{{ route('web.login') }}">Đăng nhập</a></li>
                                         </ul>
                                     </div>
                                 </li>
