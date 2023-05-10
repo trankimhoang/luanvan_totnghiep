@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index() {
         $listCategory = Category::all();
-        $listProduct = Product::where('parent_id', '=', null)->where('status', '=', 1)->all();
+        $listProduct = Product::where('parent_id', '=', null)->where('status', '=', 1)->get();
 
         return view('web.home.index', compact('listCategory', 'listProduct'));
     }
