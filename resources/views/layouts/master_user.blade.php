@@ -59,7 +59,7 @@
                     <div class="col-lg-3 col-md-4">
                         <div class="header-top-left">
                             <ul class="phone-wrap">
-                                <li><span>Telephone:</span><a href="#">0584246834</a></li>
+                                <li><span>Telephone:</span><a href="#"> 0584246834</a></li>
                             </ul>
                         </div>
                     </div>
@@ -70,13 +70,24 @@
                             <ul class="ht-menu">
                                 <!-- Begin Setting Area -->
                                 <li>
-                                    <div class="ht-setting-trigger"><span>Setting</span></div>
-                                    <div class="setting ht-setting">
-                                        <ul class="ht-setting-list">
-                                            <li><a href="login-register.html">My Account</a></li>
-                                            <li><a href="{{ route('web.login') }}">Đăng nhập</a></li>
-                                        </ul>
-                                    </div>
+                                    @if(\Illuminate\Support\Facades\Auth::guard('web')->check())
+                                        <div class="ht-setting-trigger"><span>{{ \Illuminate\Support\Facades\Auth::guard('web')->user()->name }}</span></div>
+                                        <div class="setting ht-setting">
+                                            <ul class="ht-setting-list">
+                                                <li><a href="login-register.html">My Account</a></li>
+                                                <li><a href="{{ route('web.logout') }}">Đăng xuất</a></li>
+                                            </ul>
+                                        </div>
+                                    @else
+                                        <div class="ht-setting-trigger"><span>Đăng nhập để mua hàng</span></div>
+                                        <div class="setting ht-setting">
+                                            <ul class="ht-setting-list">
+                                                <li><a href="{{ route('web.register') }}">Đăng kí</a></li>
+                                                <li><a href="{{ route('web.login') }}">Đăng nhập</a></li>
+                                            </ul>
+                                        </div>
+                                    @endif
+
                                 </li>
                                 <!-- Setting Area End Here -->
                             </ul>
@@ -204,6 +215,17 @@
     <!-- Header Area End Here -->
 
     <div class="mb-5">
+        @if(session()->has('success'))
+            <div class="alert alert-success">
+                {{ session()->get('success') }}
+            </div>
+        @endif
+
+        @if(session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
+        @endif
         @yield('content')
     </div>
 

@@ -25,7 +25,7 @@ class AuthController extends Controller
             return redirect()->route('admin.index');
         }
 
-        return redirect()->back()->with('error', 'Email hoặc mật khẩu không đúng');
+        return redirect()->back()->with('error', 'Email hoặc mật khẩu không đúng!');
     }
 
     public function logout() {

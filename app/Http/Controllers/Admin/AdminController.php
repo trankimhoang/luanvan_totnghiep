@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdminUpdateRequest;
 use App\Http\Requests\Admin\CreateAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -98,7 +98,7 @@ class AdminController extends Controller
      * @param  int  $id
      * @return RedirectResponse
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(AdminUpdateRequest $request, $id): RedirectResponse
     {
         try {
             $admin = Admin::find($id);

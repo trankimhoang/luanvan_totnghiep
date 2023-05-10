@@ -13,9 +13,7 @@
             </div>
         </div>
         <div class="col-md-6 offset-md-4">
-            <button type="submit" class="btn btn-primary">
-                Lấy lại mật khẩu
-            </button>
+            <button type="submit" class="btn btn-primary">Lấy lại mật khẩu</button>
         </div>
     </form>
 @endsection

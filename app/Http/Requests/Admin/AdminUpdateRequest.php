@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Web;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserLoginRequest extends FormRequest
+class AdminUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class UserLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required',
+            'name' => 'required',
+            'email' => 'required|email|unique:admins,email' . request()->get('id'),
+            'password' => 'required'
         ];
     }
 }
