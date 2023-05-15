@@ -158,17 +158,17 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-cate" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Loai san pham</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-menu-button-wide"></i><span>Chuyên mục</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="components-cate" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="{{ route('admin.categories.index') }}">
-                        <i class="bi bi-circle"></i><span>Danh sách loai</span>
+                        <i class="bi bi-circle"></i><span>Danh sách Chuyên mục</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.categories.create') }}">
-                        <i class="bi bi-circle"></i><span>Thêm loai</span>
+                        <i class="bi bi-circle"></i><span>Thêm Chuyên mục</span>
                     </a>
                 </li>
             </ul>
@@ -225,10 +225,15 @@
 <script src="{{ asset('theme/admin/assets/vendor/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ asset('theme/admin/assets/vendor/php-email-form/validate.js') }}"></script>
 
+
 <!-- Template Main JS File -->theme/admin/
 <script src="{{ asset('theme/admin/assets/js/main.js') }}"></script>
 <script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
 <script src="{{ asset('js/loadingoverlay.min.js') }}"></script>
+
+<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('lib/select2/css/select2.min.css') }}">
+
 @yield('js')
 
 </body>

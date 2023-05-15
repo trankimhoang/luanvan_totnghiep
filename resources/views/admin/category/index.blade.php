@@ -1,7 +1,7 @@
 @extends('layouts.master_admin')
 @section('content')
     <div class="pagetitle">
-        <h1>Danh sách loai</h1>
+        <h1>Danh sách chuyên mục</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Danh sách</li>
@@ -9,11 +9,11 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-2">Thêm loai</a>
+    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-2">Thêm chuyên mục</a>
     <table class="table table-bordered border border-primary">
         <tr>
             <th>ID</th>
-            <th>Tên loai</th>
+            <th>Tên chuyên mục</th>
             <th>Action</th>
         </tr>
         @foreach($listCategory as $category)

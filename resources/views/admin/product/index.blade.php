@@ -17,8 +17,8 @@
             <th>Tên sản phẩm</th>
             <th>Ảnh đại diện</th>
             <th>Mô tả</th>
-            <th>Giá gốc</th>
-            <th>Giá sau KM</th>
+            <th>Giá bán</th>
+            <th>Giá KM</th>
             <th>Số lượng</th>
             <th>Trạng thái</th>
             <th>Action</th>

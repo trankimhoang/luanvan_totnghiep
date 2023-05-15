@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="pagetitle">
-        <h1>Chỉnh sửa loại</h1>
+        <h1>Chỉnh sửa chuyên mục</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Chỉnh sửa</li>
@@ -14,7 +14,7 @@
         @csrf
         @method('put')
         <div class="form-group">
-            <label for="name">Tên loại @include('admin.include.required_icon')</label>
+            <label for="name">Tên chuyên mục @include('admin.include.required_icon')</label>
             <input type="text" name="name" class="form-control" value="{{ old('name', $category->name) }}">
             @error('name')
             <p class="alert alert-danger">{{ $message }}</p>

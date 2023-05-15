@@ -34,17 +34,23 @@ class ProductController extends Controller {
      */
     public function create(): View {
         $listCategory = Category::all();
-        return view('admin.product.create', compact('listCategory'));
+        $listAttr = Attribute::all();
+
+        return view('admin.product.create', compact('listCategory', 'listAttr'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param ProductStoreRequest $request
-     * @return RedirectResponse
+     * @return mixed
      */
-    public function store(ProductStoreRequest $request): RedirectResponse {
+    public function store(Request $request): RedirectResponse {
         try {
+            return response()->json([
+                'test' => $request->toArray()
+            ]);
+
             $product = new Product();
             $product->setAttribute('name', $request->get('name'));
             $product->setAttribute('description', $request->get('description'));
@@ -86,11 +92,10 @@ class ProductController extends Controller {
      */
     public function edit($id): View {
         $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
-        $listAttr = Attribute::all()->toArray();
+        $listAttr = Attribute::all();
         $listCategory = Category::all();
 
         return view('admin.product.edit', compact('product', 'listAttr', 'listCategory'));
-
     }
 
     /**
