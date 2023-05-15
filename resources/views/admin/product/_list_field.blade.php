@@ -21,9 +21,13 @@
 
 <div class="form-group pt-3">
     <label for="category_id">Thuộc tính @include('admin.include.required_icon')</label>
-    <select class="js-example-basic-multiple form-control form-select" name="attr[]" multiple="multiple">
+    <select class="js-example-basic-multiple form-control form-select" name="list_attr[]" multiple="multiple">
         @foreach($listAttr as $attr)
-            <option value="{{ $attr->id }}">{{ $attr->name }}</option>
+            @if(!empty($listAttributeIdSelected) && in_array($attr->id, $listAttributeIdSelected) !== false)
+                <option value="{{ $attr->id }}" selected>{{ $attr->name }}</option>
+            @else
+                <option value="{{ $attr->id }}">{{ $attr->name }}</option>
+            @endif
         @endforeach
     </select>
 </div>

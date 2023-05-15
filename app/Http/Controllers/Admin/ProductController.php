@@ -43,21 +43,21 @@ class ProductController extends Controller {
      * Store a newly created resource in storage.
      *
      * @param ProductStoreRequest $request
-     * @return mixed
+     * @return JsonResponse
      */
-    public function store(Request $request): RedirectResponse {
+    public function store(ProductStoreRequest $request): JsonResponse {
         try {
-            return response()->json([
-                'test' => $request->toArray()
-            ]);
-
             $product = new Product();
             $product->setAttribute('name', $request->get('name'));
             $product->setAttribute('description', $request->get('description'));
             $product->setAttribute('status', $request->get('status'));
             $product->setAttribute('price', $request->get('price'));
-            $product->setAttribute('price_new', $request->get('price_new'));
             $product->setAttribute('quantity', $request->get('quantity'));
+            $product->setAttribute('category_id', $request->get('category_id'));
+
+            $listAttr = $request->get('list_attr');
+            $product->setAttribute('attr_ids', implode(',', $listAttr));
+
             $product->save();
 
             if ($request->has('image')) {
@@ -67,10 +67,18 @@ class ProductController extends Controller {
                 $product->save();
             }
 
-            return redirect()->route('admin.products.index')->with('success', 'Thêm thành công');
+            Session::flash('success', 'Them thanh cong');
+            return response()->json([
+                'success' => true,
+                'url' => route('admin.products.edit', $product->getAttribute('id'))
+            ]);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
-            return redirect()->back()->with('error', $exception->getMessage());
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'mgs' => $exception->getMessage()
+            ]);
         }
     }
 
@@ -94,8 +102,9 @@ class ProductController extends Controller {
         $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
         $listAttr = Attribute::all();
         $listCategory = Category::all();
+        $listAttributeIdSelected = explode(',', $product->getAttribute('attr_ids'));
 
-        return view('admin.product.edit', compact('product', 'listAttr', 'listCategory'));
+        return view('admin.product.edit', compact('product', 'listAttr', 'listCategory', 'listAttributeIdSelected'));
     }
 
     /**
@@ -116,6 +125,9 @@ class ProductController extends Controller {
                 $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
                 $product->setAttribute('image', $imageUrl);
             }
+            $listAttr = $request->get('list_attr');
+            $product->setAttribute('attr_ids', implode(',', $listAttr));
+
             $product->save();
 
             // update product child
@@ -139,10 +151,6 @@ class ProductController extends Controller {
 
                     if (!empty($productChild['price'])) {
                         $productUpdateData['price'] = $productChild['price'];
-                    }
-
-                    if (!empty($productChild['price_new'])) {
-                        $productUpdateData['price_new'] = $productChild['price_new'];
                     }
 
                     if (!empty($productChild['quantity'])) {

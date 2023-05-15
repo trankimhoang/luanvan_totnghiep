@@ -28,8 +28,6 @@
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(function (response) {
-                console.log(response);
-
                 if (response.data.success) {
                     window.location.replace(response.data.url);
                 }
