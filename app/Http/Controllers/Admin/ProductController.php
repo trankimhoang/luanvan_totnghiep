@@ -244,4 +244,9 @@ class ProductController extends Controller {
 
         return view('admin.product._product_child_new', compact('productIdNew', 'listAttr'));
     }
+
+    public function renderAttribute(Request $request) {
+        $listAttribute = Attribute::whereIn('id', explode(',', $request->get('attribute_ids')))->get();
+        return view('admin.product.render_attribute', compact('listAttribute'));
+    }
 }
