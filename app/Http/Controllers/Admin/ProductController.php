@@ -60,6 +60,8 @@ class ProductController extends Controller {
 
             $product->save();
 
+            $this->updateAttributeNotPrivate($product->getAttribute('id'), $request->toArray());
+
             if ($request->has('image')) {
                 $imagePath = 'product_images/' . $product->getAttribute('id');
                 $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
@@ -107,6 +109,26 @@ class ProductController extends Controller {
         return view('admin.product.edit', compact('product', 'listAttr', 'listCategory', 'listAttributeIdSelected'));
     }
 
+    private function updateAttributeNotPrivate($id, $data) {
+        $listValueInsert = [];
+
+        if (!empty($data['list_attr_value']) && is_array($data['list_attr_value'])) {
+            foreach ($data['list_attr_value'] as $attrId => $textValue) {
+                $listValueInsert[] = [
+                    'product_id' => $id,
+                    'attribute_id' => $attrId,
+                    'text_value' => $textValue
+                ];
+            }
+        }
+
+        DB::table('values')->where('product_id', '=', $id)->delete();
+
+        if (!empty($listValueInsert)) {
+            DB::table('values')->insert($listValueInsert);
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -129,6 +151,8 @@ class ProductController extends Controller {
             $product->setAttribute('attr_ids', implode(',', $listAttr));
 
             $product->save();
+
+            $this->updateAttributeNotPrivate($id, $data);
 
             // update product child
             if (!empty($data['product_child_id_delete'])) {
@@ -239,14 +263,51 @@ class ProductController extends Controller {
     }
 
     public function renderProductChildNewRow() {
-        $productIdNew = time() * rand(11111, 9999999) * rand(22222, 999999);
+        $productIdNew = time() + rand(11111, 9999999) + rand(22222, 999999);
         $listAttr = Attribute::all()->toArray();
 
         return view('admin.product._product_child_new', compact('productIdNew', 'listAttr'));
     }
 
     public function renderAttribute(Request $request) {
-        $listAttribute = Attribute::whereIn('id', explode(',', $request->get('attribute_ids')))->get();
-        return view('admin.product.render_attribute', compact('listAttribute'));
+        $listAttrId = $request->get('attribute_ids');
+
+        if (empty($listAttrId)) {
+            return '';
+        }
+
+        $productId = $request->get('product_id');
+        $listAttribute = DB::table('attributes')
+            ->whereIn('id', $listAttrId)
+            ->where('is_private', '=', 0)
+            ->get();
+
+        $listAttributeValue = [];
+
+        if (!empty($productId)) {
+            $listAttributeValue = DB::table('values')
+                ->where('product_id', '=', $productId)
+                ->whereIn('attribute_id', $listAttribute->pluck('id')->toArray())
+                ->get()->mapWithKeys(function ($item) {
+                    return [$item->attribute_id => $item->text_value];
+                })->toArray();
+        }
+
+        return view('admin.product._render_attribute', compact('listAttribute', 'listAttributeValue'));
+    }
+
+    public function renderAttributeListProductChild(Request $request) {
+        $listAttrId = $request->get('attribute_ids');
+
+        if (empty($listAttrId)) {
+            return '';
+        }
+
+        $listAttribute = DB::table('attributes')
+            ->whereIn('id', $listAttrId)
+            ->where('is_private', '=', 1)
+            ->get();
+
+        return view('admin.product._render_attribute_list_product_child', compact('listAttribute'));
     }
 }

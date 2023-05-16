@@ -1,3 +1,5 @@
+<input type="hidden" id="id" value="{{ $product->id ?? '' }}">
+
 <div class="form-group pt-3">
     <label for="name">Tên sản phẩm @include('admin.include.required_icon')</label>
     <input type="text" name="name" class="form-control" value="{{ $product->name ?? '' }}">
@@ -21,15 +23,44 @@
 
 <div class="form-group pt-3">
     <label for="category_id">Thuộc tính @include('admin.include.required_icon')</label>
-    <select class="js-example-basic-multiple form-control form-select" name="list_attr[]" multiple="multiple">
+    <select class="js-example-basic-multiple form-control form-select" name="list_attr[]" multiple="multiple" id="list_attribute">
         @foreach($listAttr as $attr)
             @if(!empty($listAttributeIdSelected) && in_array($attr->id, $listAttributeIdSelected) !== false)
-                <option value="{{ $attr->id }}" selected>{{ $attr->name }}</option>
+                <option value="{{ $attr->id }}" selected>{{ $attr->name }} [@if($attr->is_private) Riêng @else Chung @endif]</option>
             @else
-                <option value="{{ $attr->id }}">{{ $attr->name }}</option>
+                <option value="{{ $attr->id }}">{{ $attr->name }} [@if($attr->is_private) Riêng @else Chung @endif]</option>
             @endif
         @endforeach
     </select>
+</div>
+
+<div id="div_list_attribute">
+
+</div>
+
+<table class="table table-bordered border border-primary mt-2" id="table-product-child">
+    <tr>
+        <th>ID</th>
+        <th>Thuộc tính @include('admin.include.required_icon')</th>
+        <th>Giá bán @include('admin.include.required_icon')</th>
+        <th>Số lượng @include('admin.include.required_icon')</th>
+        <th>Action</th>
+    </tr>
+
+    @php
+        $listAttr = $listAttr->toArray();
+    @endphp
+
+
+    @foreach($product->listProductChild as $productChild)
+        @include('admin.product._product_child_new', ['productIdNew' => $productChild->id, 'isOld' => true])
+    @endforeach
+</table>
+
+<div style="text-align: right;">
+    <button type="button" class="btn btn-primary" id="btn-add-product-child-new">
+        <i class="bi bi-plus"></i>
+    </button>
 </div>
 
 <div class="form-group pt-3">

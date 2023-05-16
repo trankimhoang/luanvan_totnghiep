@@ -46,10 +46,10 @@ class AttributeController extends Controller
         try {
             $attribute = new Attribute();
             $attribute->setAttribute('name', $request->get('name'));
-
+            $attribute->setAttribute('is_private', !empty($request->get('is_private')) ? $request->get('is_private') : 0);
             $attribute->save();
 
-            return redirect()->route('admin.attributes.index')->with('success', 'Thêm thành công');
+            return redirect()->route('admin.attributes.edit', $attribute->id)->with('success', 'Thêm thành công');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
@@ -96,11 +96,15 @@ class AttributeController extends Controller
             $attribute = Attribute::find($id);
             $data = $request->all();
 
+            if (empty($data['is_private'])) {
+                $data['is_private'] = 0;
+            }
+
             $attribute->fill($data);
 
             $attribute->save();
 
-            return redirect()->route('admin.attributes.index')->with('success', 'Sửa thành công');
+            return redirect()->route('admin.attributes.edit', $attribute->id)->with('success', 'Sửa thành công');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
