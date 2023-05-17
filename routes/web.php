@@ -33,4 +33,3 @@ Route::get('product/{id}', [\App\Http\Controllers\Web\ProductController::class, 
 
 Route::get('logout', [\App\Http\Controllers\Web\AuthController::class, 'logout'])->name('logout');
 
-

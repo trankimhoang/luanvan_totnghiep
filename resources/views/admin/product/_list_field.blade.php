@@ -1,4 +1,4 @@
-<input type="hidden" id="id" value="{{ $product->id ?? '' }}">
+<input type="hidden" id="id" name="id" value="{{ $product->id ?? '' }}">
 
 <div class="form-group pt-3">
     <label for="name">Tên sản phẩm @include('admin.include.required_icon')</label>
@@ -34,34 +34,50 @@
     </select>
 </div>
 
-<div id="div_list_attribute">
-
+<h4 class="mb-0 mt-4">Danh sách thuộc tính chung</h4>
+<div id="div_list_attribute" class="mt-0 mb-5 border p-2 pb-4">
 </div>
 
-<table class="table table-bordered border border-primary mt-2" id="table-product-child">
-    <tr>
-        <th>ID</th>
-        <th>Thuộc tính @include('admin.include.required_icon')</th>
-        <th>Giá bán @include('admin.include.required_icon')</th>
-        <th>Số lượng @include('admin.include.required_icon')</th>
-        <th>Action</th>
-    </tr>
+<h4 class="mb-0 mt-2">Danh sách thuộc tính riêng</h4>
+<div class="mt-0 border p-2">
+    <table class="table table-bordered border border-primary mt-2" id="table-product-child">
+        <tr class="text-center">
+            <th>STT</th>
+            <th>ID</th>
+            <th>Thuộc tính @include('admin.include.required_icon')</th>
+            <th>Giá bán @include('admin.include.required_icon')</th>
+            <th>Số lượng @include('admin.include.required_icon')</th>
+            <th>Hành động</th>
+        </tr>
 
-    @php
-        $listAttr = $listAttr->toArray();
-    @endphp
+        @php
+            if ($listAttr) {
+                $listAttr = $listAttr->toArray();
+            } else {
+                $listAttr = [];
+            }
+        @endphp
 
 
-    @foreach($product->listProductChild as $productChild)
-        @include('admin.product._product_child_new', ['productIdNew' => $productChild->id, 'isOld' => true])
-    @endforeach
-</table>
+        @if(!empty($product))
+            @foreach($product->listProductChild as $productChild)
+                @include('admin.product._product_child_new', ['productIdNew' => $productChild->id, 'productChild' => $productChild])
+            @endforeach
+        @endif
+    </table>
 
-<div style="text-align: right;">
-    <button type="button" class="btn btn-primary" id="btn-add-product-child-new">
-        <i class="bi bi-plus"></i>
-    </button>
+    <div id="div-error-product-child-attr">
+
+    </div>
+
+    <div style="text-align: right;">
+        <button type="button" class="btn btn-primary" id="btn-add-product-child-new">
+            <i class="bi bi-plus"></i>
+        </button>
+    </div>
 </div>
+
+
 
 <div class="form-group pt-3">
     <label for="content">Mô tả</label>

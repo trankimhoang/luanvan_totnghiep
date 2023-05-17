@@ -61,6 +61,7 @@ class ProductController extends Controller {
             $product->save();
 
             $this->updateAttributeNotPrivate($product->getAttribute('id'), $request->toArray());
+            $this->addListProductChildNew($product->getAttribute('id'));
 
             if ($request->has('image')) {
                 $imagePath = 'product_images/' . $product->getAttribute('id');
@@ -105,8 +106,18 @@ class ProductController extends Controller {
         $listAttr = Attribute::all();
         $listCategory = Category::all();
         $listAttributeIdSelected = explode(',', $product->getAttribute('attr_ids'));
+        $listProductId = DB::table('products')
+            ->where('parent_id', '=', $id)
+            ->pluck('id')->toArray();
 
-        return view('admin.product.edit', compact('product', 'listAttr', 'listCategory', 'listAttributeIdSelected'));
+        $listAttrValueForListProductChild = DB::table('values')
+            ->whereIn('product_id', $listProductId)
+            ->whereIn('attribute_id', $listAttributeIdSelected)
+            ->get()->mapWithKeys(function ($item) {
+                return [$item->product_id . '_' . $item->attribute_id => $item->text_value];
+            })->toArray();
+
+        return view('admin.product.edit', compact('product', 'listAttr', 'listCategory', 'listAttributeIdSelected', 'listAttrValueForListProductChild'));
     }
 
     private function updateAttributeNotPrivate($id, $data) {
@@ -129,6 +140,37 @@ class ProductController extends Controller {
         }
     }
 
+    private function addListProductChildNew($id) {
+        $data = request()->toArray();
+        $listProductChildNew = $data['list_product_child_new'] ?? [];
+
+        if (!empty($listProductChildNew)) {
+            $listProductChildNewInsertAttr = [];
+
+            foreach ($listProductChildNew as $productChildNew) {
+                $listAttr = $productChildNew['list_attr'] ?? [];
+                unset($productChildNew['list_attr']);
+                $productChildNew['parent_id'] = $id;
+                $productChildNewId = DB::table('products')
+                    ->insertGetId($productChildNew);
+
+                if (!empty($listAttr)) {
+                    foreach ($listAttr as $attrId => $attrValue) {
+                        $listProductChildNewInsertAttr[] = [
+                            'product_id' => $productChildNewId,
+                            'attribute_id' => $attrId,
+                            'text_value' => $attrValue
+                        ];
+                    }
+                }
+            }
+
+            if (!empty($listProductChildNewInsertAttr)) {
+                DB::table('values')->insert($listProductChildNewInsertAttr);
+            }
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -139,6 +181,49 @@ class ProductController extends Controller {
     public function update(ProductUpdateRequest $request, int $id): JsonResponse {
         try {
             $data = $request->all();
+
+            $listProductChild = [];
+
+            if (!empty($data['list_product_child'])) {
+                foreach ($data['list_product_child'] as $key => $value) {
+                    $listProductChild[$key] = $value;
+                }
+            }
+
+            if (!empty($data['list_product_child_new'])) {
+                foreach ($data['list_product_child_new'] as $key => $value) {
+                    $listProductChild[$key] = $value;
+                }
+            }
+
+            if (!empty($listProductChild)) {
+                $listProductChildDataAttr = [];
+
+                foreach ($listProductChild as $productId => $productChild) {
+                    $listAttr = $productChild['list_attr'] ?? '';
+                    $listAttr = array_values($listAttr);
+                    $listAttr = implode('_', $listAttr);
+
+                    $listProductChildDataAttr[$listAttr][] = $productId;
+                }
+
+                if (!empty($listProductChildDataAttr)) {
+                    foreach ($listProductChildDataAttr as $listAttr => $listProductId) {
+                        if (count($listProductId) == 1) {
+                            unset($listProductChildDataAttr[$listAttr]);
+                        }
+                    }
+                }
+
+                if (!empty($listProductChildDataAttr)) {
+                    return response()->json([
+                        'success' => false,
+                        'error_product_exists' => $listProductChildDataAttr
+                    ]);
+                }
+            }
+
+
             $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
             $product->fill($data);
 
@@ -149,6 +234,17 @@ class ProductController extends Controller {
             }
             $listAttr = $request->get('list_attr');
             $product->setAttribute('attr_ids', implode(',', $listAttr));
+
+            $isAttrHavePrivate = DB::table('attributes')
+                ->whereIn('id', $listAttr)
+                ->where('is_private', '=', 1)
+                ->exists();
+
+            if (!$isAttrHavePrivate) {
+                DB::table('products')
+                    ->where('parent_id', '=', $id)
+                    ->delete();
+            }
 
             $product->save();
 
@@ -199,34 +295,7 @@ class ProductController extends Controller {
             }
             DB::commit();
 
-            $listProductChildNew = $data['list_product_child_new'] ?? [];
-
-            if (!empty($listProductChildNew)) {
-                $listProductChildNewInsertAttr = [];
-
-                foreach ($listProductChildNew as $productChildNew) {
-                    $listAttr = $productChildNew['list_attr'] ?? [];
-                    unset($productChildNew['list_attr']);
-                    $productChildNew['parent_id'] = $id;
-                    $productChildNewId = DB::table('products')
-                        ->insertGetId($productChildNew);
-
-                    if (!empty($listAttr)) {
-                        foreach ($listAttr as $attrId => $attrValue) {
-                            $listProductChildNewInsertAttr[] = [
-                                'product_id' => $productChildNewId,
-                                'attribute_id' => $attrId,
-                                'text_value' => $attrValue
-                            ];
-                        }
-                    }
-                }
-
-                if (!empty($listProductChildNewInsertAttr)) {
-                    DB::table('values')->insert($listProductChildNewInsertAttr);
-                }
-            }
-
+            $this->addListProductChildNew($id);
             // end product child
 
             Session::flash('success', 'Cap nhat thanh cong');

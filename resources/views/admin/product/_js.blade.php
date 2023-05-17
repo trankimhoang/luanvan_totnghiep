@@ -7,6 +7,22 @@
 <script>
     $(document).ready(function () {
         var dataHtmlProductChildLisAttr = '';
+        const listAttrValueForListProductChild = @json($listAttrValueForListProductChild ?? []);
+
+        @if(empty($product))
+            $('#btn-add-product-child-new').prop('disabled', true);
+        @endif
+        reloadStt();
+
+        function reloadStt() {
+            $('#table-product-child .stt').each(function (index) {
+                $(this).text(index + 1);
+            });
+
+            $('#table-product-child .product-child-list-attr').each(function (index) {
+                $(this).attr('stt', index + 1);
+            });
+        }
 
         function select2OptionsSelected($elementSelect2) {
             let data = [],
@@ -28,11 +44,21 @@
 
         function reRenderNameListAttrProductChild() {
             $('.product-child-list-attr').each(function () {
-                const id = $(this).attr('data-id');
+                const productId = $(this).attr('data-id');
+                const isOld = $(this).attr('data-is-old');
+                let nameInput = 'list_product_child_new';
+
+                if (isOld === "1") {
+                    nameInput = 'list_product_child';
+                }
+
 
                 $(this).find('input').each(function () {
                     const name = $(this).attr('name');
-                    $(this).attr('name', 'list_product_child_new[' + id + ']' + name);
+                    const attrId = $(this).attr('data-id');
+
+                    $(this).attr('name', nameInput + '[' + productId + ']' + name);
+                    $(this).val(listAttrValueForListProductChild[productId + '_' + attrId] ?? '');
                 });
             });
         }
@@ -69,10 +95,19 @@
                     },
                     success: function (data) {
                         countSuccess++;
+                        data = data.trim();
 
                         $('.product-child-list-attr').html(data);
                         dataHtmlProductChildLisAttr = data;
                         reRenderNameListAttrProductChild();
+
+                        if (data === '') {
+                            $('#btn-add-product-child-new').prop('disabled', true);
+                            $('#table-product-child tr:not(:eq(0))').hide();
+                        } else {
+                            $('#btn-add-product-child-new').prop('disabled', false);
+                            $('#table-product-child tr:not(:eq(0))').show();
+                        }
 
                         if (countSuccess === 2) {
                             $.LoadingOverlay('hide');
@@ -85,6 +120,12 @@
 
         $('#list_attribute').on('change', function (e) {
             renderAttrFieldParent();
+        });
+
+        $('body').on('change', '.input-attr-product-child', function () {
+            const productId = $(this).parents('.product-child-list-attr').attr('data-id');
+            const attrId = $(this).attr('data-id');
+            listAttrValueForListProductChild[productId + '_' + attrId] = $(this).val();
         });
 
         $('.js-example-basic-multiple').select2();
@@ -100,6 +141,7 @@
             }
 
             $(this).parents('tr').remove();
+            reloadStt();
         });
 
         $('#btn-add-product-child-new').click(function () {
@@ -113,6 +155,7 @@
                     $('#table-product-child').append(html);
                     $('.product-child-list-attr').html(dataHtmlProductChildLisAttr);
                     reRenderNameListAttrProductChild();
+                    reloadStt();
                 }
             })
         });
@@ -140,6 +183,29 @@
             }).then(function (response) {
                 if (response.data.success) {
                     window.location.replace(response.data.url);
+                } else if (response.data.error_product_exists) {
+                    $('#div-error-product-child-attr').html('');
+                    $.LoadingOverlay('hide');
+
+                    console.log(response.data.error_product_exists);
+
+                    for (const [key, value] of Object.entries(response.data.error_product_exists)) {
+                        let errorRow = [];
+
+                        value.forEach(function (item) {
+                            const stt = $(`.product-child-list-attr[data-id='${item}']`).attr('stt');
+                            errorRow.push(stt);
+                        });
+
+                        console.log(errorRow);
+
+                        $('#div-error-product-child-attr').append(`<p class="text-danger">Dòng ${errorRow.join(',')} đang bị trùng danh sách thuộc tính</p>`)
+                    }
+
+                    document.getElementById(`div-error-product-child-attr`).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
                 }
             }).catch(function (err) {
                 let mess_errors = err.response.data.errors;
