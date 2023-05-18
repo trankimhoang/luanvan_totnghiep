@@ -47,6 +47,49 @@ class ProductController extends Controller {
      */
     public function store(ProductStoreRequest $request): JsonResponse {
         try {
+            $data = $request->all();
+
+            $listProductChild = [];
+
+            if (!empty($data['list_product_child'])) {
+                foreach ($data['list_product_child'] as $key => $value) {
+                    $listProductChild[$key] = $value;
+                }
+            }
+
+            if (!empty($data['list_product_child_new'])) {
+                foreach ($data['list_product_child_new'] as $key => $value) {
+                    $listProductChild[$key] = $value;
+                }
+            }
+
+            if (!empty($listProductChild)) {
+                $listProductChildDataAttr = [];
+
+                foreach ($listProductChild as $productId => $productChild) {
+                    $listAttr = $productChild['list_attr'] ?? '';
+                    $listAttr = array_values($listAttr);
+                    $listAttr = implode('_', $listAttr);
+
+                    $listProductChildDataAttr[$listAttr][] = $productId;
+                }
+
+                if (!empty($listProductChildDataAttr)) {
+                    foreach ($listProductChildDataAttr as $listAttr => $listProductId) {
+                        if (count($listProductId) == 1) {
+                            unset($listProductChildDataAttr[$listAttr]);
+                        }
+                    }
+                }
+
+                if (!empty($listProductChildDataAttr)) {
+                    return response()->json([
+                        'success' => false,
+                        'error_product_exists' => $listProductChildDataAttr
+                    ]);
+                }
+            }
+            
             $product = new Product();
             $product->setAttribute('name', $request->get('name'));
             $product->setAttribute('description', $request->get('description'));
