@@ -42,4 +42,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function Carts(): \Illuminate\Database\Eloquent\Relations\HasMany {
+        return $this->hasMany(Cart::class, 'user_id')->with(['Product']);
+    }
 }

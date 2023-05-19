@@ -33,3 +33,9 @@ Route::get('product/{id}', [\App\Http\Controllers\Web\ProductController::class, 
 
 Route::get('logout', [\App\Http\Controllers\Web\AuthController::class, 'logout'])->name('logout');
 
+
+Route::group(['middleware' => 'auth:web'], function () {
+    Route::get('cart', [\App\Http\Controllers\Web\CartController::class, 'addCart'])->name('cart.add');
+
+    Route::get('deleteItemCart', [\App\Http\Controllers\Web\CartController::class, 'deleteItemCart'])->name('delete.item.cart');
+});

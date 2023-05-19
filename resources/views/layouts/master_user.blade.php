@@ -129,43 +129,7 @@
                                         <span class="item-text">£160<span class="cart-item-count">2</span></span>
                                     </div>
                                     <span></span>
-                                    <div class="minicart">
-                                        <ul class="minicart-product-list">
-                                            <li>
-                                                <a href="single-product.html" class="minicart-product-image">
-                                                    <img src="images/product/small-size/3.jpg" alt="cart products">
-                                                </a>
-                                                <div class="minicart-product-details">
-                                                    <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                                                    <span>£80 x 1</span>
-                                                </div>
-                                                <button class="close">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <a href="single-product.html" class="minicart-product-image">
-                                                    <img src="images/product/small-size/4.jpg" alt="cart products">
-                                                </a>
-                                                <div class="minicart-product-details">
-                                                    <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                                                    <span>£80 x 1</span>
-                                                </div>
-                                                <button class="close">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                        <p class="minicart-total">SUBTOTAL: <span>£160</span></p>
-                                        <div class="minicart-button">
-                                            <a href="checkout.html" class="li-button li-button-dark li-button-fullwidth li-button-sm">
-                                                <span>View Full Cart</span>
-                                            </a>
-                                            <a href="checkout.html" class="li-button li-button-fullwidth li-button-sm">
-                                                <span>Checkout</span>
-                                            </a>
-                                        </div>
-                                    </div>
+
                                 </li>
                                 <!-- Header Mini Cart Area End Here -->
                             </ul>
@@ -542,6 +506,63 @@
 <script src="{{ asset('theme/user/js/scrollUp.min.js') }}"></script>
 <!-- Main/Activator js -->
 <script src="{{ asset('theme/user/js/main.js') }}"></script>
+
+{{--<script>--}}
+{{--    $(document).ready(function () {--}}
+{{--        $('.cart-dropdown').on('click', '.delete-item-cart', function () {--}}
+{{--            let id = $(this).attr('data-id');--}}
+
+{{--            $.ajax({--}}
+{{--                url: @json(route('delete.item.cart')),--}}
+{{--                method: 'GET',--}}
+{{--                data: {--}}
+{{--                    id: id--}}
+{{--                },--}}
+{{--                success: function (response) {--}}
+{{--                    let data = response.data;--}}
+
+
+{{--                    if (response.hasOwnProperty('success') && response.success === true) {--}}
+{{--                        if (data.hasOwnProperty('qty')) {--}}
+{{--                            $('#cart-container #cart-qty').html(data.qty);--}}
+{{--                        }--}}
+
+{{--                        if (data.hasOwnProperty('cart_dropdown')) {--}}
+{{--                            $('#cart-container #cart-dropdown').html(data.cart_dropdown);--}}
+{{--                        }--}}
+{{--                    }--}}
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+
+{{--        $('.add-to-cart-btn').click(function (event){--}}
+{{--            let id = $(this).attr('data-id');--}}
+
+{{--            $.ajax({--}}
+{{--                url: @json(route('cart.add')),--}}
+{{--                method: 'GET',--}}
+{{--                data: {--}}
+{{--                    product_id: id,--}}
+{{--                    quality: $('#product-quality').val() ?? 1--}}
+{{--                },--}}
+{{--                success: function (response){--}}
+{{--                    let data = response.data;--}}
+
+{{--                    if( response.hasOwnProperty('success') && response.success === true){--}}
+{{--                        if (data.hasOwnProperty('qty')) {--}}
+{{--                            $('#cart-container #cart-qty').html(data.qty);--}}
+{{--                        }--}}
+
+{{--                        if (data.hasOwnProperty('cart_dropdown')) {--}}
+{{--                            $('#cart-container #cart-dropdown').html(data.cart_dropdown);--}}
+{{--                        }--}}
+{{--                    }--}}
+{{--                }--}}
+{{--            })--}}
+{{--        })--}}
+{{--    });--}}
+{{--</script>--}}
+
 @yield('js')
 </body>
 
