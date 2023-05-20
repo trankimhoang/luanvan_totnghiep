@@ -57,4 +57,8 @@ class Product extends Model
 
         return asset('images/not_found.jpg');
     }
+
+    public function Category() {
+        return $this->belongsTo(Category::class);
+    }
 }

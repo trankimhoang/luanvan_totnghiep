@@ -10,6 +10,8 @@ class Cart extends Model
     use HasFactory;
     protected $table = 'carts';
 
+    public $timestamps = false;
+
     public function Product() {
         return $this->belongsTo(Product::class, 'product_id');
     }

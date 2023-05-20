@@ -114,18 +114,17 @@
                                 </div>
                             @endif
 
-
                             <div class="single-add-to-cart">
                                 <form action="#" class="cart-quantity">
                                     <div class="quantity">
-                                        <label>Quantity</label>
+                                        <label>Số lượng</label>
                                         <div class="cart-plus-minus">
-                                            <input class="cart-plus-minus-box" value="1" type="text">
+                                            <input class="cart-plus-minus-box" value="1" type="text" id="quantity">
                                             <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
                                             <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                         </div>
                                     </div>
-                                    <button class="add-to-cart" type="submit">Add to cart</button>
+                                    <button class="add-to-cart" type="button">Mua ngay</button>
                                 </form>
                             </div>
                         </div>
@@ -345,5 +344,34 @@
             $('#product-price').text(price);
         });
         $('#product-child-select').trigger('change');
+
+        $('.add-to-cart').click(function (){
+           let productId = @json($product->id);
+
+           console.log($('#product-child-select').val());
+
+           if($('#product-child-select').val() !== undefined) {
+               productId = $('#product-child-select').val();
+           }
+
+           $.ajax({
+              data: {
+                  product_id: productId,
+                  quantity: $('#quantity').val(),
+              },
+               method: 'get',
+               url: @json(route('web.cart.add')),
+               success: function(data){
+                   console.log(data);
+
+                   if (data.hasOwnProperty('success') && data.success) {
+                       $('.cart-item-count').text(data.data.qty);
+                   } else {
+                       // error
+                       alert(data.data.message ?? '');
+                   }
+               }
+           });
+        });
     </script>
 @endsection

@@ -114,9 +114,9 @@
                     <!-- Begin Header Middle Right Area -->
                     <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
                         <!-- Begin Header Middle Searchbox Area -->
-                        <form action="#" class="hm-searchbox">
-                            <input type="text" placeholder="Enter your search key ...">
-                            <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
+                        <form action="{{ route('web.search') }}" class="hm-searchbox">
+                            <input type="text" placeholder="Enter your search key ..." name="search" value="{{ request()->get('search') ?? '' }}">
+                            <button class="li-btn"><i class="fa fa-search"></i></button>
                         </form>
                         <!-- Header Middle Searchbox Area End Here -->
                         <!-- Begin Header Middle Right Area -->
@@ -126,10 +126,15 @@
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
-                                        <span class="item-text">£160<span class="cart-item-count">2</span></span>
+                                        <span class="item-text">£160<span class="cart-item-count">
+                                                @if(\Illuminate\Support\Facades\Auth::guard('web')->check())
+                                                    {{ \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity') }}
+                                                @else
+                                                    0
+                                                @endif
+                                            </span>
+                                        </span>
                                     </div>
-                                    <span></span>
-
                                 </li>
                                 <!-- Header Mini Cart Area End Here -->
                             </ul>

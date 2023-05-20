@@ -15,4 +15,12 @@ class HomeController extends Controller
 
         return view('web.home.index', compact('listCategory', 'listProduct'));
     }
+
+    public function search(Request $request){
+        $search = $request->get('search');
+        $listCategory = Category::all();
+        $listProduct = Product::where('name', 'like', '%' . $search . '%')->get();
+
+        return view('web.search.index', compact('search', 'listProduct', 'listCategory'));
+    }
 }

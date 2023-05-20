@@ -1,5 +1,6 @@
 @extends('layouts.master_user')
 @section('content')
+
     <div class="slider-with-banner">
         <div class="container">
             <div class="row">
@@ -12,8 +13,8 @@
                         </div>
                         <div id="cate-toggle" class="category-menu-list" style="display: block;">
                             <ul>
-                                @foreach($listCategory as $category)
-                                    <li><a href="{{ route('web.detail.category', $category->id) }}">{{ $category->name }}</a></li>
+                                @foreach($listCategory as $categoryItem)
+                                    <li><a href="{{ route('web.detail.category', $categoryItem->id) }}">{{ $categoryItem->name }}</a></li>
                                 @endforeach
 
                                 <li class="rx-parent">
@@ -78,24 +79,12 @@
     </div>
 
     <section class="product-area li-laptop-product Special-product pt-60 pb-45">
+        <h5 class="text-center">Tìm thấy {{ $listProduct->count() }} sản phẩm cho từ khóa '{{ $search }}'</h5>
         <div class="container">
             <div class="row">
-                <!-- Begin Li's Section Area -->
-                <div class="col-lg-12">
-                    <div class="li-section-title">
-                        <h2>
-                            <span>Hot Deals Products</span>
-                        </h2>
-                    </div>
-                    <div class="row">
-                        <div class="special-product-active owl-carousel">
-                            @foreach($listProduct as $product)
-                                @include('web.include.item_product')
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                <!-- Li's Section Area End Here -->
+                @foreach($listProduct as $product)
+                    @include('web.include.item_product_search')
+                @endforeach
             </div>
         </div>
     </section>

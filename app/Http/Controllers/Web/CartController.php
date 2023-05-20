@@ -15,34 +15,53 @@ class CartController extends Controller
         $userId = Auth::guard('web')->user()->id;
         $quantity = $request->get('quantity') ?? 1;
 
-        if ($quantity < 1){
-            return redirect()->back()->with('error', 'So luong khong hop le');
+        $productExists = DB::table('products')->where('id', $productId)->exists();
+
+        if (!$productExists) {
+            return response()->json([
+                'success'=>false,
+                'data'=>[
+                    'message'=>'Sản phẩm không tồn tại',
+                    'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity'),
+                ]
+            ]);
         }
 
+        if ($quantity < 1 || !is_numeric($quantity)){
+            return response()->json([
+                'success'=>false,
+                'data'=>[
+                    'message'=>'Số lượng không hợp lệ',
+                    'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity'),
+                ]
+            ]);
+        }
 
-        $cartRow = DB::table('carts')
+        $cart = DB::table('carts')
             ->where('user_id', $userId)
             ->where('product_id', $productId)
-            ->get()->first();
+            ->first();
 
-        if (!empty($cartRow->id)){
-            $cart = Cart::find($cartRow->id);
-            $cart->setAttribute('quantity', $cart->getAttribute('quantity') + $quantity);
-            $cart->save();
+        if (!empty($cart)){
+            DB::table('carts')
+                ->where('user_id', '=', $userId)
+                ->where('product_id', '=', $productId)
+                ->update([
+                    'quantity' => $cart->quantity + $quantity
+                ]);
         } else {
-            $cart = new Cart();
-            $cart->setAttribute('product_id', $productId);
-            $cart->setAttribute('user_id', $userId);
-            $cart->setAttribute('quantity', $quantity);
-            $cart->save();
+            DB::table('carts')->insert([
+               'user_id' => $userId,
+               'product_id' => $productId,
+               'quantity' => $quantity
+            ]);
         }
 
         return response()->json([
             'success'=>true,
             'data'=>[
                 'message'=>'Them vao gio hang thanh cong',
-                'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity'),
-                'cart_dropdown' => view('cart.cart_dropdown')->render()
+                'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity')
             ]
         ]);
     }

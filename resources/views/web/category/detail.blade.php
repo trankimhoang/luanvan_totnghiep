@@ -12,8 +12,8 @@
                         </div>
                         <div id="cate-toggle" class="category-menu-list" style="display: block;">
                             <ul>
-                                @foreach($listCategory as $category)
-                                    <li><a href="{{ route('web.detail.category', $category->id) }}">{{ $category->name }}</a></li>
+                                @foreach($listCategory as $categoryItem)
+                                    <li><a href="{{ route('web.detail.category', $categoryItem->id) }}">{{ $categoryItem->name }}</a></li>
                                 @endforeach
 
                                 <li class="rx-parent">
@@ -84,7 +84,7 @@
                 <div class="col-lg-12">
                     <div class="li-section-title">
                         <h2>
-                            <span>Hot Deals Products</span>
+                            <span>{{ $category->name }}</span>
                         </h2>
                     </div>
                     <div class="row">
