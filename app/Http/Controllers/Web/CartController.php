@@ -14,25 +14,28 @@ class CartController extends Controller
         $productId = $request->get('product_id');
         $userId = Auth::guard('web')->user()->id;
         $quantity = $request->get('quantity') ?? 1;
-
-        $productExists = DB::table('products')->where('id', $productId)->exists();
+        $quantityNew = $request->get('quantity_new') ?? null;
+        $product = DB::table('products')->where('id', $productId);
+        $productExists = $product->exists();
 
         if (!$productExists) {
             return response()->json([
                 'success'=>false,
                 'data'=>[
                     'message'=>'Sản phẩm không tồn tại',
-                    'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity'),
+                    'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
                 ]
             ]);
         }
 
-        if ($quantity < 1 || !is_numeric($quantity)){
+        $productPrice = $product->get()->first()->price ?? null;
+
+        if ($quantity < 1 || !is_numeric($quantity) || ($quantityNew != null && $quantityNew <= 0)){
             return response()->json([
                 'success'=>false,
                 'data'=>[
                     'message'=>'Số lượng không hợp lệ',
-                    'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity'),
+                    'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
                 ]
             ]);
         }
@@ -42,12 +45,17 @@ class CartController extends Controller
             ->where('product_id', $productId)
             ->first();
 
+
+        $quantityUpdate = 0;
+
         if (!empty($cart)){
+            $quantityUpdate = $quantityNew ?? ($cart->quantity + $quantity);
+
             DB::table('carts')
                 ->where('user_id', '=', $userId)
                 ->where('product_id', '=', $productId)
                 ->update([
-                    'quantity' => $cart->quantity + $quantity
+                    'quantity' => $quantityUpdate
                 ]);
         } else {
             DB::table('carts')->insert([
@@ -61,23 +69,34 @@ class CartController extends Controller
             'success'=>true,
             'data'=>[
                 'message'=>'Them vao gio hang thanh cong',
-                'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity')
+                'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
+                'total' => \Illuminate\Support\Facades\Auth::guard('web')->user()->totalMoneyInCart(),
+                'total_row' => $productPrice * $quantityUpdate
             ]
         ]);
     }
 
-    public function deleteItemCart(Request $request){
-        $id = $request->get('id');
+    public function deleteProductCart(Request $request){
+        $productId = $request->get('product_id');
+        $user = Auth::guard('web')->user();
 
-        $cart = Cart::find($id);
-        $cart->delete();
+        DB::table('carts')
+            ->where('product_id', $productId)
+            ->where('user_id', $user->id)
+            ->delete();
 
         return response()->json([
             'success' => true,
             'data' => [
-                'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quality'),
-                'cart_dropdown' => view('cart.cart_dropdown')->render()
+                'qty' => $user->countListProductInCart(),
+                'total' => $user->totalMoneyInCart()
             ]
         ]);
+    }
+
+    public function listProductInCart() {
+        $listProduct = Auth::guard('web')->user()->listProductInCart;
+        $total = Auth::guard('web')->user()->totalMoneyInCart();
+        return view('web.cart.list', compact('listProduct', 'total'));
     }
 }

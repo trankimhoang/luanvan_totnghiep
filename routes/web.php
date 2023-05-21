@@ -42,5 +42,7 @@ Route::get('add-cart', [\App\Http\Controllers\Web\CartController::class, 'addCar
     ->middleware('isLoginWebAjax');
 
 Route::group(['middleware' => 'auth:web'], function () {
-    Route::get('deleteItemCart', [\App\Http\Controllers\Web\CartController::class, 'deleteItemCart'])->name('delete.item.cart');
+    Route::get('cart', [\App\Http\Controllers\Web\CartController::class, 'listProductInCart'])->name('list.product.cart');
+
+    Route::get('delete', [\App\Http\Controllers\Web\CartController::class, 'deleteProductCart'])->name('delete.product.cart');
 });

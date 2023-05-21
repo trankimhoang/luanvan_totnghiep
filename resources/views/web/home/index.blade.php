@@ -8,7 +8,7 @@
                     <!--Category Menu Start-->
                     <div class="category-menu">
                         <div class="category-heading">
-                            <h2 class="categories-toggle"><span>categories</span></h2>
+                            <h2 class="categories-toggle"><span>Danh mục</span></h2>
                         </div>
                         <div id="cate-toggle" class="category-menu-list" style="display: block;">
                             <ul>
@@ -17,8 +17,8 @@
                                 @endforeach
 
                                 <li class="rx-parent">
-                                    <a class="rx-default">More Categories</a>
-                                    <a class="rx-show">Less Categories</a>
+                                    <a class="rx-default">Xem thêm</a>
+                                    <a class="rx-show">Thu gọn</a>
                                 </li>
                             </ul>
                         </div>
@@ -84,7 +84,7 @@
                 <div class="col-lg-12">
                     <div class="li-section-title">
                         <h2>
-                            <span>Hot Deals Products</span>
+                            <span>Sản phẩm mới</span>
                         </h2>
                     </div>
                     <div class="row">

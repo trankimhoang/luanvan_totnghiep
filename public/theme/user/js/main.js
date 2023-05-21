@@ -480,7 +480,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
          newVal = 0;
        }
        }
-    $button.parent().find("input").val(newVal);
+    $button.parent().find("input").val(newVal).change();
    });
 /*----------------------------------------*/
 /* 23. Single Prduct Carousel Activision

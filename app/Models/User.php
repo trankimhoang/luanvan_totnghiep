@@ -43,7 +43,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function Carts(): \Illuminate\Database\Eloquent\Relations\HasMany {
-        return $this->hasMany(Cart::class, 'user_id')->with(['Product']);
+    public function listProductInCart(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
+        return $this->belongsToMany(Product::class, 'carts', 'user_id', 'product_id')->withPivot(['quantity']);
+    }
+
+    public function countListProductInCart() {
+        return $this->listProductInCart->sum('pivot.quantity');
+    }
+
+    public function totalMoneyInCart() {
+        $total = 0;
+
+        foreach ($this->listProductInCart as $item) {
+            $total += $item->pivot->quantity * $item->price;
+        }
+
+        return $total;
     }
 }

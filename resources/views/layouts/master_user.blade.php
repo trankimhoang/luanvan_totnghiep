@@ -121,14 +121,14 @@
                         <!-- Header Middle Searchbox Area End Here -->
                         <!-- Begin Header Middle Right Area -->
                         <div class="header-middle-right">
-                            <ul class="hm-menu">
+                            <ul class="hm-menu" id="cart-icon">
                                 <!-- Begin Header Mini Cart Area -->
                                 <li class="hm-minicart">
                                     <div class="hm-minicart-trigger">
                                         <span class="item-icon"></span>
-                                        <span class="item-text">£160<span class="cart-item-count">
+                                        <span class="item-text">Giỏ hàng<span class="cart-item-count">
                                                 @if(\Illuminate\Support\Facades\Auth::guard('web')->check())
-                                                    {{ \Illuminate\Support\Facades\Auth::guard('web')->user()->Carts->sum('quantity') }}
+                                                    {{ \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart() }}
                                                 @else
                                                     0
                                                 @endif
@@ -155,12 +155,9 @@
                         <div class="hb-menu hb-menu-2 d-xl-block">
                             <nav>
                                 <ul>
-                                    <li><a href="#">Home</a></li>
-                                    <li><a href="#">Shop</a></li>
-                                    <li><a href="#">Blog</a></li>
-                                    <li><a href="#">Pages</a></li>
-                                    <li><a href="#">About Us</a></li>
-                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="#">Trang chủ</a></li>
+                                    <li><a href="#">Về chúng tôi</a></li>
+                                    <li><a href="#">Liên hệ</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -511,62 +508,16 @@
 <script src="{{ asset('theme/user/js/scrollUp.min.js') }}"></script>
 <!-- Main/Activator js -->
 <script src="{{ asset('theme/user/js/main.js') }}"></script>
-
-{{--<script>--}}
-{{--    $(document).ready(function () {--}}
-{{--        $('.cart-dropdown').on('click', '.delete-item-cart', function () {--}}
-{{--            let id = $(this).attr('data-id');--}}
-
-{{--            $.ajax({--}}
-{{--                url: @json(route('delete.item.cart')),--}}
-{{--                method: 'GET',--}}
-{{--                data: {--}}
-{{--                    id: id--}}
-{{--                },--}}
-{{--                success: function (response) {--}}
-{{--                    let data = response.data;--}}
+<script src="{{ asset('js/loadingoverlay.min.js') }}"></script>
 
 
-{{--                    if (response.hasOwnProperty('success') && response.success === true) {--}}
-{{--                        if (data.hasOwnProperty('qty')) {--}}
-{{--                            $('#cart-container #cart-qty').html(data.qty);--}}
-{{--                        }--}}
-
-{{--                        if (data.hasOwnProperty('cart_dropdown')) {--}}
-{{--                            $('#cart-container #cart-dropdown').html(data.cart_dropdown);--}}
-{{--                        }--}}
-{{--                    }--}}
-{{--                }--}}
-{{--            });--}}
-{{--        });--}}
-
-{{--        $('.add-to-cart-btn').click(function (event){--}}
-{{--            let id = $(this).attr('data-id');--}}
-
-{{--            $.ajax({--}}
-{{--                url: @json(route('cart.add')),--}}
-{{--                method: 'GET',--}}
-{{--                data: {--}}
-{{--                    product_id: id,--}}
-{{--                    quality: $('#product-quality').val() ?? 1--}}
-{{--                },--}}
-{{--                success: function (response){--}}
-{{--                    let data = response.data;--}}
-
-{{--                    if( response.hasOwnProperty('success') && response.success === true){--}}
-{{--                        if (data.hasOwnProperty('qty')) {--}}
-{{--                            $('#cart-container #cart-qty').html(data.qty);--}}
-{{--                        }--}}
-
-{{--                        if (data.hasOwnProperty('cart_dropdown')) {--}}
-{{--                            $('#cart-container #cart-dropdown').html(data.cart_dropdown);--}}
-{{--                        }--}}
-{{--                    }--}}
-{{--                }--}}
-{{--            })--}}
-{{--        })--}}
-{{--    });--}}
-{{--</script>--}}
+<script>
+    $(document).ready(function () {
+        $('#cart-icon').click(function () {
+            window.location.replace(@json(route('web.list.product.cart')));
+        });
+    });
+</script>
 
 @yield('js')
 </body>

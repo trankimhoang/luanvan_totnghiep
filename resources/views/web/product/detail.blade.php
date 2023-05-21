@@ -23,9 +23,9 @@
                         <div class="product-details-images slider-navigation-1">
                             <div class="lg-image">
                                 <a class="popup-img venobox vbox-item"
-                                   href="{{ asset('theme/user/images/product/large-size/1.jpg') }}"
+                                   href="{{ $product->getImage() }}"
                                    data-gall="myGallery">
-                                    <img src="{{ asset('theme/user/images/product/large-size/1.jpg') }}"
+                                    <img src="{{ $product->getImage() }}"
                                          alt="product image">
                                 </a>
                             </div>
@@ -354,6 +354,8 @@
                productId = $('#product-child-select').val();
            }
 
+           $.LoadingOverlay('show');
+
            $.ajax({
               data: {
                   product_id: productId,
@@ -362,7 +364,7 @@
                method: 'get',
                url: @json(route('web.cart.add')),
                success: function(data){
-                   console.log(data);
+                   $.LoadingOverlay('hide');
 
                    if (data.hasOwnProperty('success') && data.success) {
                        $('.cart-item-count').text(data.data.qty);
