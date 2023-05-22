@@ -24,6 +24,14 @@
         </div>
 
         <div class="form-group pt-3">
+            <label for="status">Trạng thái:</label>
+            <select class="form-group p-lg-2" name="status">
+                <option value="1" @if($banner->status == 1) selected @endif>On</option>
+                <option value="0" @if($banner->status == 0) selected @endif>Off</option>
+            </select>
+        </div>
+
+        <div class="form-group pt-3">
             <button type="submit" class="btn btn-primary">Lưu</button>
         </div>
     </form>

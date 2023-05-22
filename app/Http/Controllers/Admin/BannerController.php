@@ -57,9 +57,7 @@ class BannerController extends Controller
                 $banner->save();
             }
 
-
-
-            return redirect()->route('admin.banners.edit');
+            return redirect()->route('admin.banners.index');
         } catch (\Exception $exception){
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
