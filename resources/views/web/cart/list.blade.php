@@ -68,7 +68,7 @@
                                     <ul>
                                         <li>Tổng <span id="total-cart">{{ $total }}</span></li>
                                     </ul>
-                                    <a href="#">Thanh toán</a>
+                                    <a href="{{ route('web.checkout') }}">Thanh toán</a>
                                 </div>
                             </div>
                         </div>

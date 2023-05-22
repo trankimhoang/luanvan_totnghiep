@@ -45,4 +45,6 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::get('cart', [\App\Http\Controllers\Web\CartController::class, 'listProductInCart'])->name('list.product.cart');
 
     Route::get('delete', [\App\Http\Controllers\Web\CartController::class, 'deleteProductCart'])->name('delete.product.cart');
+
+    Route::get('checkout', [\App\Http\Controllers\Web\CartController::class, 'checkout'])->name('checkout');
 });

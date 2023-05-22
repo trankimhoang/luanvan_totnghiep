@@ -99,4 +99,8 @@ class CartController extends Controller
         $total = Auth::guard('web')->user()->totalMoneyInCart();
         return view('web.cart.list', compact('listProduct', 'total'));
     }
+
+    public function checkout() {
+        return view('web.checkout.index');
+    }
 }
