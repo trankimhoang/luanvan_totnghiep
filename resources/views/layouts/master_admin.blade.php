@@ -172,7 +172,25 @@
                     </a>
                 </li>
             </ul>
-        </li><!-- End Components Nav -->
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-banner" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Banner</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-banner" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('admin.banners.index') }}">
+                        <i class="bi bi-circle"></i><span>Danh sách banner</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.banners.create') }}">
+                        <i class="bi bi-circle"></i><span>Thêm banner</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Components Nav --><!-- End Components Nav -->
 
     </ul>
 

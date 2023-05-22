@@ -22,3 +22,12 @@ function mapStatusProduct($status){
 
     return $array[$status] ?? '';
 }
+function mapStatusBanner($status){
+    $array = [
+        0 => 'Off',
+        1 => 'On'
+    ];
+
+    return $array[$status] ?? '';
+}
+

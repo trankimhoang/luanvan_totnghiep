@@ -42,5 +42,7 @@ Route::middleware(['auth:admin'])->group(function (){
     Route::get('render-attribute', [\App\Http\Controllers\Admin\ProductController::class, 'renderAttribute'])->name('renderAttribute');
     Route::get('render-attribute-product-child', [\App\Http\Controllers\Admin\ProductController::class, 'renderAttributeListProductChild'])
         ->name('renderAttributeProductChild');
+
+    Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
 });
 

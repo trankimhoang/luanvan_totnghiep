@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AdminUpdateRequest;
-use App\Http\Requests\Admin\CreateAdminRequest;
 use App\Models\Admin;
+use App\Models\Banner;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class AdminController extends Controller
+class BannerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,8 +20,8 @@ class AdminController extends Controller
      */
     public function index(): View
     {
-        $listAdmin = Admin::all();
-        return view('admin.admin.index', compact('listAdmin'));
+        $listBanner = Banner::all();
+        return view('admin.banner.index', compact('listBanner'));
     }
 
     /**
@@ -31,7 +31,7 @@ class AdminController extends Controller
      */
     public function create(): View
     {
-        return view('admin.admin.create');
+        return view('admin.banner.create');
     }
 
     /**
@@ -40,25 +40,27 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return RedirectResponse
      */
-    public function store(CreateAdminRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         try {
-            $admin = new Admin();
-            $admin->setAttribute('name', $request->get('name'));
-            $admin->setAttribute('email', $request->get('email'));
-            $admin->setAttribute('password', Hash::make($request->get('password')));
+            $data = $request->all();
 
-            $admin->save();
+            $banner = new Banner();
+            $banner->fill($data);
+
+            $banner->save();
 
             if ($request->has('image')) {
-                $imagePath = 'admin_images/' . $admin->getAttribute('id');
+                $imagePath = 'banner_images/' . $banner->getAttribute('id');
                 $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
-                $admin->setAttribute('image', $imageUrl);
-                $admin->save();
+                $banner->setAttribute('image', $imageUrl);
+                $banner->save();
             }
 
-            return redirect()->route('admin.admins.index')->with('success', 'Thêm thành công');
-        } catch (\Exception $exception) {
+
+
+            return redirect()->route('admin.banners.edit');
+        } catch (\Exception $exception){
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
         }
@@ -79,17 +81,17 @@ class AdminController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return View
+     * @return \Illuminate\Http\Response
      */
     public function edit($id): View
     {
-        $admin = Admin::find($id);
+        $banner = Banner::find($id);
 
-        if (empty($admin)) {
+        if (empty($banner)) {
             abort(404);
         }
 
-        return view('admin.admin.edit', compact('admin'));
+        return view('admin.banner.edit', compact('banner'));
     }
 
     /**
@@ -99,29 +101,23 @@ class AdminController extends Controller
      * @param  int  $id
      * @return RedirectResponse
      */
-    public function update(AdminUpdateRequest $request, $id): RedirectResponse
+    public function update(Request $request, $id): RedirectResponse
     {
         try {
-            $admin = Admin::find($id);
+            $banner = Banner::find($id);
             $data = $request->all();
 
-            if (!empty($data['password'])){
-                $data['password'] = Hash::make($request->get('password'));
-            } else {
-                unset($data['password']);
-            }
-
-            $admin->fill($data);
+            $banner->fill($data);
 
             if ($request->has('image')) {
-                $imagePath = 'admin_images/' . $admin->getAttribute('id');
+                $imagePath = 'banner_images/' . $banner->getAttribute('id');
                 $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
-                $admin->setAttribute('image', $imageUrl);
+                $banner->setAttribute('image', $imageUrl);
             }
 
-            $admin->save();
+            $banner->save();
 
-            return redirect()->route('admin.admins.index')->with('success', 'Sửa thành công');
+            return redirect()->route('admin.banners.index')->with('success', 'Sửa thành công');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());
@@ -137,8 +133,8 @@ class AdminController extends Controller
     public function destroy($id): RedirectResponse
     {
         try {
-            $admin = Admin::find($id);
-            $admin->delete();
+            $banner = Banner::find($id);
+            $banner->delete();
 
             return redirect()->back()->with('success', 'Xóa thành công');
         }catch (\Exception $exception){
