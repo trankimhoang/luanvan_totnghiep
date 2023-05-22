@@ -23,4 +23,12 @@ class HomeController extends Controller
 
         return view('web.search.index', compact('search', 'listProduct', 'listCategory'));
     }
+
+    public function about() {
+        return view('web.about.index');
+    }
+
+    public function contact() {
+        return view('web.contact.index');
+    }
 }

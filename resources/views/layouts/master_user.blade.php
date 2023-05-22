@@ -74,7 +74,7 @@
                                         <div class="ht-setting-trigger"><span>{{ \Illuminate\Support\Facades\Auth::guard('web')->user()->name }}</span></div>
                                         <div class="setting ht-setting">
                                             <ul class="ht-setting-list">
-                                                <li><a href="login-register.html">Tài khoản</a></li>
+                                                <li><a href="{{ route('web.profile') }}">Tài khoản</a></li>
                                                 <li><a href="{{ route('web.logout') }}">Đăng xuất</a></li>
                                             </ul>
                                         </div>
@@ -156,8 +156,8 @@
                             <nav>
                                 <ul>
                                     <li><a href="#">Trang chủ</a></li>
-                                    <li><a href="#">Về chúng tôi</a></li>
-                                    <li><a href="#">Liên hệ</a></li>
+                                    <li><a href="{{ route('web.about') }}">Về chúng tôi</a></li>
+                                    <li><a href="{{ route('web.contact') }}">Liên hệ</a></li>
                                 </ul>
                             </nav>
                         </div>

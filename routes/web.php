@@ -37,6 +37,10 @@ Route::get('category/{id}/detail', [\App\Http\Controllers\Web\CategoryController
 
 Route::get('search', [\App\Http\Controllers\Web\HomeController::class, 'search'])->name('search');
 
+Route::get('about', [\App\Http\Controllers\Web\HomeController::class, 'about'])->name('about');
+
+Route::get('contact', [\App\Http\Controllers\Web\HomeController::class, 'contact'])->name('contact');
+
 Route::get('add-cart', [\App\Http\Controllers\Web\CartController::class, 'addCart'])
     ->name('cart.add')
     ->middleware('isLoginWebAjax');
@@ -47,4 +51,7 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::get('delete', [\App\Http\Controllers\Web\CartController::class, 'deleteProductCart'])->name('delete.product.cart');
 
     Route::get('checkout', [\App\Http\Controllers\Web\CartController::class, 'checkout'])->name('checkout');
+
+    Route::get('profile', [\App\Http\Controllers\Web\ProfileController::class, 'showFormProfile'])->name('profile');
+    Route::post('profile/{id}', [\App\Http\Controllers\Web\ProfileController::class, 'profile'])->name('profile.post');
 });
