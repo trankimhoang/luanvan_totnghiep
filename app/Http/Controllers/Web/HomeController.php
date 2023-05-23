@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -12,8 +13,8 @@ class HomeController extends Controller
     public function index() {
         $listCategory = Category::all();
         $listProduct = Product::where('parent_id', '=', null)->where('status', '=', 1)->get();
-
-        return view('web.home.index', compact('listCategory', 'listProduct'));
+        $listBanner = Banner::where('status', 1)->get();
+        return view('web.home.index', compact('listCategory', 'listProduct', 'listBanner'));
     }
 
     public function search(Request $request){
