@@ -100,7 +100,4 @@ class CartController extends Controller
         return view('web.cart.list', compact('listProduct', 'total'));
     }
 
-    public function checkout() {
-        return view('web.checkout.index');
-    }
 }

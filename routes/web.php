@@ -50,7 +50,9 @@ Route::group(['middleware' => 'auth:web'], function () {
 
     Route::get('delete', [\App\Http\Controllers\Web\CartController::class, 'deleteProductCart'])->name('delete.product.cart');
 
-    Route::get('checkout', [\App\Http\Controllers\Web\CartController::class, 'checkout'])->name('checkout');
+    Route::post('create-order', [\App\Http\Controllers\Web\OrderController::class, 'createOrder'])->name('create.order');
+    Route::get('checkout', [\App\Http\Controllers\Web\OrderController::class, 'checkOut'])->name('checkout.order');
+    Route::get('order-success', [\App\Http\Controllers\Web\OrderController::class, 'success'])->name('success.order');
 
     Route::get('profile', [\App\Http\Controllers\Web\ProfileController::class, 'showFormProfile'])->name('profile');
     Route::post('profile/{id}', [\App\Http\Controllers\Web\ProfileController::class, 'profile'])->name('profile.post');
