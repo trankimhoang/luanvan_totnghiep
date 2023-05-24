@@ -44,5 +44,7 @@ Route::middleware(['auth:admin'])->group(function (){
         ->name('renderAttributeProductChild');
 
     Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
+
+    Route::get('order', [\App\Http\Controllers\Admin\OrderController::class, 'order'])->name('order');
 });
 
