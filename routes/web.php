@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// login with social
+Route::get('/redirect/{social}', [\App\Http\Controllers\Web\SocialAuthController::class, 'redirect'])->name('social.redirect');
+Route::get('/callback/{social}', [\App\Http\Controllers\Web\SocialAuthController::class, 'callback'])->name('social.callback');
+// end login with social
+
 Route::middleware(['guest:web'])->group(function () {
     Route::get('login', [\App\Http\Controllers\Web\AuthController::class, 'showFormLogin'])->name('login');
     Route::post('login', [\App\Http\Controllers\Web\AuthController::class, 'login'])->name('login.post');

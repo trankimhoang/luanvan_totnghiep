@@ -43,8 +43,15 @@
                                 <div class="col-md-4 mt-10 mb-20 text-left text-md-right">
                                     <a href="{{ route('web.forget.password.get') }}">Quên mật khẩu?</a>
                                 </div>
+
+
+
                                 <div class="col-md-12">
                                     <input type="submit" name="submit" class="btn btn-outline-dark w-100" style="background-color: #434e5b"  value="Đăng nhập">
+                                </div>
+
+                                <div class="col-12">
+                                    @include('web.include.social_login')
                                 </div>
                             </div>
                         </div>
