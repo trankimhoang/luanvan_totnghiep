@@ -6,7 +6,7 @@
         <div class="container">
             <div class="breadcrumb-content">
                 <ul>
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="{{ route('web.index') }}">Home</a></li>
                     <li class="active">Chi tiết sản phẩm</li>
                 </ul>
             </div>

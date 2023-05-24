@@ -1,5 +1,17 @@
 @extends('layouts.master_user')
 @section('content')
+    <!-- Begin Li's Breadcrumb Area -->
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="{{ route('web.index') }}">Trang chủ</a></li>
+                    <li class="active">Đặt hàng</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Li's Breadcrumb Area End Here -->
     <div class="checkout-area pt-60 pb-30">
         <div class="container">
             <div class="row">
@@ -11,26 +23,38 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="checkout-form-list">
-                                        <label>Họ tên:<span class="required">*</span></label>
+                                        <label>Họ tên:@include('admin.include.required_icon')</label>
                                         <input placeholder="" type="text" name="name" value="{{ \Illuminate\Support\Facades\Auth::guard('web')->user()->name }}">
+                                        @error('name')
+                                        <p class="alert alert-danger mt-2">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="checkout-form-list">
-                                        <label>Địa chỉ <span class="required">*</span></label>
+                                        <label>Địa chỉ @include('admin.include.required_icon')</label>
                                         <input placeholder="Địa chỉ" type="text" name="address" value="{{ \Illuminate\Support\Facades\Auth::guard('web')->user()->address }}">
+                                        @error('address')
+                                        <p class="alert alert-danger mt-2">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="checkout-form-list">
-                                        <label>Email:<span class="required">*</span></label>
+                                        <label>Email:@include('admin.include.required_icon')</label>
                                         <input placeholder="" type="email" name="email" value="{{ \Illuminate\Support\Facades\Auth::guard('web')->user()->email }}">
+                                        @error('email')
+                                        <p class="alert alert-danger mt-2">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="checkout-form-list">
-                                        <label>Số điện thoại:<span class="required">*</span></label>
+                                        <label>Số điện thoại:@include('admin.include.required_icon')</label>
                                         <input type="text" name="phone" value="{{ \Illuminate\Support\Facades\Auth::guard('web')->user()->phone }}">
+                                        @error('phone')
+                                        <p class="alert alert-danger mt-2">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -55,7 +79,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-
                                 @foreach($listProduct as $product)
                                     @if(!empty($listProductRequest[$product->id]['quantity']))
                                         <tr class="cart_item">
@@ -89,7 +112,6 @@
                                           <option value="ATM">ATM</option>
                                       </select>
                                    </div>
-
                                 </div>
                                 <div class="order-button-payment">
                                     <input value="Đặt hàng" type="submit" form="form-main">

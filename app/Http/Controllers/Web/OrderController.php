@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\CheckoutRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function createOrder(Request $request) {
+    public function createOrder(CheckoutRequest $request) {
         $user = Auth::guard('web')->user();
         $dataOrder = $request->except(['list_product', '_token']);
         $listProductRequest = $request->get('list_product');

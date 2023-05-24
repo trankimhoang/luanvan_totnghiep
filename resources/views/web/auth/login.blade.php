@@ -24,14 +24,14 @@
                                     <label>Email @include('admin.include.required_icon')</label>
                                     <input class="mb-0" name="email" type="email" placeholder="Email Address">
                                     @error('email')
-                                    <p class="alert alert-danger">{{ $message }}</p>
+                                    <p class="alert alert-danger mt-2">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-12 mb-20">
                                     <label>Mật khẩu @include('admin.include.required_icon')</label>
                                     <input class="mb-0" name="password" type="password" placeholder="Password">
                                     @error('password')
-                                    <p class="alert alert-danger">{{ $message }}</p>
+                                    <p class="alert alert-danger mt-2">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-md-8">
