@@ -38,11 +38,44 @@ class OrderController extends Controller
                 ->delete();
         }
 
+        // payment momo
+        if (!empty($dataOrder['payment_type']) && strtoupper($dataOrder['payment_type']) == 'MOMO') {
+            $payUrlMomo = createPayUrlMomo($orderId, totalMoneyOrder($orderId));
+
+            if (!empty($payUrlMomo)) {
+                return redirect()->to($payUrlMomo);
+            }
+        }
+
         return redirect()->route('web.success.order');
+    }
+
+    public function momoReturn(Request $request) {
+        $orderId = $request->get('orderId');
+        $orderId = explode('_', $orderId);
+        $orderId = $orderId[0] ?? null;
+        $payType = $request->get('payType');
+
+        if (!empty($orderId)) {
+            if (!empty($payType)) {
+                DB::table('orders')
+                    ->where('id', '=', $orderId)
+                    ->update([
+                        'status' => 'PAID'
+                    ]);
+                return redirect()->route('web.success.order');
+            }
+        }
+
+        return redirect()->route('web.error.order')->with('error', $request->get('message') ?? '');
     }
 
     public function success() {
         return view('web.order.success');
+    }
+
+    public function error() {
+        return view('web.order.error');
     }
 
     public function checkOut(Request $request) {

@@ -109,7 +109,7 @@
                                        <label for="payment_type">Phương thức thanh toán</label>
                                       <select class="form-control" name="payment_type" form="form-main">
                                           <option value="COD">COD</option>
-                                          <option value="ATM">ATM</option>
+                                          <option value="MOMO">MOMO</option>
                                       </select>
                                    </div>
                                 </div>
