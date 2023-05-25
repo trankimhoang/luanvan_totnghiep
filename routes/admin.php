@@ -33,6 +33,8 @@ Route::middleware(['auth:admin'])->group(function (){
         [\App\Http\Controllers\Admin\ProductController::class, 'renderProductChildNewRow']
     )->name('products.render-product-child-new-row');
 
+    Route::get('render_image_review', [\App\Http\Controllers\Admin\ProductController::class, 'renderImageReview'])->name('products.render_image_review');
+
     Route::resource('admins', \App\Http\Controllers\Admin\AdminController::class);
 
     Route::resource('attributes', \App\Http\Controllers\Admin\AttributeController::class);

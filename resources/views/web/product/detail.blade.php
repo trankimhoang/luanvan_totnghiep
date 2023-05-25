@@ -29,60 +29,26 @@
                                          alt="product image">
                                 </a>
                             </div>
-                            <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
-                                   href="{{ asset('theme/user/images/product/large-size/2.jpg') }}"
-                                   data-gall="myGallery">
-                                    <img src="{{ asset('theme/user/images/product/large-size/2.jpg') }}"
-                                         alt="product image">
-                                </a>
-                            </div>
-                            <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
-                                   href="{{ asset('theme/user/images/product/large-size/3.jpg') }}"
-                                   data-gall="myGallery">
-                                    <img src="{{ asset('theme/user/images/product/large-size/3.jpg') }}"
-                                         alt="product image">
-                                </a>
-                            </div>
-                            <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
-                                   href="{{ asset('theme/user/images/product/large-size/4.jpg') }}"
-                                   data-gall="myGallery">
-                                    <img src="{{ asset('theme/user/images/product/large-size/4.jpg') }}"
-                                         alt="product image">
-                                </a>
-                            </div>
-                            <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
-                                   href="{{ asset('theme/user/images/product/large-size/5.jpg') }}"
-                                   data-gall="myGallery">
-                                    <img src="{{ asset('theme/user/images/product/large-size/5.jpg') }}"
-                                         alt="product image">
-                                </a>
-                            </div>
-                            <div class="lg-image">
-                                <a class="popup-img venobox vbox-item"
-                                   href="{{ asset('theme/user/images/product/large-size/6.jpg') }}"
-                                   data-gall="myGallery">
-                                    <img src="{{ asset('theme/user/images/product/large-size/6.jpg') }}"
-                                         alt="product image">
-                                </a>
-                            </div>
+
+                            @if(!empty($listImage))
+                                @foreach($listImage as $image)
+                                    <div class="lg-image">
+                                        <a class="popup-img venobox vbox-item"
+                                           href="{{ $image->getImage() }}"
+                                           data-gall="myGallery">
+                                            <img src="{{ $image->getImage() }}">
+                                        </a>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                         <div class="product-details-thumbs slider-thumbs-1">
-                            <div class="sm-image"><img src="{{ asset('theme/user/images/product/small-size/1.jpg') }}"
-                                                       alt="product image thumb"></div>
-                            <div class="sm-image"><img src="{{ asset('theme/user/images/product/small-size/2.jpg') }}"
-                                                       alt="product image thumb"></div>
-                            <div class="sm-image"><img src="{{ asset('theme/user/images/product/small-size/3.jpg') }}"
-                                                       alt="product image thumb"></div>
-                            <div class="sm-image"><img src="{{ asset('theme/user/images/product/small-size/4.jpg') }}"
-                                                       alt="product image thumb"></div>
-                            <div class="sm-image"><img src="{{ asset('theme/user/images/product/small-size/5.jpg') }}"
-                                                       alt="product image thumb"></div>
-                            <div class="sm-image"><img src="{{ asset('theme/user/images/product/small-size/6.jpg') }}"
-                                                       alt="product image thumb"></div>
+                            <div class="sm-image"><img src="{{ $product->getImage() }}"></div>
+                            @if(!empty($listImage))
+                                @foreach($listImage as $image)
+                                    <div class="sm-image"><img src="{{ $image->getImage() }}"></div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                     <!--// Product Details Left -->

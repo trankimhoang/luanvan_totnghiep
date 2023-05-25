@@ -8,10 +8,12 @@ use App\Http\Requests\Admin\ProductUpdateRequest;
 use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
@@ -89,7 +91,7 @@ class ProductController extends Controller {
                     ]);
                 }
             }
-            
+
             $product = new Product();
             $product->setAttribute('name', $request->get('name'));
             $product->setAttribute('description', $request->get('description'));
@@ -102,6 +104,8 @@ class ProductController extends Controller {
             $product->setAttribute('attr_ids', implode(',', $listAttr));
 
             $product->save();
+
+            $this->addImages($product->getAttribute('id'));
 
             $this->updateAttributeNotPrivate($product->getAttribute('id'), $request->toArray());
             $this->addListProductChildNew($product->getAttribute('id'));
@@ -145,7 +149,7 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id): View {
-        $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
+        $product = Product::with(['listProductChild', 'listAttribute', 'listImage'])->find($id);
         $listAttr = Attribute::all();
         $listCategory = Category::all();
         $listAttributeIdSelected = explode(',', $product->getAttribute('attr_ids'));
@@ -214,6 +218,46 @@ class ProductController extends Controller {
         }
     }
 
+    private function addImages($id) {
+        $request = request();
+
+        if (!empty($request->file('image_news'))) {
+            $arrayInsertImage = [];
+
+            foreach ($request->file('image_news') as $image) {
+                $imageUrl = updateImage($image, time() * rand(1111, 8888), 'product_images/' . $id);
+
+                if (!empty($imageUrl)) {
+                    $arrayInsertImage[] = [
+                        'image' => $imageUrl,
+                        'product_id' => $id,
+                        'created_at' => Carbon::now()
+                    ];
+                }
+            }
+
+            DB::table('product_images')->insert($arrayInsertImage);
+        }
+
+        $dataImagesRemove = $request->get('remove_images');
+
+        if (!empty($dataImagesRemove)) {
+            $listImagePath = DB::table('product_images')
+                ->whereIn('id', $dataImagesRemove)
+                ->pluck('image');
+
+            if (!empty($listImagePath)) {
+                foreach ($listImagePath as $path) {
+                    File::delete(public_path($path));
+                }
+
+                DB::table('product_images')
+                    ->whereIn('id', $dataImagesRemove)
+                    ->delete();
+            }
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -226,6 +270,8 @@ class ProductController extends Controller {
             $data = $request->all();
 
             $listProductChild = [];
+
+            $this->addImages($id);
 
             if (!empty($data['list_product_child'])) {
                 foreach ($data['list_product_child'] as $key => $value) {
@@ -421,5 +467,11 @@ class ProductController extends Controller {
             ->get();
 
         return view('admin.product._render_attribute_list_product_child', compact('listAttribute'));
+    }
+
+    public function renderImageReview(Request $request) {
+        $imageUrl = $request->get('image_url');
+
+        return view('admin.product.image_item', compact('imageUrl'));
     }
 }

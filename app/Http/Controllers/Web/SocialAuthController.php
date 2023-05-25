@@ -19,7 +19,7 @@ class SocialAuthController extends Controller
 
     public function callback($social)
     {
-        $user = $this->createOrGetUser(Socialite::driver($social)->user(), $social);
+        $user = $this->createOrGetUser(Socialite::driver($social)->stateless()->user(), $social);
         Auth::guard('web')->login($user, true);
 
         return redirect('/');

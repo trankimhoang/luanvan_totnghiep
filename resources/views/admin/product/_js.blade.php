@@ -6,6 +6,46 @@
 </style>
 <script>
     $(document).ready(function () {
+        $('#btn-add-image').click(function () {
+            $('#container-images').append(`<input type="file" name="image_news[]" class="image_new" multiple="multiple" accept="image/png, image/gif, image/jpeg" style="display: none;">`);
+            $('.image_new').click();
+        });
+
+        $('body').on('change', '.image_new', function () {
+            for (let i = 0; i < this.files.length; i++) {
+                let img_url = URL.createObjectURL(event.target.files[i]);
+                let fileType = this.files[i]['type'];
+                let validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+
+                if (validImageTypes.includes(fileType)) {
+                    $.ajax({
+                        url: @json(route('admin.products.render_image_review')),
+                        method: 'GET',
+                        data: {
+                            image_url: img_url,
+                            order: $('#container-images .image-order').length + 1
+                        },
+                        success: function (data) {
+                            $('#container-images').append(data).ready(function () {
+                                $('.image_new').detach().appendTo("#container-images .image-item:last");
+                                $('.image_new').removeClass('image_new');
+                            });
+                        }
+                    });
+                }
+            }
+        });
+
+        $('body').on('click', '.btn-remove-image', function () {
+            let id = $(this).attr('data-id') ?? '';
+
+            if (id != '') {
+                $('#form-main').append(`<input type="hidden" name="remove_images[]" value="${id}">`);
+            }
+
+            $(this).parents('.image-item').remove();
+        });
+
         var dataHtmlProductChildLisAttr = '';
         const listAttrValueForListProductChild = @json($listAttrValueForListProductChild ?? []);
 

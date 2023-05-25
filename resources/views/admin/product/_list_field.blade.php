@@ -22,6 +22,24 @@
 </div>
 
 <div class="form-group pt-3">
+    <label for="category_id">Danh sách hình</label>
+    <div id="container-images" class="row mb-3">
+        @if(!empty($product) && !empty($product->listImage))
+            @foreach($product->listImage as $image)
+                @include('admin.product.image_item', ['imageUrl' => $image->getImage(), 'id' => $image->id])
+            @endforeach
+        @endif
+    </div>
+    <div>
+        <button id="btn-add-image" class="btn btn-small btn-primary" type="button">
+            Thêm
+        </button>
+    </div>
+    <p class="alert alert-danger tag-error" id="category_id-error"></p>
+</div>
+
+
+<div class="form-group pt-3">
     <label for="category_id">Thuộc tính @include('admin.include.required_icon')</label>
     <select class="js-example-basic-multiple form-control form-select" name="list_attr[]" multiple="multiple" id="list_attribute">
         @foreach($listAttr as $attr)

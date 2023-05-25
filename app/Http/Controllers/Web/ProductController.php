@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     public function detail($id){
-        $product = Product::with(['listProductChild'])->find($id);
-        return view('web.product.detail', compact('product'));
+        $product = Product::with(['listProductChild', 'listImage'])->find($id);
+        $listImage = $product->listImage;
+
+        return view('web.product.detail', compact('product', 'listImage'));
     }
 }
