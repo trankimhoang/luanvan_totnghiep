@@ -24,10 +24,10 @@ class CheckoutRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|alpha',
             'address' => 'required',
             'email' => 'required|email',
-            'phone' => 'required'
+            'phone' => 'required|digits:10'
         ];
     }
 }

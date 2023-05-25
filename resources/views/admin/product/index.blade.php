@@ -16,6 +16,7 @@
             <th>ID</th>
             <th>Tên sản phẩm</th>
             <th>Ảnh đại diện</th>
+            <th>Chuyên mục</th>
             <th>Mô tả</th>
             <th>Giá bán</th>
             <th>Giá KM</th>
@@ -30,6 +31,7 @@
                 <td>
                     <img src="{{ $product->getImage() }}" alt="" width="128px" style="text-align: center">
                 </td>
+                <td>{{ $product->Category->name }}</td>
                 <td>{{ $product->description }}</td>
                 <td>{{ $product->price }}</td>
                 <td>{{ $product->price_new }}</td>
