@@ -46,12 +46,9 @@
             $(this).parents('.image-item').remove();
         });
 
-        var dataHtmlProductChildLisAttr = '';
+        let dataHtmlProductChildLisAttr = '';
         const listAttrValueForListProductChild = @json($listAttrValueForListProductChild ?? []);
-
-        @if(empty($product))
-            $('#btn-add-product-child-new').prop('disabled', true);
-        @endif
+        $('#btn-add-product-child-new').prop('disabled', true);
         reloadStt();
 
         function reloadStt() {
@@ -106,27 +103,39 @@
         function renderAttrFieldParent() {
             const listAttrSelect = select2OptionsSelected($('#list_attribute'));
 
+            $(`#list_attribute_private option`).prop('disabled',false);
+
+            listAttrSelect.forEach(function (item) {
+                $(`#list_attribute_private option[value='${item}']`).prop('disabled',true);
+            });
+
+            $.LoadingOverlay('show');
+
+            $.ajax({
+                method: 'get',
+                url: @json(route('admin.renderAttribute')),
+                data: {
+                    attribute_ids: listAttrSelect,
+                    product_id: $('#id').val()
+                },
+                success: function (data) {
+                    $('#div_list_attribute').html(data);
+                    $.LoadingOverlay('hide');
+                }
+            });
+        }
+
+        function renderAttrFieldForChild() {
+            const listAttrSelect = select2OptionsSelected($('#list_attribute_private'));
+
+            $(`#list_attribute option`).prop('disabled',false);
+
+            listAttrSelect.forEach(function (item) {
+                $(`#list_attribute option[value='${item}']`).prop('disabled',true);
+            });
+
             if (listAttrSelect.length > 0) {
                 $.LoadingOverlay('show');
-                let countSuccess = 0;
-
-                $.ajax({
-                    method: 'get',
-                    url: @json(route('admin.renderAttribute')),
-                    data: {
-                        attribute_ids: listAttrSelect,
-                        product_id: $('#id').val()
-                    },
-                    success: function (data) {
-                        countSuccess++;
-                        $('#div_list_attribute').html(data);
-
-                        if (countSuccess === 2) {
-                            $.LoadingOverlay('hide');
-                        }
-                    }
-                });
-
                 $.ajax({
                     method: 'get',
                     url: @json(route('admin.renderAttributeProductChild')),
@@ -134,7 +143,7 @@
                         attribute_ids: listAttrSelect,
                     },
                     success: function (data) {
-                        countSuccess++;
+                        $.LoadingOverlay('hide');
                         data = data.trim();
 
                         $('.product-child-list-attr').html(data);
@@ -148,18 +157,17 @@
                             $('#btn-add-product-child-new').prop('disabled', false);
                             $('#table-product-child tr:not(:eq(0))').show();
                         }
-
-                        if (countSuccess === 2) {
-                            $.LoadingOverlay('hide');
-                        }
                     }
                 });
-
             }
         }
 
         $('#list_attribute').on('change', function (e) {
             renderAttrFieldParent();
+        });
+
+        $('#list_attribute_private').on('change', function (e) {
+            renderAttrFieldForChild();
         });
 
         $('body').on('change', '.input-attr-product-child', function () {
@@ -171,6 +179,7 @@
         $('.js-example-basic-multiple').select2();
 
         $("#list_attribute").trigger("change");
+        $("#list_attribute_private").trigger("change");
 
 
         $('body').on('click', '.btn-delete-product-child', function () {
@@ -223,29 +232,39 @@
             }).then(function (response) {
                 if (response.data.success) {
                     window.location.replace(response.data.url);
-                } else if (response.data.error_product_exists) {
-                    $('#div-error-product-child-attr').html('');
+                } else {
                     $.LoadingOverlay('hide');
 
-                    console.log(response.data.error_product_exists);
+                    if (response.data.error_attr_config) {
+                        alert(response.data.error_attr_config);
+                    } else if (response.data.error_product_exists) {
+                        $('#div-error-product-child-attr').html('');
+                        console.log(response.data.error_product_exists);
 
-                    for (const [key, value] of Object.entries(response.data.error_product_exists)) {
+                        for (const [key, value] of Object.entries(response.data.error_product_exists)) {
+                            let errorRow = [];
+
+                            value.forEach(function (item) {
+                                const stt = $(`.product-child-list-attr[data-id='${item}']`).attr('stt');
+                                errorRow.push(stt);
+                            });
+
+                            $('#div-error-product-child-attr').append(`<p class="text-danger">Dòng ${errorRow.join(',')} đang bị trùng danh sách thuộc tính</p>`);
+                        }
+
+                        document.getElementById(`div-error-product-child-attr`).scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    } else if (response.data.error_product_child_empty) {
                         let errorRow = [];
 
-                        value.forEach(function (item) {
-                            const stt = $(`.product-child-list-attr[data-id='${item}']`).attr('stt');
-                            errorRow.push(stt);
-                        });
+                        for (const [key, value] of Object.entries(response.data.error_product_child_empty)) {
+                            errorRow.push(value);
+                        }
 
-                        console.log(errorRow);
-
-                        $('#div-error-product-child-attr').append(`<p class="text-danger">Dòng ${errorRow.join(',')} đang bị trùng danh sách thuộc tính</p>`)
+                        $('#div-error-product-child-empty').html(`<p class="text-danger">Dòng ${errorRow.join(',')} đang bỏ trống các trường bắt buộc</p>`)
                     }
-
-                    document.getElementById(`div-error-product-child-attr`).scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
                 }
             }).catch(function (err) {
                 let mess_errors = err.response.data.errors;

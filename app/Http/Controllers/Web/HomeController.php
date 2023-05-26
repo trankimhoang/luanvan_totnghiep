@@ -7,12 +7,13 @@ use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function index() {
         $listCategory = Category::all();
-        $listProduct = Product::where('parent_id', '=', null)->where('status', '=', 1)->get();
+        $listProduct = Product::with(['Category'])->where('parent_id', '=', null)->where('status', '=', 1)->get();
         $listBanner = Banner::where('status', 1)->get();
         return view('web.home.index', compact('listCategory', 'listProduct', 'listBanner'));
     }
@@ -20,9 +21,20 @@ class HomeController extends Controller
     public function search(Request $request){
         $search = $request->get('search');
         $listCategory = Category::all();
-        $listProduct = Product::where('name', 'like', '%' . $search . '%')->get();
 
-        return view('web.search.index', compact('search', 'listProduct', 'listCategory'));
+        $listProduct = Product::where('name', 'like', '%' . $search . '%');
+
+        $listProductIdsByAttrSearch = getListProductIdsByAttrSearch();
+
+        if (!empty($listProductIdsByAttrSearch)) {
+            $listProduct->whereIn('id', $listProductIdsByAttrSearch);
+        }
+
+        $listProduct = $listProduct->get();
+
+        $listBanner = Banner::where('status', 1)->get();
+
+        return view('web.search.index', compact('search', 'listProduct', 'listCategory', 'listBanner'));
     }
 
     public function about() {

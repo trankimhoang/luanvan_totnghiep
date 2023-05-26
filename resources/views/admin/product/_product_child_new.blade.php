@@ -18,28 +18,41 @@
         <div class="form-group row mb-2 align-items-center">
             <div class="col-12">
                 @if(!empty($productChild))
-                    {{ $productIdNew }}
+                    <span class="text-success">Đã tồn tại</span>
                 @else
-                    <span class="text-danger">Mới</span>
+                    <span class="text-danger">Thêm mới</span>
                 @endif
             </div>
         </div>
     </td>
-    <td>
+    <td valign="middle">
         <div class="product-child-list-attr" data-id="{{ $productIdNew }}" data-is-old="{{ !empty($productChild) ? 1 : 0 }}">
         </div>
     </td>
-    <td>
+    <td valign="middle" class="text-center">
+        <div class="row align-items-center">
+            <div class="col-5">
+                @if(!empty($productChild))
+                    <img width="64" src="{{ $productChild->getImage() }}" alt="">
+                @endif
+            </div>
+            <div class="col-7">
+                <input type="file" class="form-control"
+                       name="{{ $nameInput }}[{{ $productIdNew }}][image]">
+            </div>
+        </div>
+    </td>
+    <td valign="middle">
         <input type="text" class="form-control"
                name="{{ $nameInput }}[{{ $productIdNew }}][price]"
                value="{{ $productChild->price ?? '' }}">
     </td>
-    <td>
+    <td valign="middle">
         <input type="text" class="form-control"
                name="{{ $nameInput }}[{{ $productIdNew }}][quantity]"
                value="{{ $productChild->quantity ?? '' }}">
     </td>
-    <td class="text-center">
+    <td class="text-center" valign="middle">
         <button type="button"
                 @if(!empty($productChild))
                     data-id="{{ $productIdNew }}"

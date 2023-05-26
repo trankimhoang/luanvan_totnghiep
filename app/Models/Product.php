@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static find(int $id)
+ */
 class Product extends Model
 {
     use HasFactory;
@@ -19,14 +22,15 @@ class Product extends Model
         'quantity',
         'image',
         'status',
-        'category_id'
+        'category_id',
+        'type'
     ];
 
-    public function listProductChild() {
+    public function listProductChild(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(Product::class, 'parent_id')->with(['listAttribute']);
     }
 
-    public function attributeTitle() {
+    public function attributeTitle(): string {
         $listAttr = $this->listAttribute;
         $title = '';
 
@@ -41,7 +45,7 @@ class Product extends Model
         return $title;
     }
 
-    public function listAttribute() {
+    public function listAttribute(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
         return $this->belongsToMany(
             Attribute::class,
             'values',
@@ -58,11 +62,30 @@ class Product extends Model
         return asset('images/not_found.jpg');
     }
 
-    public function Category() {
+    public function Category(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
         return $this->belongsTo(Category::class);
     }
 
-    public function listImage() {
+    public function listImage(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(ProductImage::class, 'product_id');
+    }
+
+    public function getArrayAttrIds($isPrivate = 0): array {
+        return $this->belongsToMany(
+            Attribute::class,
+            'product_attr_config',
+            'product_id',
+            'attribute_id'
+        )->where('product_attr_config.is_private', '=', $isPrivate)
+            ->pluck('attribute_id')
+            ->toArray();
+    }
+
+    public function getListProductSameCategory() {
+        return Product::with(['Category'])
+            ->where('category_id', '=', $this->getAttribute('category_id'))
+            ->where('id', '!=', $this->getAttribute('i'))
+            ->where('parent_id', '=', null)
+            ->get();
     }
 }

@@ -95,11 +95,11 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  AdminUpdateRequest  $request
      * @param  int  $id
      * @return RedirectResponse
      */
-    public function update(AdminUpdateRequest $request, $id): RedirectResponse
+    public function update(AdminUpdateRequest $request, int $id): RedirectResponse
     {
         try {
             $admin = Admin::find($id);
@@ -121,7 +121,7 @@ class AdminController extends Controller
 
             $admin->save();
 
-            return redirect()->route('admin.admins.index')->with('success', 'Sửa thành công');
+            return redirect()->route('admin.admins.edit', $id)->with('success', 'Sửa thành công');
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return redirect()->back()->with('error', $exception->getMessage());

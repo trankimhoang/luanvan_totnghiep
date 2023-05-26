@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('attributes', function (Blueprint $table) {
-            $table->boolean('is_private')->default(0);
+        Schema::table('products', function (Blueprint $table) {
+            $table->string('type')->default('simple');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('attributes', function (Blueprint $table) {
-            $table->dropColumn('is_private');
+        Schema::table('products', function (Blueprint $table) {
+            //
         });
     }
 };

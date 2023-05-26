@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -41,6 +42,50 @@ class ProductController extends Controller {
         return view('admin.product.create', compact('listCategory', 'listAttr'));
     }
 
+    private function validateListProductChild(): array {
+        $data = request()->all();
+        $listProductChild = [];
+
+        if (!empty($data['list_product_child'])) {
+            foreach ($data['list_product_child'] as $key => $value) {
+                $listProductChild[$key] = $value;
+            }
+        }
+
+        if (!empty($data['list_product_child_new'])) {
+            foreach ($data['list_product_child_new'] as $key => $value) {
+                $listProductChild[$key] = $value;
+            }
+        }
+
+        if (!empty($listProductChild)) {
+            $listProductChildDataAttr = [];
+
+            foreach ($listProductChild as $productId => $productChild) {
+                $listAttr = $productChild['list_attr'] ?? '';
+                $listAttr = array_values($listAttr);
+                $listAttr = implode('_', $listAttr);
+
+                $listProductChildDataAttr[$listAttr][] = $productId;
+            }
+
+            if (!empty($listProductChildDataAttr)) {
+                foreach ($listProductChildDataAttr as $listAttr => $listProductId) {
+                    if (count($listProductId) == 1) {
+                        unset($listProductChildDataAttr[$listAttr]);
+                    }
+                }
+            }
+
+            if (!empty($listProductChildDataAttr)) {
+                return $listProductChildDataAttr;
+            }
+        }
+
+        return [];
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -49,47 +94,29 @@ class ProductController extends Controller {
      */
     public function store(ProductStoreRequest $request): JsonResponse {
         try {
-            $data = $request->all();
+            $listProductChildError =  $this->validateListProductChild();
 
-            $listProductChild = [];
-
-            if (!empty($data['list_product_child'])) {
-                foreach ($data['list_product_child'] as $key => $value) {
-                    $listProductChild[$key] = $value;
-                }
+            if (!empty($listProductChildError)) {
+                return response()->json([
+                    'success' => false,
+                    'error_product_exists' => $listProductChildError
+                ]);
             }
 
-            if (!empty($data['list_product_child_new'])) {
-                foreach ($data['list_product_child_new'] as $key => $value) {
-                    $listProductChild[$key] = $value;
-                }
+            if ($this->isErrorAttrConfig()) {
+                return response()->json([
+                    'success' => false,
+                    'error_attr_config' => 'Thuộc tính chung và riêng không được trùng nhau'
+                ]);
             }
 
-            if (!empty($listProductChild)) {
-                $listProductChildDataAttr = [];
+            $listProductChildFieldEmptyError = $this->validateListProductChildField();
 
-                foreach ($listProductChild as $productId => $productChild) {
-                    $listAttr = $productChild['list_attr'] ?? '';
-                    $listAttr = array_values($listAttr);
-                    $listAttr = implode('_', $listAttr);
-
-                    $listProductChildDataAttr[$listAttr][] = $productId;
-                }
-
-                if (!empty($listProductChildDataAttr)) {
-                    foreach ($listProductChildDataAttr as $listAttr => $listProductId) {
-                        if (count($listProductId) == 1) {
-                            unset($listProductChildDataAttr[$listAttr]);
-                        }
-                    }
-                }
-
-                if (!empty($listProductChildDataAttr)) {
-                    return response()->json([
-                        'success' => false,
-                        'error_product_exists' => $listProductChildDataAttr
-                    ]);
-                }
+            if (!empty($listProductChildFieldEmptyError)) {
+                return response()->json([
+                    'success' => false,
+                    'error_product_child_empty' => $listProductChildFieldEmptyError
+                ]);
             }
 
             $product = new Product();
@@ -99,14 +126,13 @@ class ProductController extends Controller {
             $product->setAttribute('price', $request->get('price'));
             $product->setAttribute('quantity', $request->get('quantity'));
             $product->setAttribute('category_id', $request->get('category_id'));
-
-            $listAttr = $request->get('list_attr');
-            $product->setAttribute('attr_ids', implode(',', $listAttr));
-
+            $product->setAttribute('type', $request->get('type'));
             $product->save();
 
-            $this->addImages($product->getAttribute('id'));
+            $data = $request->toArray();
 
+            $this->addImages($product->getAttribute('id'));
+            $this->updateAttrConfig($product->getAttribute('id'), $data['list_attr'] ?? [], $data['list_attr_private'] ?? []);
             $this->updateAttributeNotPrivate($product->getAttribute('id'), $request->toArray());
             $this->addListProductChildNew($product->getAttribute('id'));
 
@@ -133,26 +159,16 @@ class ProductController extends Controller {
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id) {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function edit($id): View {
+    public function edit(int $id): View {
         $product = Product::with(['listProductChild', 'listAttribute', 'listImage'])->find($id);
         $listAttr = Attribute::all();
         $listCategory = Category::all();
-        $listAttributeIdSelected = explode(',', $product->getAttribute('attr_ids'));
+        $listAttributeIdSelected = $product->getArrayAttrIds(1);
         $listProductId = DB::table('products')
             ->where('parent_id', '=', $id)
             ->pluck('id')->toArray();
@@ -200,6 +216,15 @@ class ProductController extends Controller {
                 $productChildNew['parent_id'] = $id;
                 $productChildNewId = DB::table('products')
                     ->insertGetId($productChildNew);
+
+                if (!empty($productChildNew['image'])) {
+                    $imagePath = updateImage($productChildNew['image'], 'avatar', 'product_images/' . $productChildNewId);
+                    DB::table('products')
+                        ->where('id', '=', $productChildNewId)
+                        ->update([
+                            'image' =>  $imagePath
+                        ]);
+                }
 
                 if (!empty($listAttr)) {
                     foreach ($listAttr as $attrId => $attrValue) {
@@ -258,6 +283,86 @@ class ProductController extends Controller {
         }
     }
 
+    private function updateAttrConfig($id, $listAttr, $listAttrPrivate) {
+        DB::table('product_attr_config')
+            ->where('product_id', '=', $id)
+            ->delete();
+        $arrayInsert = [];
+
+        if (!empty($listAttr)) {
+            foreach ($listAttr as $item) {
+                $arrayInsert[] = [
+                    'product_id' => $id,
+                    'attribute_id' => $item,
+                    'is_private' => 0
+                ];
+            }
+        }
+
+        if (!empty($listAttrPrivate)) {
+            foreach ($listAttrPrivate as $item) {
+                $arrayInsert[] = [
+                    'product_id' => $id,
+                    'attribute_id' => $item,
+                    'is_private' => 1
+                ];
+            }
+        }
+
+        if (!empty($arrayInsert)) {
+            DB::table('product_attr_config')->insert($arrayInsert);
+        }
+    }
+
+    private function isErrorAttrConfig(): bool {
+        $data = request();
+        $listAttr = $data['list_attr'] ?? [];
+        $listAttrPrivate = $data['list_attr_private'] ?? [];
+        $result = array_intersect($listAttr, $listAttrPrivate);
+
+        return !empty($result);
+    }
+
+    private function validateListProductChildField(): array {
+        $data = request();
+        $listProductChild = [];
+
+        if (!empty($data['list_product_child'])) {
+            foreach ($data['list_product_child'] as $item) {
+                $listProductChild[] = $item;
+            }
+        }
+
+        if (!empty($data['list_product_child_new'])) {
+            foreach ($data['list_product_child_new'] as $item) {
+                $listProductChild[] = $item;
+            }
+        }
+
+        $listProductChildEmptyRows = [];
+
+        foreach ($listProductChild as $key => $item) {
+            $isEmptyAttr = false;
+
+            if (!empty($item['list_attr'])) {
+                foreach ($item['list_attr'] as $attr) {
+                    if (empty($attr)) {
+                        $isEmptyAttr = true;
+                        break;
+                    }
+                }
+            } else {
+                $isEmptyAttr = true;
+            }
+
+            if (empty($item['price']) || empty($item['quantity']) || $isEmptyAttr) {
+                $listProductChildEmptyRows[] = $key + 1;
+            }
+        }
+
+        return $listProductChildEmptyRows;
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -268,51 +373,33 @@ class ProductController extends Controller {
     public function update(ProductUpdateRequest $request, int $id): JsonResponse {
         try {
             $data = $request->all();
+            $listProductChildError =  $this->validateListProductChild();
 
-            $listProductChild = [];
+            if (!empty($listProductChildError)) {
+                return response()->json([
+                    'success' => false,
+                    'error_product_exists' => $listProductChildError
+                ]);
+            }
+
+            if ($this->isErrorAttrConfig()) {
+                return response()->json([
+                    'success' => false,
+                    'error_attr_config' => 'Thuộc tính chung và riêng không được trùng nhau'
+                ]);
+            }
+
+            $listProductChildFieldEmptyError = $this->validateListProductChildField();
+
+            if (!empty($listProductChildFieldEmptyError)) {
+                return response()->json([
+                    'success' => false,
+                    'error_product_child_empty' => $listProductChildFieldEmptyError
+                ]);
+            }
 
             $this->addImages($id);
-
-            if (!empty($data['list_product_child'])) {
-                foreach ($data['list_product_child'] as $key => $value) {
-                    $listProductChild[$key] = $value;
-                }
-            }
-
-            if (!empty($data['list_product_child_new'])) {
-                foreach ($data['list_product_child_new'] as $key => $value) {
-                    $listProductChild[$key] = $value;
-                }
-            }
-
-            if (!empty($listProductChild)) {
-                $listProductChildDataAttr = [];
-
-                foreach ($listProductChild as $productId => $productChild) {
-                    $listAttr = $productChild['list_attr'] ?? '';
-                    $listAttr = array_values($listAttr);
-                    $listAttr = implode('_', $listAttr);
-
-                    $listProductChildDataAttr[$listAttr][] = $productId;
-                }
-
-                if (!empty($listProductChildDataAttr)) {
-                    foreach ($listProductChildDataAttr as $listAttr => $listProductId) {
-                        if (count($listProductId) == 1) {
-                            unset($listProductChildDataAttr[$listAttr]);
-                        }
-                    }
-                }
-
-                if (!empty($listProductChildDataAttr)) {
-                    return response()->json([
-                        'success' => false,
-                        'error_product_exists' => $listProductChildDataAttr
-                    ]);
-                }
-            }
-
-
+            $this->updateAttrConfig($id, $data['list_attr'] ?? [], $data['list_attr_private'] ?? []);
             $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
             $product->fill($data);
 
@@ -321,22 +408,8 @@ class ProductController extends Controller {
                 $imageUrl = updateImage($request->file('image'), 'avatar', $imagePath);
                 $product->setAttribute('image', $imageUrl);
             }
-            $listAttr = $request->get('list_attr');
-            $product->setAttribute('attr_ids', implode(',', $listAttr));
-
-            $isAttrHavePrivate = DB::table('attributes')
-                ->whereIn('id', $listAttr)
-                ->where('is_private', '=', 1)
-                ->exists();
-
-            if (!$isAttrHavePrivate) {
-                DB::table('products')
-                    ->where('parent_id', '=', $id)
-                    ->delete();
-            }
 
             $product->save();
-
             $this->updateAttributeNotPrivate($id, $data);
 
             // update product child
@@ -357,6 +430,11 @@ class ProductController extends Controller {
                 foreach ($listProductChild as $productChildId => $productChild) {
                     $listAttr = $productChild['list_attr'] ?? [];
                     $productUpdateData = [];
+
+                    if (!empty($productChild['image'])) {
+                        $imagePath = updateImage($productChild['image'],'avatar', 'product_images/' . $productChildId);
+                        $productUpdateData['image'] = $imagePath;
+                    }
 
                     if (!empty($productChild['price'])) {
                         $productUpdateData['price'] = $productChild['price'];
@@ -408,7 +486,7 @@ class ProductController extends Controller {
      * @param int $id
      * @return RedirectResponse
      */
-    public function destroy($id): RedirectResponse {
+    public function destroy(int $id): RedirectResponse {
         try {
             $admin = Product::find($id);
             $admin->delete();
@@ -419,15 +497,14 @@ class ProductController extends Controller {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-
-    public function renderProductChildNewRow() {
+    public function renderProductChildNewRow(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application {
         $productIdNew = time() + rand(11111, 9999999) + rand(22222, 999999);
         $listAttr = Attribute::all()->toArray();
 
         return view('admin.product._product_child_new', compact('productIdNew', 'listAttr'));
     }
 
-    public function renderAttribute(Request $request) {
+    public function renderAttribute(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|string|\Illuminate\Contracts\Foundation\Application {
         $listAttrId = $request->get('attribute_ids');
 
         if (empty($listAttrId)) {
@@ -454,7 +531,7 @@ class ProductController extends Controller {
         return view('admin.product._render_attribute', compact('listAttribute', 'listAttributeValue'));
     }
 
-    public function renderAttributeListProductChild(Request $request) {
+    public function renderAttributeListProductChild(Request $request): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|string|\Illuminate\Contracts\Foundation\Application {
         $listAttrId = $request->get('attribute_ids');
 
         if (empty($listAttrId)) {
@@ -463,13 +540,11 @@ class ProductController extends Controller {
 
         $listAttribute = DB::table('attributes')
             ->whereIn('id', $listAttrId)
-            ->where('is_private', '=', 1)
             ->get();
 
         return view('admin.product._render_attribute_list_product_child', compact('listAttribute'));
     }
-
-    public function renderImageReview(Request $request) {
+    public function renderImageReview(Request $request): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application {
         $imageUrl = $request->get('image_url');
 
         return view('admin.product.image_item', compact('imageUrl'));

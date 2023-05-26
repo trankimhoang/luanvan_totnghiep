@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -11,7 +13,16 @@ class CategoryController extends Controller
     public function categoryDetail(Request $request, $id){
         $listCategory = Category::all();
         $category = Category::find($id);
-        $listProduct = $category->products;
-        return view('web.category.detail', compact('category', 'listProduct', 'listCategory'));
+        $listProduct = Product::with(['Category'])->where('category_id', $id);
+        $listProductIdsByAttrSearch = getListProductIdsByAttrSearch();
+
+        if (!empty($listProductIdsByAttrSearch)) {
+            $listProduct->whereIn('id', $listProductIdsByAttrSearch);
+        }
+
+        $listProduct = $listProduct->get();
+        $listBanner = Banner::where('status', 1)->get();
+
+        return view('web.category.detail', compact('category', 'listProduct', 'listCategory', 'listBanner'));
     }
 }

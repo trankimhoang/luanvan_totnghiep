@@ -5,7 +5,12 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - NiceAdmin Bootstrap Template</title>
+    @hasSection('title')
+        <title>@yield('title') - Admin - {{ env('APP_NAME') }}</title>
+    @else
+        <title>Admin - {{ env('APP_NAME') }}</title>
+    @endif
+
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -38,7 +43,7 @@
     <div class="d-flex align-items-center justify-content-between">
         <a href="index.html" class="logo d-flex align-items-center">
             <img src="{{ asset('theme/admin/assets/img/logo.png') }}" alt="">
-            <span class="d-none d-lg-block">NiceAdmin</span>
+            <span class="d-none d-lg-block">{{ env('APP_NAME') }}</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -56,7 +61,7 @@
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
                         <h6>{{ \Illuminate\Support\Facades\Auth::guard('admin')->user()->name }}</h6>
-                        <span>Manager</span>
+                        <span>Quản trị viên</span>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
@@ -65,7 +70,7 @@
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.admins.edit', \Illuminate\Support\Facades\Auth::guard('admin')->user()->id) }}">
                             <i class="bi bi-gear"></i>
-                            <span>Account Settings</span>
+                            <span>Chỉnh sửa thông tin</span>
                         </a>
                     </li>
                     <li>
@@ -94,120 +99,52 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
+        @php
+            $listMenu = config('custom.admin_menu');
+        @endphp
 
-        <li class="nav-item">
-            <a class="nav-link " href="{{ route('admin.index') }}">
-                <i class="bi bi-grid"></i>
-                <span>Trang chủ</span>
-            </a>
-        </li><!-- End Dashboard Nav -->
+        @foreach($listMenu as $keyMenu => $menu)
+            @if(empty($menu['list_child']))
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route($menu['route']) }}" @if($menu['route'] != \Request::route()->getName()) style="background: none;" @endif>
+                        {!! $menu['icon'] !!}
+                        <span @if($menu['route'] != \Request::route()->getName()) style="color: #012970;" @endif>{{ __($menu['title'] ?? '') }}</span>
+                    </a>
+                </li>
+            @else
+                @php
+                    $isCurrentRoute = false;
+                    foreach ($menu['list_child'] as $menuChild) {
+                        if ($menuChild['route'] == \Request::route()->getName()) {
+                            $isCurrentRoute = true;
+                        }
+                    }
+                @endphp
 
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-product" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Sản phẩm</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-product" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('admin.products.create') }}">
-                        <i class="bi bi-circle"></i><span>Thêm sản phẩm</span>
+                <li class="nav-item @if($isCurrentRoute) active @endif">
+                    <a class="nav-link @if(!$isCurrentRoute) collapsed @endif" data-bs-target="#components-{{ $keyMenu }}" data-bs-toggle="collapse" href="#">
+                        {!! $menu['icon'] !!}
+                        <span>{{ __($menu['title'] ?? '') }}</span>
+                        <i class="bi bi-chevron-down ms-auto"></i>
                     </a>
+                    <ul id="components-{{ $keyMenu }}" class="nav-content collapse @if($isCurrentRoute) show @endif" data-bs-parent="#sidebar-nav">
+                        @foreach($menu['list_child'] as $menuChild)
+                            <li>
+                                <a href="{{ route($menuChild['route'], $menuChild['array_param'] ?? []) }}" class="@if($menuChild['route'] == \Request::route()->getName() && implode('_', $menuChild['array_param'] ?? []) == implode('_', request()->toArray())) active @endif">
+                                    <i class="bi bi-circle"></i><span>{{ __($menuChild['title'] ?? '') }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
                 </li>
-                <li>
-                    <a href="{{ route('admin.products.index') }}">
-                        <i class="bi bi-circle"></i><span>Danh sách sản phẩm</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-admin" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-admin" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('admin.admins.index') }}">
-                        <i class="bi bi-circle"></i><span>Danh sách quản trị viên</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.admins.create') }}">
-                        <i class="bi bi-circle"></i><span>Thêm quản trị viên</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-attr" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Thuộc tính</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-attr" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('admin.attributes.index') }}">
-                        <i class="bi bi-circle"></i><span>Danh sách thuộc tính</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.attributes.create') }}">
-                        <i class="bi bi-circle"></i><span>Thêm thuộc tính</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-cate" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Chuyên mục</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-cate" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('admin.categories.index') }}">
-                        <i class="bi bi-circle"></i><span>Danh sách Chuyên mục</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.categories.create') }}">
-                        <i class="bi bi-circle"></i><span>Thêm Chuyên mục</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-banner" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Banner</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-banner" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('admin.banners.index') }}">
-                        <i class="bi bi-circle"></i><span>Danh sách banner</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.banners.create') }}">
-                        <i class="bi bi-circle"></i><span>Thêm banner</span>
-                    </a>
-                </li>
-            </ul>
-        </li><!-- End Components Nav --><!-- End Components Nav -->
+            @endif
+        @endforeach
 
     </ul>
 
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
-
-{{--    <div class="pagetitle">--}}
-{{--        <h1>Dashboard</h1>--}}
-{{--        <nav>--}}
-{{--            <ol class="breadcrumb">--}}
-{{--                <li class="breadcrumb-item"><a href="index.html">Home</a></li>--}}
-{{--                <li class="breadcrumb-item active">Dashboard</li>--}}
-{{--            </ol>--}}
-{{--        </nav>--}}
-{{--    </div><!-- End Page Title -->--}}
-
     @if(session()->has('success'))
         <div class="alert alert-success">
             {{ session()->get('success') }}
@@ -244,7 +181,7 @@
 <script src="{{ asset('theme/admin/assets/vendor/php-email-form/validate.js') }}"></script>
 
 
-<!-- Template Main JS File -->theme/admin/
+<!-- Template Main JS File -->
 <script src="{{ asset('theme/admin/assets/js/main.js') }}"></script>
 <script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
 <script src="{{ asset('js/loadingoverlay.min.js') }}"></script>

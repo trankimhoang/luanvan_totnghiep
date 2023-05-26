@@ -97,3 +97,58 @@ function totalMoneyOrder($orderId) {
     return $totalMoney;
 }
 
+function productTypeString($type) {
+    $array = [
+        'simple' => 'Đơn',
+        'configurable' => 'Nhiều phiên bản'
+    ];
+
+    return $array[$type] ?? null;
+}
+
+
+function getListProductIdsByAttrSearch(): array {
+    $listAttrSearch = request()->list_attr_search ?? [];
+    $listAttrSearch = array_filter($listAttrSearch);
+    $listProductIdSearchByAttr = [];
+
+    if (!empty($listAttrSearch)) {
+        $listProductIdSearchByAttr = DB::table('values');
+        $listProductIdSearchByAttr->whereIn('attribute_id', array_keys($listAttrSearch));
+        $listProductIdSearchByAttr->whereIn('text_value', array_values($listAttrSearch));
+
+        $listProductIdSearchByAttr = $listProductIdSearchByAttr->pluck('product_id')->toArray();
+        print_r($listProductIdSearchByAttr);
+        die;
+    }
+
+    $listProductIdSearchByAttrParent = DB::table('products')
+        ->whereIn('id', $listProductIdSearchByAttr)
+        ->pluck('parent_id')
+        ->toArray();
+
+    return array_merge($listProductIdSearchByAttr, $listProductIdSearchByAttrParent);
+}
+
+function getListAttrSearch(): array {
+    $listAttrData = [];
+
+    $listAttr = DB::table('values')
+        ->where('text_value', '!=', '')
+        ->where('text_value', '!=', null)
+        ->join('attributes', 'values.attribute_id', '=', 'attributes.id')
+        ->get();
+
+    foreach ($listAttr as $item) {
+        if (!empty($listAttrData[$item->attribute_id])) {
+            $listAttrData[$item->attribute_id]['list_search'][] = $item->text_value;
+        } else {
+            $listAttrData[$item->attribute_id] = [
+                'list_search' => [$item->text_value],
+                'title' => $item->name
+            ];
+        }
+    }
+
+    return $listAttrData;
+}

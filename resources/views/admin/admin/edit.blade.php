@@ -13,6 +13,9 @@
     <form action="{{ route('admin.admins.update', $admin->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('put')
+
+        <input type="hidden" name="id" value="{{ $admin->id }}">
+
         <div class="form-group">
             <label for="name">Tên quản trị viên @include('admin.include.required_icon')</label>
             <input type="text" name="name" class="form-control" value="{{ old('name', $admin->name) }}">

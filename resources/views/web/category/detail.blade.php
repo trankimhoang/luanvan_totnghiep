@@ -29,46 +29,42 @@
                 <!-- Begin Slider Area -->
                 <div class="col-lg-9">
                     <div class="slider-area pt-sm-30 pt-xs-30">
-                        <div class="slider-active owl-carousel">
-                            <!-- Begin Single Slide Area -->
-                            <div class="single-slide align-center-left animation-style-02 bg-4">
-                                <div class="slider-progress"></div>
-                                <div class="slider-content">
-                                    <h5>Sale Offer <span>-20% Off</span> This Week</h5>
-                                    <h2>Chamcham Galaxy S9 | S9+</h2>
-                                    <h3>Starting at <span>$589.00</span></h3>
-                                    <div class="default-btn slide-btn">
-                                        <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
-                                    </div>
-                                </div>
+                        <div id="demo" class="carousel slide" data-ride="carousel">
+
+                            <!-- Indicators -->
+                            <ul class="carousel-indicators">
+                                @foreach($listBanner as $key => $banner)
+                                    @if($key == 0)
+                                        <li data-target="#demo" data-slide-to="{{ $key }}" class="active"></li>
+                                    @else
+                                        <li data-target="#demo" data-slide-to="{{ $key }}"></li>
+                                    @endif
+                                @endforeach
+
+                            </ul>
+
+                            <!-- The slideshow -->
+                            <div class="carousel-inner">
+                                @foreach($listBanner as $key => $banner)
+                                    @if($key == 0)
+                                        <div class="carousel-item active">
+                                            <img src="{{ $banner->getImage() }}" alt="" width="1100" height="500">
+                                        </div>
+                                    @else
+                                        <div class="carousel-item">
+                                            <img src="{{ $banner->getImage() }}" alt="" width="1100" height="500">
+                                        </div>
+                                    @endif
+                                @endforeach
                             </div>
-                            <!-- Single Slide Area End Here -->
-                            <!-- Begin Single Slide Area -->
-                            <div class="single-slide align-center-left animation-style-01 bg-5">
-                                <div class="slider-progress"></div>
-                                <div class="slider-content">
-                                    <h5>Sale Offer <span>Black Friday</span> This Week</h5>
-                                    <h2>Work Desk Surface Studio 2018</h2>
-                                    <h3>Starting at <span>$1599.00</span></h3>
-                                    <div class="default-btn slide-btn">
-                                        <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Single Slide Area End Here -->
-                            <!-- Begin Single Slide Area -->
-                            <div class="single-slide align-center-left animation-style-02 bg-6">
-                                <div class="slider-progress"></div>
-                                <div class="slider-content">
-                                    <h5>Sale Offer <span>-10% Off</span> This Week</h5>
-                                    <h2>Phantom 4 Pro+ Obsidian</h2>
-                                    <h3>Starting at <span>$809.00</span></h3>
-                                    <div class="default-btn slide-btn">
-                                        <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Single Slide Area End Here -->
+
+                            <!-- Left and right controls -->
+                            <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </a>
+                            <a class="carousel-control-next" href="#demo" data-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -76,6 +72,8 @@
             </div>
         </div>
     </div>
+
+    @include('web.include.attr_search')
 
     <section class="product-area li-laptop-product Special-product pt-60 pb-45">
         <div class="container">
@@ -88,11 +86,9 @@
                         </h2>
                     </div>
                     <div class="row">
-                        <div class="special-product-active owl-carousel">
-                            @foreach($listProduct as $product)
-                                @include('web.include.item_product')
-                            @endforeach
-                        </div>
+                        @foreach($listProduct as $product)
+                            @include('web.include.item_product_search')
+                        @endforeach
                     </div>
                 </div>
                 <!-- Li's Section Area End Here -->

@@ -15,11 +15,11 @@
         <tr>
             <th>ID</th>
             <th>Tên sản phẩm</th>
+            <th>Loại</th>
             <th>Ảnh đại diện</th>
             <th>Chuyên mục</th>
             <th>Mô tả</th>
             <th>Giá bán</th>
-            <th>Giá KM</th>
             <th>Số lượng</th>
             <th>Trạng thái</th>
             <th>Action</th>
@@ -28,13 +28,13 @@
             <tr>
                 <td>{{ $product->id }}</td>
                 <td>{{ $product->name }}</td>
+                <th>{{ productTypeString($product->type) }}</th>
                 <td>
                     <img src="{{ $product->getImage() }}" alt="" width="128px" style="text-align: center">
                 </td>
                 <td>{{ $product->Category->name }}</td>
                 <td>{{ $product->description }}</td>
                 <td>{{ $product->price }}</td>
-                <td>{{ $product->price_new }}</td>
                 <td>{{ $product->quantity }}</td>
                 <td>
                     {{ mapStatusProduct($product->status) }}

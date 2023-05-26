@@ -25,8 +25,7 @@ class AdminUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:admins,email' . request()->get('id'),
-            'password' => 'required'
+            'email' => 'required|email|unique:admins,email,' . request()->id,
         ];
     }
 }

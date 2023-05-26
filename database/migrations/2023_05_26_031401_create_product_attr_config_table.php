@@ -13,8 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->text('attr_ids')->nullable();
+        Schema::create('product_attr_config', function (Blueprint $table) {
+            $table->unsignedBigInteger('product_id')->comment('id product trong table product');
+            $table->unsignedBigInteger('attribute_id')->comment('id attribute trong table attribute');
+            $table->boolean('is_private')->default(false);
         });
     }
 
@@ -25,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('attr_ids');
-        });
+        Schema::dropIfExists('product_attr_config');
     }
 };

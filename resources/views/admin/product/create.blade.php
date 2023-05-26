@@ -14,7 +14,9 @@
         @csrf
         @include('admin.product._list_field')
         <div class="form-group pt-3">
-            <button type="submit" class="btn btn-primary">Lưu</button>
+            <button type="submit" class="btn btn-primary">
+                Lưu
+            </button>
         </div>
     </form>
 @endsection

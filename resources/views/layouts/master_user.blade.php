@@ -5,7 +5,13 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>King Mobile</title>
+
+    @hasSection('title')
+        <title>@yield('title') - {{ env('APP_NAME') }}</title>
+    @else
+        <title>{{ env('APP_NAME') }}</title>
+    @endif
+
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -46,6 +52,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        /* Make the image fully responsive */
+        .carousel-inner img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 
 </head>
 <body>
@@ -350,7 +364,7 @@
                     <div class="col-lg-12">
                         <!-- Begin Copyright Area -->
                         <div class="copyright text-center pt-25">
-                            <span><a href="#">Tran Kim Hoang</a></span>
+                            &copy; Copyright <strong><span>Tran Kim Hoang</span></strong>. All Rights Reserved
                         </div>
                         <!-- Copyright Area End Here -->
                     </div>
