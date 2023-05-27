@@ -98,7 +98,7 @@
                                                 <option value="{{ $productChild->id }}"
                                                         data-quantity="{{ $productChild->quantity }}"
                                                         data-price="{{ formatVnd($productChild->price) }}">
-                                                    {{ $productChild->attributeTitle() }} [Kho: {{ $productChild->quantity }}]
+                                                    {{ $productChild->attributeTitle() }} [SL: {{ $productChild->quantity }}]
                                                 </option>
                                             @endforeach
                                         </select>
