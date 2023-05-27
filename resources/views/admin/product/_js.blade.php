@@ -235,12 +235,12 @@
                 } else {
                     $.LoadingOverlay('hide');
 
+                    $('#div-error-product-child-attr').html('');
+                    $('#div-error-product-child-empty').html('');
+
                     if (response.data.error_attr_config) {
                         alert(response.data.error_attr_config);
                     } else if (response.data.error_product_exists) {
-                        $('#div-error-product-child-attr').html('');
-                        console.log(response.data.error_product_exists);
-
                         for (const [key, value] of Object.entries(response.data.error_product_exists)) {
                             let errorRow = [];
 
@@ -264,6 +264,8 @@
                         }
 
                         $('#div-error-product-child-empty').html(`<p class="text-danger">Dòng ${errorRow.join(',')} đang bỏ trống các trường bắt buộc</p>`)
+                    } else if (response.data.error_product_child_empty_row) {
+                        alert(response.data.error_product_child_empty_row);
                     }
                 }
             }).catch(function (err) {

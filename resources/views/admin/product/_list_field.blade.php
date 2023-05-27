@@ -2,7 +2,6 @@
     <div class="col-12 card mt-3 p-3">
         <input type="hidden" id="id" name="id" value="{{ $product->id ?? '' }}">
 
-
         @if(!empty($product))
             <input type="hidden" id="id" name="type" value="{{ $product->type }}">
         @else
@@ -53,17 +52,19 @@
             <p class="alert alert-danger tag-error" id="description-error"></p>
         </div>
 
-        <div class="form-group pt-3">
-            <label for="email">Giá bán @include('admin.include.required_icon')</label>
-            <input type="text" name="price" class="form-control" value="{{ $product->price ?? '' }}">
-            <p class="alert alert-danger tag-error" id="price-error"></p>
-        </div>
+        @if((!empty($product) && $product->type == 'simple') || (empty($product) && empty(request()->type)))
+            <div class="form-group pt-3">
+                <label for="email">Giá bán @include('admin.include.required_icon')</label>
+                <input type="text" name="price" class="form-control" value="{{ $product->price ?? '' }}">
+                <p class="alert alert-danger tag-error" id="price-error"></p>
+            </div>
 
-        <div class="form-group pt-3">
-            <label for="password">Số lượng @include('admin.include.required_icon')</label>
-            <input type="text" name="quantity" class="form-control" value="{{ $product->quantity ?? '' }}">
-            <p class="alert alert-danger tag-error" id="quantity-error"></p>
-        </div>
+            <div class="form-group pt-3">
+                <label for="password">Số lượng @include('admin.include.required_icon')</label>
+                <input type="text" name="quantity" class="form-control" value="{{ $product->quantity ?? '' }}">
+                <p class="alert alert-danger tag-error" id="quantity-error"></p>
+            </div>
+        @endif
 
         <div class="form-group pt-3">
             <img src="" width="256px" class="img-preview">
@@ -86,7 +87,7 @@
     </div>
     <div class="col-12 card mt-3 p-3">
         <div class="form-group pt-3">
-            <label for="category_id">Thuộc tính chung @include('admin.include.required_icon')</label>
+            <label for="category_id">Thuộc tính chung</label>
             <select class="js-example-basic-multiple form-control form-select" name="list_attr[]" multiple="multiple" id="list_attribute">
                 @foreach($listAttr as $attr)
                     @if(!empty($product) && in_array($attr->id, $product->getArrayAttrIds()) !== false)

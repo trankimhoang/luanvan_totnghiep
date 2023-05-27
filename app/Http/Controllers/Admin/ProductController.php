@@ -26,7 +26,7 @@ class ProductController extends Controller {
      * @return View
      */
     public function index(): View {
-        $listProduct = Product::query()->where('parent_id', '=', null)->get();
+        $listProduct = Product::query()->where('parent_id', '=', null)->paginate(10);
         return view('admin.product.index', compact('listProduct'));
     }
 
@@ -94,6 +94,14 @@ class ProductController extends Controller {
      */
     public function store(ProductStoreRequest $request): JsonResponse {
         try {
+            if ($this->isEmptyProductChild()) {
+                return response()->json([
+                    'success' => false,
+                    'error_product_child_empty_row' => 'Vui lòng nhập sản phẩm con'
+                ]);
+            }
+
+
             $listProductChildError =  $this->validateListProductChild();
 
             if (!empty($listProductChildError)) {
@@ -363,6 +371,18 @@ class ProductController extends Controller {
         return $listProductChildEmptyRows;
     }
 
+    private function isEmptyProductChild(): bool {
+        $data = request()->toArray();
+
+        if (!empty($data['type']) && $data['type'] == 'configurable') {
+            if (empty($data['list_product_child']) && empty($data['list_product_child_new'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -372,6 +392,13 @@ class ProductController extends Controller {
      */
     public function update(ProductUpdateRequest $request, int $id): JsonResponse {
         try {
+            if ($this->isEmptyProductChild()) {
+                return response()->json([
+                    'success' => false,
+                    'error_product_child_empty_row' => 'Vui lòng nhập sản phẩm con'
+                ]);
+            }
+
             $data = $request->all();
             $listProductChildError =  $this->validateListProductChild();
 

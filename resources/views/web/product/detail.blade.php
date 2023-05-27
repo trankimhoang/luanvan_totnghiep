@@ -81,7 +81,7 @@
                         <div class="product-info">
                             <h2>{{ $product->name }}</h2>
                             <div class="price-box pt-20">
-                                <span class="new-price new-price-2" id="product-price">{{ $product->price }}</span>
+                                <span class="new-price new-price-2" id="product-price">{{ formatVnd($product->price) }}</span>
                             </div>
                             <div class="product-desc">
                                 <p>
@@ -97,7 +97,7 @@
                                             @foreach($product->listProductChild as $productChild)
                                                 <option value="{{ $productChild->id }}"
                                                         data-quantity="{{ $productChild->quantity }}"
-                                                        data-price="{{ $productChild->price }}">
+                                                        data-price="{{ formatVnd($productChild->price) }}">
                                                     {{ $productChild->attributeTitle() }} [Kho: {{ $productChild->quantity }}]
                                                 </option>
                                             @endforeach
@@ -127,57 +127,30 @@
     </div>
     <!-- content-wraper end -->
     <!-- Begin Product Area -->
-    <div class="product-area pt-35">
+    <section class="product-area li-laptop-product pt-30 pb-50">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="li-product-tab">
-                        <ul class="nav li-product-menu">
-                            <li><a class="active" data-toggle="tab" href="#description"><span>Mô tả</span></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- Begin Li's Tab Menu Content Area -->
-                </div>
-            </div>
-            <div class="tab-content">
-                <div id="description" class="tab-pane active show" role="tabpanel">
-                    <div class="product-description">
-                        <span>{{ $product->description }}.</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Mô tả</th>
+                    <td>{{ $product->description }}</td>
+                </tr>
 
-    @if(!empty($product->listAttribute))
-        @foreach($product->listAttribute as $attr)
-            @if(!empty($attr->pivot->text_value))
-                <div class="product-area pt-35">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="li-product-tab">
-                                    <ul class="nav li-product-menu">
-                                        <li><a class="active" data-toggle="tab" href="#attr-{{ $attr->idd }}"><span>{{ $attr->name }}</span></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- Begin Li's Tab Menu Content Area -->
-                            </div>
-                        </div>
-                        <div class="tab-content">
-                            <div id="attr-{{ $attr->id }}" class="tab-pane active show" role="tabpanel">
-                                <div class="product-description">
-                                    <span>{{ $attr->pivot->text_value }}.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-        @endforeach
-    @endif
+                @if(!empty($product->listAttribute))
+                    @foreach($product->listAttribute as $attr)
+                        @if(!empty($attr->pivot->text_value))
+                            <tr>
+                                <th>{{ $attr->name }}</th>
+                                <td>{{ $attr->pivot->text_value }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
+                @endif
+
+            </table>
+        </div>
+    </section>
+
+
 
 
     <!-- Product Area End Here -->
@@ -194,8 +167,8 @@
                     </div>
                     <div class="row">
                         <div class="product-active owl-carousel">
-                            @foreach($product->getListProductSameCategory() as $product)
-                                @include('web.include.item_product')
+                            @foreach($product->getListProductSameCategory() as $productItem)
+                                @include('web.include.item_product', ['product' => $productItem])
                             @endforeach
                         </div>
                     </div>

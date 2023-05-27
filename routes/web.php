@@ -63,4 +63,8 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::get('profile', [\App\Http\Controllers\Web\ProfileController::class, 'showFormProfile'])->name('profile');
     Route::post('profile/{id}', [\App\Http\Controllers\Web\ProfileController::class, 'profile'])->name('profile.post');
     Route::get('momo-return', [\App\Http\Controllers\Web\OrderController::class, 'momoReturn'])->name('momo_return');
+
+    Route::get('list-order', [\App\Http\Controllers\Web\OrderController::class, 'listOrderOfUser'])->name('list_order_of_user');
+    Route::get('order/{id}', [\App\Http\Controllers\Web\OrderController::class, 'orderDetail'])->name('order_detail');
+    Route::post('order/{id}', [\App\Http\Controllers\Web\OrderController::class, 'updateStatusOrder'])->name('order_update_status');
 });

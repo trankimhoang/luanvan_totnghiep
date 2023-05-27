@@ -82,4 +82,14 @@ return [
             ],
         ]
     ],
+    [
+        'title' => 'Quản lý đơn đặt hàng',
+        'icon' => '<i class="bi bi-menu-button-wide"></i>',
+        'list_child' => [
+            [
+                'title' => 'Danh sách',
+                'route' => 'admin.orders.index'
+            ],
+        ]
+    ],
 ];

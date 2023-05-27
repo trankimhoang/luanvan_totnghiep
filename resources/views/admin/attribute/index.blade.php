@@ -37,6 +37,5 @@
             </tr>
         @endforeach
     </table>
-
     <div>{{ $listAttribute->render() }}</div>
 @endsection

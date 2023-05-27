@@ -56,4 +56,5 @@
             </tr>
         @endforeach
     </table>
+    <div>{{ $listProduct->render() }}</div>
 @endsection

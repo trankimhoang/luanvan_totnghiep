@@ -55,14 +55,13 @@ function createPayUrlMomo($orderId, $amount) {
     $partnerCode = 'MOMOBKUN20180529';
     $accessKey = 'klm05TvNBzhg7h7j';
     $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
-    $orderInfo = "Thanh toán qua MoMo đơn hàng [$orderId]";
+    $orderInfo = "Thanh toán qua MoMo cho shop " . env('APP_NAME') . " đơn hàng [$orderId]";
     $redirectUrl = route('web.momo_return');
     $ipnUrl = route('web.momo_return');
     $requestId = time() . "";
     $requestType = "captureWallet";
     $extraData = "";
     //before sign HMAC SHA256 signature
-    $orderId = $orderId . '_' . time() + rand(111, 8888);
     $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
     $signature = hash_hmac("sha256", $rawHash, $secretKey);
     $data = array('partnerCode' => $partnerCode,
@@ -118,8 +117,6 @@ function getListProductIdsByAttrSearch(): array {
         $listProductIdSearchByAttr->whereIn('text_value', array_values($listAttrSearch));
 
         $listProductIdSearchByAttr = $listProductIdSearchByAttr->pluck('product_id')->toArray();
-        print_r($listProductIdSearchByAttr);
-        die;
     }
 
     $listProductIdSearchByAttrParent = DB::table('products')
@@ -152,3 +149,45 @@ function getListAttrSearch(): array {
 
     return $listAttrData;
 }
+
+function mapStringIsPaid($paymentStatus = 'UNPAID') {
+    $array = [
+        'UNPAID' => 'Chưa thanh toán',
+        'PAID' => 'Đã thanh toán',
+        'REFUND' => 'Đã hoàn tiền'
+    ];
+
+    return $array[$paymentStatus] ?? '';
+}
+
+if (!function_exists('getDayFromDateToDate')) {
+    function getDayFromDateToDate($fromDate, $toDate) {
+        $datetime1 = new DateTime($fromDate);
+        $datetime2 = new DateTime($toDate);
+        $interval = $datetime1->diff($datetime2);
+
+        if (strtotime($fromDate) > strtotime($toDate)) {
+            return -$interval->format('%a');
+        }
+
+        return $interval->format('%a');
+    }
+}
+
+function mapOrderStatus($status) {
+    $array = [
+        'PENDING' => 'Đang chờ xử lí',
+        'CONFIRMED' => 'Đã xác nhận',
+        'DELIVERY' => 'Đang giao hàng',
+        'SUCCESS' => 'Thành công',
+        'REFUND' => 'Đã trả lại',
+        'CANCEL' => 'Đã hủy'
+    ];
+
+    return $array[$status] ?? '';
+}
+
+function formatVnd($number) {
+    return number_format($number, 0, '', ',') . 'đ';
+}
+

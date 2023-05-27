@@ -37,8 +37,8 @@
                                             <input type="checkbox" class="ckb-product" name="list_product[{{ $product->id }}][id]" value="{{ $product->id }}" form="form-main">
                                         </td>
                                         <td class="li-product-thumbnail"><a href="#"><img src="{{ $product->getImage() }}" width="100px" alt="Li's Product Image"></a></td>
-                                        <td class="li-product-name"><a href="{{ route('web.detail', $product->id) }}" target="_blank">{{ $product->name }}</a></td>
-                                        <td class="li-product-price"><span class="amount">{{ $product->price }}</span></td>
+                                        <td class="li-product-name" width="30%"><a href="{{ route('web.detail', $product->id) }}" target="_blank">{{ $product->getName() }}</a></td>
+                                        <td class="li-product-price"><span class="amount">{{ formatVnd($product->price) }}</span></td>
                                         <td class="quantity">
                                             <label>Số lượng</label>
                                             <div class="cart-plus-minus">
@@ -50,8 +50,10 @@
                                                 <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                             </div>
                                         </td>
-                                        <td class="product-subtotal"><span class="amount" data-product-id="{{ $product->id }}">{{ $product->price * $product->pivot->quantity }}</span></td>
-                                        <td class="li-product-remove remove-product-cart" data-product-id="{{ $product->id }}"><a href="#"><i class="fa fa-times"></i></a></td>
+                                        <td class="product-subtotal"><span class="amount" data-product-id="{{ $product->id }}">{{ formatVnd($product->price * $product->pivot->quantity) }}</span></td>
+                                        <td class="li-product-remove remove-product-cart" data-product-id="{{ $product->id }}">
+                                            <i class="fa fa-trash" style="cursor: pointer;"></i>
+                                        </td>
                                     </tr>
                                 @endforeach
 
@@ -73,7 +75,7 @@
                                 <div class="cart-page-total">
                                     <h2>Tổng tiền thanh toán</h2>
                                     <ul>
-                                        <li>Tổng <span id="total-cart">{{ $total }}</span></li>
+                                        <li>Tổng <span id="total-cart">{{ formatVnd($total) }}</span></li>
                                     </ul>
                                     <button type="submit" class="btn btn-dark mt-2" form="form-main">Mua ngay</button>
                                 </div>

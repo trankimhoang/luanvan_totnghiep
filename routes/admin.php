@@ -47,6 +47,7 @@ Route::middleware(['auth:admin'])->group(function (){
 
     Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
 
-    Route::get('order', [\App\Http\Controllers\Admin\OrderController::class, 'order'])->name('order');
+    Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
+
 });
 

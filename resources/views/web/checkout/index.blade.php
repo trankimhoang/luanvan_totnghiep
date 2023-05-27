@@ -82,8 +82,8 @@
                                 @foreach($listProduct as $product)
                                     @if(!empty($listProductRequest[$product->id]['quantity']))
                                         <tr class="cart_item">
-                                            <td class="cart-product-name">{{ $product->name }}<strong class="product-quantity"> × {{ $listProductRequest[$product->id]['quantity'] }}</strong></td>
-                                            <td class="cart-product-total"><span class="amount">{{ $product->price * $listProductRequest[$product->id]['quantity'] }}</span></td>
+                                            <td class="cart-product-name">{{ $product->getName() }}<strong class="product-quantity"> × {{ $listProductRequest[$product->id]['quantity'] }}</strong></td>
+                                            <td class="cart-product-total"><span class="amount">{{ formatVnd($product->price * $listProductRequest[$product->id]['quantity']) }}</span></td>
                                         </tr>
                                         <input type="hidden" name="list_product[{{ $product->id }}][id]" form="form-main" value="{{ $product->id }}">
                                         <input type="hidden" name="list_product[{{ $product->id }}][quantity]" form="form-main" value="{{ $listProductRequest[$product->id]['quantity'] }}">
@@ -93,11 +93,11 @@
                                 <tfoot>
                                 <tr class="cart-subtotal">
                                     <th>Tổng tiền</th>
-                                    <td><span class="amount">{{ $total }}</span></td>
+                                    <td><span class="amount">{{ formatVnd($total) }}</span></td>
                                 </tr>
                                 <tr class="order-total">
                                     <th>Tổng tiền thanh toán</th>
-                                    <td><strong><span class="amount">{{ $total }}</span></strong></td>
+                                    <td><strong><span class="amount">{{ formatVnd($total) }}</span></strong></td>
                                 </tr>
                                 </tfoot>
                             </table>

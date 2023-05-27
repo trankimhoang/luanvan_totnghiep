@@ -21,7 +21,7 @@ class AttributeController extends Controller
      */
     public function index(): View
     {
-        $listAttribute = Attribute::paginate(6);
+        $listAttribute = Attribute::paginate(10);
         return view('admin.attribute.index', compact('listAttribute'));
     }
 

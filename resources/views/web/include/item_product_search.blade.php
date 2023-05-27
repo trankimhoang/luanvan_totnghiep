@@ -15,7 +15,7 @@
                 </div>
                 <h4><a class="product_name" href="{{ route('web.detail', $product->id) }}">{{ $product->name }}</a></h4>
                 <div class="price-box">
-                    <span class="new-price">{{ $product->price }}</span>
+                    <span class="new-price">{{ formatVnd($product->price) }}</span>
                 </div>
             </div>
         </div>

@@ -37,4 +37,5 @@
             </tr>
         @endforeach
     </table>
+    <div>{{ $listCategory->render() }}</div>
 @endsection

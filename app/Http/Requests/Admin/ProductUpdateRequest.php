@@ -23,12 +23,20 @@ class ProductUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|unique:products,name,' . request()->id,
+        $type = $this->request->get('type');
+        $rules = [
+            'name' => 'required|unique:products,name,' . $this->request->get('id'),
             'quantity' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required',
             'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048']
         ];
+
+        if ($type == 'configurable') {
+            unset($rules['price']);
+            unset($rules['quantity']);
+        }
+
+        return $rules;
     }
 }

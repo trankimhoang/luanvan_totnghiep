@@ -49,6 +49,8 @@
     <!-- Modernizr js -->
     <script src="{{ asset('theme/user/js/vendor/modernizr-2.8.3.min.js') }}"></script>
 
+    <link rel="stylesheet" href="{{ asset('lib/fontawesome/css/all.css') }}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500&display=swap" rel="stylesheet">
@@ -94,6 +96,7 @@
                                         <div class="setting ht-setting">
                                             <ul class="ht-setting-list">
                                                 <li><a href="{{ route('web.profile') }}">Tài khoản</a></li>
+                                                <li><a href="{{ route('web.list_order_of_user') }}">Danh sách đơn đặt hàng</a></li>
                                                 <li><a href="{{ route('web.logout') }}">Đăng xuất</a></li>
                                             </ul>
                                         </div>

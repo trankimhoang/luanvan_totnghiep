@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\CheckoutRequest;
+use App\Models\Order;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +19,8 @@ class OrderController extends Controller
         $listProductRequest = $request->get('list_product');
         $listProduct = Product::whereIn('id', array_column($listProductRequest, 'id'))->get();
         $dataOrder['user_id'] = $user->id;
+        $dataOrder['created_at'] = Carbon::now();
+        $dataOrder['id'] = time() + rand(1111, 9999999);
         $orderProductInsert = [];
         $orderId = DB::table('orders')->insertGetId($dataOrder);
 
@@ -52,8 +56,6 @@ class OrderController extends Controller
 
     public function momoReturn(Request $request) {
         $orderId = $request->get('orderId');
-        $orderId = explode('_', $orderId);
-        $orderId = $orderId[0] ?? null;
         $payType = $request->get('payType');
 
         if (!empty($orderId)) {
@@ -61,11 +63,18 @@ class OrderController extends Controller
                 DB::table('orders')
                     ->where('id', '=', $orderId)
                     ->update([
-                        'status' => 'PAID'
+                        'payment_status' => 'PAID',
+                        'payment_response' => json_encode($request->toArray())
                     ]);
                 return redirect()->route('web.success.order');
             }
         }
+
+        DB::table('orders')
+            ->where('id', '=', $orderId)
+            ->update([
+                'payment_response' => json_encode($request->toArray())
+            ]);
 
         return redirect()->route('web.error.order')->with('error', $request->get('message') ?? '');
     }
@@ -90,5 +99,43 @@ class OrderController extends Controller
         }
 
         return view('web.checkout.index', compact('listProductRequest', 'listProduct', 'total'));
+    }
+
+    public function listOrderOfUser() {
+        $listOrder = Order::where('user_id', Auth::guard('web')->user()->id)->paginate(10);
+
+        return view('web.order.index', compact('listOrder'));
+    }
+
+    public function orderDetail(Request $request, int $id) {
+        $order = Order::where('user_id', Auth::guard('web')->user()->id)->find($id);
+
+        if (!$order) {
+            abort(404);
+        }
+
+        return view('web.order.detail', compact('order'));
+    }
+
+    public function updateStatusOrder(Request $request, int $id) {
+        $order = Order::where('user_id', Auth::guard('web')->user()->id)->find($id);
+
+        if (!$order) {
+            abort(404);
+        }
+
+        if (!empty($request->get('status'))) {
+            if ($request->get('status') == 'REFUND') {
+                if (!empty($order->success_at) && getDayFromDateToDate($order->success_at, \Carbon\Carbon::now()) <= 7) {
+                    $order->status = $request->get('status');
+                    $order->save();
+                }
+            } else {
+                $order->status = $request->get('status');
+                $order->save();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Cập nhật thành công');
     }
 }
