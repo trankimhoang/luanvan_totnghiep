@@ -29,6 +29,7 @@ class CartController extends Controller
         }
 
         $productPrice = $product->get()->first()->price ?? null;
+        $productQuantity = $product->get()->first()->quantity ?? null;
 
         if ($quantity < 1 || !is_numeric($quantity) || ($quantityNew != null && $quantityNew <= 0)){
             return response()->json([
@@ -50,6 +51,16 @@ class CartController extends Controller
 
         if (!empty($cart)){
             $quantityUpdate = $quantityNew ?? ($cart->quantity + $quantity);
+            if ($productQuantity < $quantityUpdate){
+                return response()->json([
+                    'success'=>false,
+                    'data'=>[
+                        'message'=>'Số lượng trong kho không đủ',
+                        'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
+                    ]
+                ]);
+            }
+
 
             DB::table('carts')
                 ->where('user_id', '=', $userId)
@@ -58,6 +69,16 @@ class CartController extends Controller
                     'quantity' => $quantityUpdate
                 ]);
         } else {
+            if ($productQuantity < $quantity){
+                return response()->json([
+                    'success'=>false,
+                    'data'=>[
+                        'message'=>'Số lượng trong kho không đủ',
+                        'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
+                    ]
+                ]);
+            }
+
             DB::table('carts')->insert([
                'user_id' => $userId,
                'product_id' => $productId,

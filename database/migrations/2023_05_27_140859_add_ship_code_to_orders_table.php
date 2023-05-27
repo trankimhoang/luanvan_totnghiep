@@ -14,10 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('payment_status')->default('UNPAID')->comment('unpaid, paid, refund');
-            $table->text('payment_response')->nullable();
-            $table->date('success_at')->nullable();
-            $table->text('admin_note')->nullable();
+            $table->string('ship_code')->nullable();
         });
     }
 

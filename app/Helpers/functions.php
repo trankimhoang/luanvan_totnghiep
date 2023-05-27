@@ -50,7 +50,7 @@ function execPostRequest($url, $data) {
     return $result;
 }
 
-function createPayUrlMomo($orderId, $amount) {
+function createPayUrlMomo($orderId, $amount, $randomOrderId = false) {
     $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
     $partnerCode = 'MOMOBKUN20180529';
     $accessKey = 'klm05TvNBzhg7h7j';
@@ -62,6 +62,11 @@ function createPayUrlMomo($orderId, $amount) {
     $requestType = "captureWallet";
     $extraData = "";
     //before sign HMAC SHA256 signature
+
+    if ($randomOrderId) {
+        $orderId .= "_repay" . time() + rand(1111, 999999);
+    }
+
     $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
     $signature = hash_hmac("sha256", $rawHash, $secretKey);
     $data = array('partnerCode' => $partnerCode,

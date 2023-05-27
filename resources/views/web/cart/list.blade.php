@@ -34,7 +34,7 @@
                                 @foreach($listProduct as $product)
                                     <tr>
                                         <td>
-                                            <input type="checkbox" class="ckb-product" name="list_product[{{ $product->id }}][id]" value="{{ $product->id }}" form="form-main">
+                                            <input type="checkbox" data-product-id="{{ $product->id }}" class="ckb-product" name="list_product[{{ $product->id }}][id]" value="{{ $product->id }}" form="form-main">
                                         </td>
                                         <td class="li-product-thumbnail"><a href="#"><img src="{{ $product->getImage() }}" width="100px" alt="Li's Product Image"></a></td>
                                         <td class="li-product-name" width="30%"><a href="{{ route('web.detail', $product->id) }}" target="_blank">{{ $product->getName() }}</a></td>
@@ -50,7 +50,7 @@
                                                 <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                             </div>
                                         </td>
-                                        <td class="product-subtotal"><span class="amount" data-product-id="{{ $product->id }}">{{ formatVnd($product->price * $product->pivot->quantity) }}</span></td>
+                                        <td class="product-subtotal"><span class="amount" data-total="{{ $product->price * $product->pivot->quantity }}" data-product-id="{{ $product->id }}">{{ formatVnd($product->price * $product->pivot->quantity) }}</span></td>
                                         <td class="li-product-remove remove-product-cart" data-product-id="{{ $product->id }}">
                                             <i class="fa fa-trash" style="cursor: pointer;"></i>
                                         </td>
@@ -75,7 +75,7 @@
                                 <div class="cart-page-total">
                                     <h2>Tổng tiền thanh toán</h2>
                                     <ul>
-                                        <li>Tổng <span id="total-cart">{{ formatVnd($total) }}</span></li>
+                                        <li>Tổng <span id="total-cart">0</span></li>
                                     </ul>
                                     <button type="submit" class="btn btn-dark mt-2" form="form-main">Mua ngay</button>
                                 </div>
@@ -94,6 +94,21 @@
 @section('js')
     <script>
         $(document).ready(function () {
+            function rfTotal() {
+                let total = 0;
+
+                $('.ckb-product:checked').each(function () {
+                    const productId = $(this).attr('data-product-id');
+                    total += parseFloat($(`.amount[data-product-id='${productId}']`).attr('data-total'));
+                });
+
+                $('#total-cart').text(formatVnd(total));
+            }
+
+            $('.ckb-product').change(function () {
+                rfTotal();
+            });
+
             $('#form-main').submit(function (event) {
                 if ($('.ckb-product:checked').length === 0) {
                     alert('Bạn chưa chọn sản phẩm');
@@ -117,8 +132,8 @@
 
                         if (data.hasOwnProperty('success') && data.success) {
                             $('.cart-item-count').text(data.data.qty);
-                            $('#total-cart').text(data.data.total);
                             thisElement.parents('tr').remove();
+                            rfTotal();
                         } else {
                             // error
                             alert(data.data.message ?? '');
@@ -128,13 +143,14 @@
             });
 
             $('.quantity-product-row').change(function () {
-               let productId = $(this).attr('data-product-id');
+                const productId = $(this).attr('data-product-id');
+               const quantity_new = $(this).val();
                $.LoadingOverlay('show');
 
                $.ajax({
                    data: {
                        product_id: productId,
-                       quantity_new: $(this).val(),
+                       quantity_new: quantity_new,
                    },
                     method: 'get',
                    url: @json(route('web.cart.add')),
@@ -144,9 +160,12 @@
                        if (data.hasOwnProperty('success') && data.success) {
                            $('.cart-item-count').text(data.data.qty);
                            $('#total-cart').text(data.data.total);
-                           $(`.amount[data-product-id='${productId}']`).text(data.data.total_row);
+                           $(`.amount[data-product-id='${productId}']`).text(formatVnd(data.data.total_row));
+                           $(`.amount[data-product-id='${productId}']`).attr('data-total', data.data.total_row);
+                           rfTotal();
                        } else {
                            // error
+                           $(`.quantity-product-row[data-product-id='${productId}']`).val(quantity_new - 1);
                            alert(data.data.message ?? '');
                        }
                    }

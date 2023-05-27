@@ -430,6 +430,10 @@
             window.location.replace(@json(route('web.list.product.cart')));
         });
     });
+
+    function formatVnd(num) {
+        return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + 'đ';
+    }
 </script>
 
 @yield('js')

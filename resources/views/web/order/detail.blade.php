@@ -36,7 +36,12 @@
 
                 <tr>
                     <th>Thanh toán</th>
-                    <td>{{ mapStringIsPaid($order->payment_status) }}</td>
+                    <td>
+                        {{ mapStringIsPaid($order->payment_status) }}
+                        @if($order->payment_type == 'MOMO' && $order->payment_status == 'UNPAID')
+                            <a href="{{ createPayUrlMomo($order->id, $order->total(), true) }}">Thanh toán lại</a>
+                        @endif
+                    </td>
                 </tr>
 
                 <tr>
@@ -100,7 +105,6 @@
                     </form>
                 </div>
             </div>
-
         @elseif($order->status == 'CONFIRMED')
 
         @elseif($order->status == 'DELIVERY')

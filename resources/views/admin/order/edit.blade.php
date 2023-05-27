@@ -117,11 +117,16 @@
             <form action="{{ route('admin.orders.update', $order->id) }}" method="post">
                 @csrf
                 @method('put')
-                <label for="admin_note">Ghi chú</label>
-                <textarea name="admin_note" id="" cols="30" class="form-control" rows="10">{{ $order->admin_note ?? '' }}</textarea>
+                <div class="form-group">
+                    <label for="admin_note">Ghi chú</label>
+                    <textarea name="admin_note" id="" cols="30" class="form-control" rows="10">{{ $order->admin_note ?? '' }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="admin_note">Mã vận đơn</label>
+                    <input type="text" class="form-control" name="ship_code" VALUE="{{ $order->ship_code }}">
+                </div>
                 <button type="submit" class="btn btn-primary mt-2">Cập nhật</button>
             </form>
-
         </div>
     </div>
 
@@ -177,21 +182,10 @@
             </div>
         </div>
     @elseif($order->status == 'SUCCESS')
-        <div class="card p-3">
-            <div class="form-group pt-3">
-                <form action="{{ route('admin.orders.update', $order->id) }}" method="post">
-                    @csrf
-                    @method('put')
-                    <button type="submit" class="btn btn-primary" name="status" value="REFUND">Trả hàng</button>
-                </form>
-            </div>
-        </div>
     @elseif($order->status == 'REFUND')
-
     @endif
 
-
-    @if($order->payment_status == 'PAID')
+    @if($order->payment_status == 'PAID' && ($order->status == 'REFUND' || $order->status == 'CANCEL'))
         <div class="card p-3">
             <div class="form-group pt-3">
                 <form action="{{ route('admin.orders.update', $order->id) }}" method="post">

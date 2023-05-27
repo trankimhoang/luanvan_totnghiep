@@ -51,11 +51,13 @@ class OrderController extends Controller
             }
         }
 
-        return redirect()->route('web.success.order');
+        return redirect()->route('web.order_detail', $orderId)->with('success', 'Đặt hàng thành công');
     }
 
     public function momoReturn(Request $request) {
         $orderId = $request->get('orderId');
+        $orderId = explode('_', $orderId);
+        $orderId = $orderId[0] ?? null;
         $payType = $request->get('payType');
 
         if (!empty($orderId)) {
@@ -66,7 +68,7 @@ class OrderController extends Controller
                         'payment_status' => 'PAID',
                         'payment_response' => json_encode($request->toArray())
                     ]);
-                return redirect()->route('web.success.order');
+                return redirect()->route('web.order_detail', $orderId)->with('success', 'Thanh toán thành công');
             }
         }
 
@@ -76,7 +78,7 @@ class OrderController extends Controller
                 'payment_response' => json_encode($request->toArray())
             ]);
 
-        return redirect()->route('web.error.order')->with('error', $request->get('message') ?? '');
+        return redirect()->route('web.order_detail', $orderId)->with('error', $request->get('message') ?? '');
     }
 
     public function success() {
@@ -102,7 +104,7 @@ class OrderController extends Controller
     }
 
     public function listOrderOfUser() {
-        $listOrder = Order::where('user_id', Auth::guard('web')->user()->id)->paginate(10);
+        $listOrder = Order::orderBy('created_at', 'desc')->where('user_id', Auth::guard('web')->user()->id)->paginate(10);
 
         return view('web.order.index', compact('listOrder'));
     }
@@ -125,8 +127,21 @@ class OrderController extends Controller
         }
 
         if (!empty($request->get('status'))) {
-            if ($request->get('status') == 'REFUND') {
+            if ($request->get('status') == 'REFUND' && $order->status == 'SUCCESS') {
                 if (!empty($order->success_at) && getDayFromDateToDate($order->success_at, \Carbon\Carbon::now()) <= 7) {
+                    $listProductIdToQuantityInOrder = DB::table('order_products')
+                        ->where('order_id', $id)
+                        ->get()
+                        ->mapWithKeys(function ($item) {
+                            return [$item->product_id => $item->quantity];
+                        })->toArray();
+
+                    foreach ($listProductIdToQuantityInOrder as $productId => $quantity) {
+                        $productUpdate = Product::find($productId);
+                        $productUpdate->quantity += $quantity;
+                        $productUpdate->save();
+                    }
+
                     $order->status = $request->get('status');
                     $order->save();
                 }

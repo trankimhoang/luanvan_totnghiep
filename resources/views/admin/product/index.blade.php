@@ -32,7 +32,7 @@
                 <td>
                     <img src="{{ $product->getImage() }}" alt="" width="128px" style="text-align: center">
                 </td>
-                <td>{{ $product->Category->name }}</td>
+                <td>{{ $product->Category->name ?? '' }}</td>
                 <td>{{ $product->description }}</td>
                 <td>{{ $product->price }}</td>
                 <td>{{ $product->quantity }}</td>

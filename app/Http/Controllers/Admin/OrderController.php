@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
     public function index(){
-        $listOrder = Order::paginate(10);
+        $listOrder = Order::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.order.index', compact('listOrder'));
     }
 
@@ -22,14 +25,45 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         if (!empty($request->get('status'))){
+            if ($request->get('status') == 'CONFIRMED' || $request->get('status') == 'CANCEL') {
+                $listProductIdToQuantityInOrder = DB::table('order_products')
+                    ->where('order_id', $id)
+                    ->get()
+                    ->mapWithKeys(function ($item) {
+                        return [$item->product_id => $item->quantity];
+                    })->toArray();
+
+                foreach ($listProductIdToQuantityInOrder as $productId => $quantity) {
+                    $productUpdate = Product::find($productId);
+
+                    if ($request->get('status') == 'CONFIRMED') {
+                        $productUpdate->quantity -= $quantity;
+                    } else if ($request->get('status') == 'CANCEL') {
+                        $productUpdate->quantity += $quantity;
+                    }
+
+                    $productUpdate->save();
+                }
+            }
+
             $order->status = $request->get('status');
         }
+
         if (!empty($request->get('payment_status'))){
             $order->payment_status = $request->get('payment_status');
         }
 
         if ($request->get('admin_note') !== null) {
             $order->admin_note = $request->get('admin_note');
+        }
+
+        if ($request->get('ship_code') !== null) {
+            $order->ship_code = $request->get('ship_code');
+        }
+
+        if ($order->status == 'SUCCESS') {
+            $order->success_at = Carbon::now();
+            $order->payment_status = 'PAID';
         }
 
         $order->save();
