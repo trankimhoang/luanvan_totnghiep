@@ -541,7 +541,6 @@ class ProductController extends Controller {
         $productId = $request->get('product_id');
         $listAttribute = DB::table('attributes')
             ->whereIn('id', $listAttrId)
-            ->where('is_private', '=', 0)
             ->get();
 
         $listAttributeValue = [];
