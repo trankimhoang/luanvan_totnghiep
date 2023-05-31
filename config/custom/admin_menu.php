@@ -92,4 +92,14 @@ return [
             ],
         ]
     ],
+    [
+        'title' => 'Quản lý khách hàng',
+        'icon' => '<i class="bi bi-menu-button-wide"></i>',
+        'list_child' => [
+            [
+                'title' => 'Danh sách',
+                'route' => 'admin.users.index'
+            ],
+        ]
+    ],
 ];

@@ -49,5 +49,7 @@ Route::middleware(['auth:admin'])->group(function (){
 
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
 
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+
 });
 

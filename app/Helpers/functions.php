@@ -32,6 +32,14 @@ function mapStatusBanner($status){
     return $array[$status] ?? '';
 }
 
+function mapStatusUser($status){
+    $array = [
+        0 => 'Đã khóa tài khoản',
+        1 => 'Tài khoản đang kích hoạt'
+    ];
+    return $array[$status] ?? '';
+}
+
 function execPostRequest($url, $data) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");

@@ -31,26 +31,27 @@ Route::middleware(['guest:web'])->group(function () {
     Route::post('reset-password', [\App\Http\Controllers\Web\ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
 });
+Route::group(['middleware' => ['checkStatusUser']], function () {
+    Route::get('/', [\App\Http\Controllers\Web\HomeController::class, 'index'])->name('index');
 
-Route::get('/', [\App\Http\Controllers\Web\HomeController::class, 'index'])->name('index');
+    Route::get('product/{id}', [\App\Http\Controllers\Web\ProductController::class, 'detail'])->name('detail');
 
-Route::get('product/{id}', [\App\Http\Controllers\Web\ProductController::class, 'detail'])->name('detail');
+    Route::get('logout', [\App\Http\Controllers\Web\AuthController::class, 'logout'])->name('logout');
 
-Route::get('logout', [\App\Http\Controllers\Web\AuthController::class, 'logout'])->name('logout');
+    Route::get('category/{id}/detail', [\App\Http\Controllers\Web\CategoryController::class, 'categoryDetail'])->name('detail.category');
 
-Route::get('category/{id}/detail', [\App\Http\Controllers\Web\CategoryController::class, 'categoryDetail'])->name('detail.category');
+    Route::get('search', [\App\Http\Controllers\Web\HomeController::class, 'search'])->name('search');
 
-Route::get('search', [\App\Http\Controllers\Web\HomeController::class, 'search'])->name('search');
+    Route::get('about', [\App\Http\Controllers\Web\HomeController::class, 'about'])->name('about');
 
-Route::get('about', [\App\Http\Controllers\Web\HomeController::class, 'about'])->name('about');
+    Route::get('contact', [\App\Http\Controllers\Web\HomeController::class, 'contact'])->name('contact');
 
-Route::get('contact', [\App\Http\Controllers\Web\HomeController::class, 'contact'])->name('contact');
+    Route::get('add-cart', [\App\Http\Controllers\Web\CartController::class, 'addCart'])
+        ->name('cart.add')
+        ->middleware('isLoginWebAjax');
+});
 
-Route::get('add-cart', [\App\Http\Controllers\Web\CartController::class, 'addCart'])
-    ->name('cart.add')
-    ->middleware('isLoginWebAjax');
-
-Route::group(['middleware' => 'auth:web'], function () {
+Route::group(['middleware' => ['auth:web', 'checkStatusUser']], function () {
     Route::get('cart', [\App\Http\Controllers\Web\CartController::class, 'listProductInCart'])->name('list.product.cart');
 
     Route::get('delete', [\App\Http\Controllers\Web\CartController::class, 'deleteProductCart'])->name('delete.product.cart');

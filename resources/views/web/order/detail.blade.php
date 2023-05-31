@@ -124,4 +124,7 @@
 
         @endif
     </div>
+    <div class="container text-right p-3">
+        <h4><a href="{{ route('web.index') }}">Tiếp tục mua hàng</a></h4>
+    </div>
 @endsection
