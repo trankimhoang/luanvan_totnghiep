@@ -51,5 +51,7 @@ Route::middleware(['auth:admin'])->group(function (){
 
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
 
+    Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+
 });
 

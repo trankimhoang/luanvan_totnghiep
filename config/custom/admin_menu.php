@@ -102,4 +102,14 @@ return [
             ],
         ]
     ],
+    [
+        'title' => 'Quản lý mã khuyến mãi',
+        'icon' => '<i class="bi bi-menu-button-wide"></i>',
+        'list_child' => [
+            [
+                'title' => 'Danh sách',
+                'route' => 'admin.coupons.index'
+            ],
+        ]
+    ],
 ];
