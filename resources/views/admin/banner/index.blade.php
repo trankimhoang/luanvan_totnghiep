@@ -5,7 +5,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Danh sách</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Tổng quan</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -33,10 +33,10 @@
                             <a href="{{ route('admin.banners.edit', $banner->id) }}" class="btn btn-success btn-sm rounded-0"><i class="bi bi-pencil"></i></a>
                         </li>
                         <li class="list-inline-item">
-                            <form action="{{ route('admin.banners.destroy', $banner->id ) }}" method="post">
+                            <form action="{{ route('admin.banners.destroy', $banner->id) }}" method="post">
                                 @csrf
                                 @method('delete')
-                                <button type="submit" class="btn btn-danger btn-sm rounded-0"><i class="bi bi-trash"></i></button>
+                                <button type="submit" class="btn btn-danger btn-sm rounded-0 btn-delete-index" data-id="{{ $banner->id }}"><i class="bi bi-trash"></i></button>
                             </form>
                         </li>
                     </ul>

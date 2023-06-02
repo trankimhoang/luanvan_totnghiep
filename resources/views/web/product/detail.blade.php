@@ -182,51 +182,55 @@
 
 @section('js')
     <script>
-        $('#product-child-select').change(function () {
-            const price = $(this).find('option:selected').attr('data-price');
-            const value = $(this).val();
-            const quantity = parseFloat($(this).find('option:selected').attr('data-quantity'));
+        $(document).ready(function () {
+            $('#product-child-select').change(function () {
+                const price = $(this).find('option:selected').attr('data-price');
+                const value = $(this).val();
+                const quantity = parseFloat($(this).find('option:selected').attr('data-quantity'));
 
-            if (quantity <= 0) {
-                $('.add-to-cart').prop('disabled', true);
-            } else {
-                $('.add-to-cart').prop('disabled', false);
-            }
+                if (quantity <= 0) {
+                    $('.add-to-cart').prop('disabled', true);
+                } else {
+                    $('.add-to-cart').prop('disabled', false);
+                }
 
-            $('#product-price').text(price);
-            $(`.sm-image[data-id='${value}']`).click();
-        });
-        $('#product-child-select').trigger('change');
+                $('#product-price').text(price);
+                $(`.sm-image[data-id='${value}']`).click();
+            });
+            $('#product-child-select').trigger('change');
 
-        $('.add-to-cart').click(function (){
-           let productId = @json($product->id);
+            $('.add-to-cart').click(function (){
+                let productId = @json($product->id);
 
-           console.log($('#product-child-select').val());
+                if($('#product-child-select').val() !== undefined) {
+                    productId = $('#product-child-select').val();
+                }
 
-           if($('#product-child-select').val() !== undefined) {
-               productId = $('#product-child-select').val();
-           }
+                $.LoadingOverlay('show');
 
-           $.LoadingOverlay('show');
+                $.ajax({
+                    data: {
+                        product_id: productId,
+                        quantity: $('#quantity').val(),
+                    },
+                    method: 'get',
+                    url: @json(route('web.cart.add')),
+                    success: function(data){
+                        $.LoadingOverlay('hide');
 
-           $.ajax({
-              data: {
-                  product_id: productId,
-                  quantity: $('#quantity').val(),
-              },
-               method: 'get',
-               url: @json(route('web.cart.add')),
-               success: function(data){
-                   $.LoadingOverlay('hide');
-
-                   if (data.hasOwnProperty('success') && data.success) {
-                       $('.cart-item-count').text(data.data.qty);
-                   } else {
-                       // error
-                       alert(data.data.message ?? '');
-                   }
-               }
-           });
+                        if (data.hasOwnProperty('success') && data.success) {
+                            $('.cart-item-count').text(data.data.qty);
+                        } else {
+                            // error
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi...',
+                                text: data.message ?? ''
+                            });
+                        }
+                    }
+                });
+            });
         });
     </script>
 @endsection

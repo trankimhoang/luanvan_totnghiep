@@ -73,13 +73,15 @@
         </div>
     </div>
 
-    @include('web.include.attr_search')
-
     <section class="product-area li-laptop-product Special-product pt-60 pb-45">
         <div class="container">
             <div class="row">
                 <!-- Begin Li's Section Area -->
-                <div class="col-lg-12">
+                <div class="col-3">
+                    @include('web.include.attr_search', ['listProductId' => $listProductId])
+                </div>
+
+                <div class="col-9">
                     <div class="li-section-title">
                         <h2>
                             <span>{{ $category->name }}</span>
@@ -92,6 +94,12 @@
                     </div>
                 </div>
                 <!-- Li's Section Area End Here -->
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    {{ $listProduct->appends(request()->input())->links() }}
+                </div>
             </div>
         </div>
     </section>

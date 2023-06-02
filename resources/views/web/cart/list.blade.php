@@ -111,7 +111,11 @@
 
             $('#form-main').submit(function (event) {
                 if ($('.ckb-product:checked').length === 0) {
-                    alert('Bạn chưa chọn sản phẩm');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi...',
+                        text: 'Bạn chưa chọn sản phẩm'
+                    });
                     event.preventDefault();
                 }
             });
@@ -136,7 +140,11 @@
                             rfTotal();
                         } else {
                             // error
-                            alert(data.data.message ?? '');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi...',
+                                text: data.data.message ?? ''
+                            });
                         }
                     }
                 })
@@ -166,7 +174,11 @@
                        } else {
                            // error
                            $(`.quantity-product-row[data-product-id='${productId}']`).val(quantity_new - 1);
-                           alert(data.data.message ?? '');
+                           Swal.fire({
+                               icon: 'error',
+                               title: 'Lỗi...',
+                               text: data.data.message ?? ''
+                           });
                        }
                    }
                });

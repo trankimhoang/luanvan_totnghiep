@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CouponController extends Controller
 {
@@ -26,7 +28,7 @@ class CouponController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.coupon.create');
     }
 
     /**
@@ -37,7 +39,16 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $coupon = new Coupon();
+            $coupon->fill($request->all());
+            $coupon->save();
+
+            return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Thêm thành công');
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 
     /**
@@ -59,7 +70,9 @@ class CouponController extends Controller
      */
     public function edit($id)
     {
-        //
+        $coupon = Coupon::find($id);
+
+        return view('admin.coupon.edit', compact('coupon'));
     }
 
     /**
@@ -71,17 +84,34 @@ class CouponController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $coupon = Coupon::find($id);
+            $coupon->fill($request->all());
+            $coupon->save();
+
+            return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Sửa thành công');
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse|void
      */
     public function destroy($id)
     {
-        //
+        try {
+            $coupon = Coupon::find($id);
+            $coupon->delete();
+            return redirect()->back()->with('success', 'Xóa thành công');
+        } catch (\Exception $exception) {
+            if ($exception->getCode() == 23000) {
+                return redirect()->back()->with('error', "Không thể xóa #$id vì đã được sử dụng trong đơn đặt hàng");
+            }
+        }
     }
 }

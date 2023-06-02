@@ -5,7 +5,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Danh sách</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Tổng quan</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -14,25 +14,24 @@
         <tr>
             <th>ID</th>
             <th>Tên mã khuyến mãi</th>
-            <th>Số tiền khuyến mãi</th>
+            <th>Số tiền/phần trăm khuyến mãi</th>
             <th>Loại khuyến mãi</th>
             <th>Số tiền giảm tối đa</th>
-            <th>Số lượng sử dụng</th>
+            <th>Số lần sử dụng</th>
             <th>Ngày bắt đầu</th>
             <th>Ngày kết thúc</th>
-            <th>Action</th>
+            <th>Hành động</th>
         </tr>
         @foreach($listCoupon as $coupon)
             <tr>
                 <td>{{ $coupon->id }}</td>
                 <td>{{ $coupon->name }}</td>
                 <td>{{ $coupon->discount }}</td>
-                <td>{{ $coupon->type }}</td>
+                <td>{{ getListCouponType()[$coupon->type] ?? '' }}</td>
                 <td>{{ $coupon->discount_max }}</td>
-                <td>{{ $coupon->number_user }}</td>
+                <td>{{ $coupon->number_use }}</td>
                 <td>{{ $coupon->start }}</td>
                 <td>{{ $coupon->end }}</td>
-                <td>{{ $coupon->forever }}</td>
                 <td>
                     <ul class="list-inline m-0">
                         <li class="list-inline-item">
@@ -42,7 +41,7 @@
                             <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="post">
                                 @csrf
                                 @method('delete')
-                                <button type="submit" class="btn btn-danger btn-sm rounded-0"><i class="bi bi-trash"></i></button>
+                                <button type="submit" class="btn btn-danger btn-sm rounded-0 btn-delete-index" data-id="{{ $coupon->id }}"><i class="bi bi-trash"></i></button>
                             </form>
                         </li>
                     </ul>

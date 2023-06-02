@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('note')->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->text('address')->nullable();
             $table->string('phone')->nullable();

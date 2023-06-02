@@ -5,7 +5,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Danh sách</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Tổng quan</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -14,7 +14,7 @@
         <tr>
             <th>ID</th>
             <th>Tên thuộc tính</th>
-            <th>Action</th>
+            <th>Hành động</th>
         </tr>
         @foreach($listAttribute as $attribute)
             <tr>
@@ -29,7 +29,7 @@
                             <form action="{{ route('admin.attributes.destroy', $attribute->id) }}" method="post">
                                 @csrf
                                 @method('delete')
-                                <button type="submit" class="btn btn-danger btn-sm rounded-0"><i class="bi bi-trash"></i></button>
+                                <button type="submit" class="btn btn-danger btn-sm rounded-0 btn-delete-index" data-id="{{ $attribute->id }}"><i class="bi bi-trash"></i></button>
                             </form>
                         </li>
                     </ul>

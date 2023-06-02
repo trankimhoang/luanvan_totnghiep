@@ -49,7 +49,7 @@
     <!-- Modernizr js -->
     <script src="{{ asset('theme/user/js/vendor/modernizr-2.8.3.min.js') }}"></script>
 
-    <link rel="stylesheet" href="{{ asset('lib/fontawesome/css/all.css') }}">
+{{--    <link rel="stylesheet" href="{{ asset('lib/fontawesome/css/all.css') }}">--}}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -422,7 +422,10 @@
 <!-- Main/Activator js -->
 <script src="{{ asset('theme/user/js/main.js') }}"></script>
 <script src="{{ asset('js/loadingoverlay.min.js') }}"></script>
-
+<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('lib/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('lib/sweetalert2/sweetalert2.min.css') }}">
+<script src="{{ asset('lib/sweetalert2/sweetalert2.min.js') }}"></script>
 
 <script>
     $(document).ready(function () {
@@ -437,6 +440,7 @@
 </script>
 
 @yield('js')
+@yield('js_attr_search')
 </body>
 
 <!-- index-231:38-->

@@ -6,7 +6,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Chỉnh sửa</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Tổng quan</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -79,6 +79,21 @@
                 <td>{{ $order->note }}</td>
             </tr>
 
+            <tr>
+                <th>Tổng tiền</th>
+                <td>{{ formatVnd($order->total(false)) }}</td>
+            </tr>
+
+            <tr>
+                <th>Tên khuyến mãi</th>
+                <td>
+                    {{ $order->Coupon->name ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <th>Khuyến mãi</th>
+                <td>{{ formatVnd(-$order->discount) }}</td>
+            </tr>
             <tr>
                 <th>Tổng tiền thanh toán</th>
                 <td>{{ formatVnd($order->total()) }}</td>

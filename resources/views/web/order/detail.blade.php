@@ -65,6 +65,22 @@
                 </tr>
 
                 <tr>
+                    <th>Tổng tiền</th>
+                    <td>{{ formatVnd($order->total(false)) }}</td>
+                </tr>
+
+                <tr>
+                    <th>Tên khuyến mãi</th>
+                    <td>
+                        {{ $order->Coupon->name ?? '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Khuyến mãi</th>
+                    <td>{{ formatVnd(-$order->discount) }}</td>
+                </tr>
+
+                <tr>
                     <th>Tổng tiền thanh toán</th>
                     <td>{{ formatVnd($order->total()) }}</td>
                 </tr>
@@ -96,33 +112,35 @@
             </table>
         </div>
 
-        @if($order->status == 'PENDING')
-            <div class="card p-3">
-                <div class="form-group pt-3">
-                    <form action="{{ route('web.order_update_status', $order->id) }}" method="post">
-                        @csrf
-                        <button type="submit" class="btn btn-danger" name="status" value="CANCEL">Hủy</button>
-                    </form>
-                </div>
-            </div>
-        @elseif($order->status == 'CONFIRMED')
-
-        @elseif($order->status == 'DELIVERY')
-
-        @elseif($order->status == 'SUCCESS')
-            @if(!empty($order->success_at) && getDayFromDateToDate($order->success_at, \Carbon\Carbon::now()) <= 7)
+        <div class="mt-3">
+            @if($order->status == 'PENDING')
                 <div class="card p-3">
                     <div class="form-group pt-3">
                         <form action="{{ route('web.order_update_status', $order->id) }}" method="post">
                             @csrf
-                            <button type="submit" class="btn btn-primary" name="status" value="REFUND">Trả hàng/Hoàn tiền</button>
+                            <button type="submit" class="btn btn-danger" name="status" value="CANCEL">Hủy</button>
                         </form>
                     </div>
                 </div>
-            @endif
-        @elseif($order->status == 'REFUND')
+            @elseif($order->status == 'CONFIRMED')
 
-        @endif
+            @elseif($order->status == 'DELIVERY')
+
+            @elseif($order->status == 'SUCCESS')
+                @if(!empty($order->success_at) && getDayFromDateToDate($order->success_at, \Carbon\Carbon::now()) <= 7)
+                    <div class="card p-3">
+                        <div class="form-group pt-3">
+                            <form action="{{ route('web.order_update_status', $order->id) }}" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-primary" name="status" value="REFUND">Trả hàng/Hoàn tiền</button>
+                            </form>
+                        </div>
+                    </div>
+                @endif
+            @elseif($order->status == 'REFUND')
+
+            @endif
+        </div>
     </div>
     <div class="container text-right p-3">
         <h4><a href="{{ route('web.index') }}">Tiếp tục mua hàng</a></h4>

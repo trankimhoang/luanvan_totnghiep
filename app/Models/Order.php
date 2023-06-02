@@ -23,13 +23,21 @@ class Order extends Model
         )->withPivot(['quantity', 'price']);
     }
 
-    public function total(){
+    public function total($isDiscount = true){
         $total = 0;
 
         foreach ($this->Products as $item) {
             $total += $item->pivot->quantity * $item->price;
         }
 
+        if ($isDiscount) {
+            $total -= $this->discount;
+        }
+
         return $total;
+    }
+
+    public function Coupon() {
+        return $this->belongsTo(Coupon::class);
     }
 }

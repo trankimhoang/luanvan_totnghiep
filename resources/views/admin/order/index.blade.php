@@ -6,7 +6,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Danh sách</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Tổng quan</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -19,7 +19,7 @@
             <th>Trạng thái đơn hàng</th>
             <th>Ngày tạo đơn</th>
             <th>Ngày chỉnh sửa</th>
-            <th>Action</th>
+            <th>Hành động</th>
         </tr>
         @foreach($listOrder as $order)
             <tr>

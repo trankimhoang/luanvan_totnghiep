@@ -96,19 +96,6 @@ function createPayUrlMomo($orderId, $amount, $randomOrderId = false) {
     return $jsonResult['payUrl'] ?? '';
 }
 
-function totalMoneyOrder($orderId) {
-    $totalMoney = 0;
-    $totalMoneyQuery = DB::table('order_products')
-        ->where('order_id', '=', $orderId)
-        ->get();
-
-    foreach ($totalMoneyQuery as $item) {
-        $totalMoney += $item->quantity * $item->price;
-    }
-
-    return $totalMoney;
-}
-
 function productTypeString($type) {
     $array = [
         'simple' => 'Đơn',
@@ -119,17 +106,24 @@ function productTypeString($type) {
 }
 
 
-function getListProductIdsByAttrSearch(): array {
+function getListProductIdsByAttrSearch(): array|null {
     $listAttrSearch = request()->list_attr_search ?? [];
     $listAttrSearch = array_filter($listAttrSearch);
-    $listProductIdSearchByAttr = [];
 
     if (!empty($listAttrSearch)) {
         $listProductIdSearchByAttr = DB::table('values');
         $listProductIdSearchByAttr->whereIn('attribute_id', array_keys($listAttrSearch));
-        $listProductIdSearchByAttr->whereIn('text_value', array_values($listAttrSearch));
+        $listAttrSearchTextValue = [];
+
+        foreach ($listAttrSearch as $item) {
+            $listAttrSearchTextValue = array_merge($listAttrSearchTextValue, array_values($item));
+        }
+
+        $listProductIdSearchByAttr->whereIn('text_value', $listAttrSearchTextValue);
 
         $listProductIdSearchByAttr = $listProductIdSearchByAttr->pluck('product_id')->toArray();
+    } else {
+        return null;
     }
 
     $listProductIdSearchByAttrParent = DB::table('products')
@@ -140,12 +134,13 @@ function getListProductIdsByAttrSearch(): array {
     return array_merge($listProductIdSearchByAttr, $listProductIdSearchByAttrParent);
 }
 
-function getListAttrSearch(): array {
+function getListAttrSearch($listProductId = []): array {
     $listAttrData = [];
 
     $listAttr = DB::table('values')
         ->where('text_value', '!=', '')
         ->where('text_value', '!=', null)
+        ->whereIn('product_id', $listProductId)
         ->join('attributes', 'values.attribute_id', '=', 'attributes.id')
         ->get();
 
@@ -202,5 +197,87 @@ function mapOrderStatus($status) {
 
 function formatVnd($number) {
     return number_format($number, 0, '', ',') . 'đ';
+}
+
+function getListCouponType() {
+    return [
+        'price' => 'Khuyến mãi theo số tiền',
+        'percent' => 'Khuyến mãi theo phần trăm'
+    ];
+}
+
+function getListCouponForCheckOut($total) {
+    $arrayCouponIdToNumberUser = DB::table('orders')
+        ->select([
+            'coupon_id',
+            DB::raw('count(*) as total')
+        ])
+        ->where('coupon_id', '!=', null)
+        ->groupBy('coupon_id')
+        ->get()->mapWithKeys(function ($item) {
+            return [$item->coupon_id => $item->total];
+        })->toArray();
+
+    $listCoupon = DB::table('coupons')
+        ->where(function ($query) {
+            $query->where('start', '=', null);
+            $query->orWhere('start', '<=', \Carbon\Carbon::now()->format('Y-m-d'));
+        })->where(function ($query) {
+            $query->where('end', '=', null);
+            $query->orWhere('end', '>=', \Carbon\Carbon::now()->format('Y-m-d'));
+        })->get()->toArray();
+
+    foreach ($listCoupon as $key => &$value) {
+        if ($value->type == 'price') {
+            if ($value->discount >= $total) {
+                unset($listCoupon[$key]);
+                continue;
+            }
+        } else if ($value->type == 'percent') {
+            if ($total * $value->discount / 100 >= $total) {
+                unset($listCoupon[$key]);
+                continue;
+            }
+        }
+
+        $value->number_use_free = $value->number_use;
+
+        if (!empty($arrayCouponIdToNumberUser[$value->id])) {
+            if ($arrayCouponIdToNumberUser[$value->id] >= $value->number_use) {
+                unset($listCoupon[$key]);
+                continue;
+            } else {
+                $value->number_use_free -= $arrayCouponIdToNumberUser[$value->id];
+            }
+        }
+
+        if ($value->number_use_free <= 0) {
+            unset($listCoupon[$key]);
+        }
+    }
+
+    return $listCoupon;
+}
+
+
+function checkActiveCouponStartAndEnd($couponId) {
+    return DB::table('coupons')
+        ->where('id', '=', $couponId)
+        ->where(function ($query) {
+            $query->where('start', '=', null);
+            $query->orWhere('start', '<=', \Carbon\Carbon::now()->format('Y-m-d'));
+        })->where(function ($query) {
+            $query->where('end', '=', null);
+            $query->orWhere('end', '>=', \Carbon\Carbon::now()->format('Y-m-d'));
+        })->exists();
+}
+
+function getNumberUseFreeCoupon($couponId) {
+    $numberUse = \App\Models\Coupon::find($couponId)->number_use;
+    $numberHaveUse = DB::table('orders')
+        ->where('coupon_id', '=', $couponId)
+        ->count();
+
+    return $numberUse - $numberHaveUse;
 }
 

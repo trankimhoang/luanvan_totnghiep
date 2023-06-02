@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('quantity')->default(0)->comment('so luong');
 
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('products');
 
             $table->timestamps();
         });

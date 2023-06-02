@@ -19,10 +19,10 @@ class CategoryController extends Controller
         if (!empty($listProductIdsByAttrSearch)) {
             $listProduct->whereIn('id', $listProductIdsByAttrSearch);
         }
-
-        $listProduct = $listProduct->get();
+        $listProductId = $listProduct->pluck('id')->toArray();
+        $listProduct = $listProduct->paginate(10);
         $listBanner = Banner::where('status', 1)->get();
 
-        return view('web.category.detail', compact('category', 'listProduct', 'listCategory', 'listBanner'));
+        return view('web.category.detail', compact('category', 'listProduct', 'listCategory', 'listBanner', 'listProductId'));
     }
 }

@@ -126,6 +126,11 @@ class AttributeController extends Controller
             return redirect()->back()->with('success', 'Xóa thành công');
         }catch (\Exception $exception){
             Log::error($exception->getMessage());
+
+            if ($exception->getCode() == 23000) {
+                return redirect()->back()->with('error', "Không thể xóa #$id vì đang được đăng ký trong sản phẩm");
+            }
+
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }

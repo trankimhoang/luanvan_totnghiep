@@ -188,8 +188,29 @@
 
 <script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('lib/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('lib/sweetalert2/sweetalert2.min.css') }}">
+<script src="{{ asset('lib/sweetalert2/sweetalert2.min.js') }}"></script>
+
 
 @yield('js')
+<script>
+    $(document).ready(function () {
+        $('.btn-delete-index').click(function () {
+            Swal.fire({
+                title: 'Bạn có muốn xóa #' + $(this).attr('data-id') + '?',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $(this).parents('form').submit();
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
 
 </body>
 

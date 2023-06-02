@@ -19,10 +19,9 @@ return new class extends Migration
             $table->double('discount')->nullable();
             $table->string('type')->default('price');
             $table->double('discount_max')->nullable();
-            $table->integer('number_use');
-            $table->date('start');
-            $table->date('end');
-            $table->boolean('forever')->default(false);
+            $table->integer('number_use')->nullable();
+            $table->date('start')->nullable();
+            $table->date('end')->nullable();
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="pagetitle">
-        <h1>Thêm thuộc tính</h1>
+        <h1>Thêm khuyến mãi</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Thêm</li>
@@ -10,9 +10,12 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    <form action="{{ route('admin.attributes.store') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.coupons.store') }}" method="post" enctype="multipart/form-data">
         @csrf
-        @include('admin.attribute._list_field')
+        @include('admin.coupon._list_field')
+        <div class="form-group pt-3">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+        </div>
     </form>
 @endsection
 

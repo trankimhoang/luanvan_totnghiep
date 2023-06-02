@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('attribute_id')->comment('id attribute trong table attribute');
             $table->string('text_value')->nullable();
             $table->primary(['product_id', 'attribute_id']);
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('attribute_id')->references('id')->on('attributes');
         });
     }
 

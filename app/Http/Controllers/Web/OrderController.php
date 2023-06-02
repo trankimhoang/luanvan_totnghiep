@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\CheckoutRequest;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -14,6 +15,13 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     public function createOrder(CheckoutRequest $request) {
+        if (!empty($request->get('coupon_id'))) {
+            if (getNumberUseFreeCoupon($request->get('coupon_id')) <= 0 || !checkActiveCouponStartAndEnd($request->get('coupon_id'))) {
+                $coupon = Coupon::find($request->get('coupon_id'));
+                return redirect()->back()->with('error', 'Mã giảm giá [' . $coupon->name . '] không thể sử dụng được nữa');
+            }
+        }
+
         $user = Auth::guard('web')->user();
         $dataOrder = $request->except(['list_product', '_token']);
         $listProductRequest = $request->get('list_product');
@@ -42,9 +50,31 @@ class OrderController extends Controller
                 ->delete();
         }
 
+        $order = Order::find($orderId);
+
+        if (!empty($request->get('coupon_id'))) {
+            $couponId = $request->get('coupon_id');
+            $discount = 0;
+            $coupon = Coupon::find($couponId);
+
+            if ($coupon->type == 'price') {
+                $discount = $coupon->discount;
+            } else if ($coupon->type == 'percent') {
+                $discount = $coupon->discount * $order->total() / 100;
+            }
+
+            if ($discount > $coupon->discount_max) {
+                $discount = $coupon->discount_max;
+            }
+
+            $order->coupon_id = $couponId;
+            $order->discount = $discount;
+            $order->save();
+        }
+
         // payment momo
         if (!empty($dataOrder['payment_type']) && strtoupper($dataOrder['payment_type']) == 'MOMO') {
-            $payUrlMomo = createPayUrlMomo($orderId, totalMoneyOrder($orderId));
+            $payUrlMomo = createPayUrlMomo($orderId, $order->total());
 
             if (!empty($payUrlMomo)) {
                 return redirect()->to($payUrlMomo);
@@ -100,7 +130,9 @@ class OrderController extends Controller
             }
         }
 
-        return view('web.checkout.index', compact('listProductRequest', 'listProduct', 'total'));
+        $listCoupon = getListCouponForCheckOut($total);
+
+        return view('web.checkout.index', compact('listProductRequest', 'listProduct', 'total', 'listCoupon'));
     }
 
     public function listOrderOfUser() {

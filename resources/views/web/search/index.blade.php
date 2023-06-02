@@ -80,15 +80,26 @@
         </div>
     </div>
 
-    @include('web.include.attr_search')
 
     <section class="product-area li-laptop-product Special-product pt-60 pb-45">
         <h5 class="text-center">Tìm thấy {{ $listProduct->count() }} sản phẩm cho từ khóa '{{ $search }}'</h5>
         <div class="container">
             <div class="row">
-                @foreach($listProduct as $product)
-                    @include('web.include.item_product_search')
-                @endforeach
+                <div class="col-3">
+                    @include('web.include.attr_search', ['listProductId' => $listProductId])
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        @foreach($listProduct as $product)
+                            @include('web.include.item_product_search')
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    {{ $listProduct->appends(request()->input())->links() }}
+                </div>
             </div>
         </div>
     </section>
