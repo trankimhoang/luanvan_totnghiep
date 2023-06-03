@@ -71,6 +71,10 @@ class Product extends Model
             return asset($this->image);
         }
 
+        if (!empty($this->Parent)) {
+            return $this->Parent->getImage();
+        }
+
         return asset('images/not_found.jpg');
     }
 
