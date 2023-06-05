@@ -137,6 +137,13 @@ function getListProductIdsByAttrSearch(): array|null {
 function getListAttrSearch($listProductId = []): array {
     $listAttrData = [];
 
+    $listProductIdChild = DB::table('products')
+        ->whereIn('parent_id', $listProductId)
+        ->pluck('id')
+        ->toArray();
+
+    $listProductId = array_merge($listProductId, $listProductIdChild);
+
     $listAttr = DB::table('values')
         ->where('text_value', '!=', '')
         ->where('text_value', '!=', null)

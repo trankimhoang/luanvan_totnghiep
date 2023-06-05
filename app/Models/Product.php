@@ -42,6 +42,14 @@ class Product extends Model
         return $this->Parent->name . ' [' . $this->attributeTitle() . ']';
     }
 
+    public function getPrice() {
+        if (!empty($this->listProductChild)) {
+            return $this->listProductChild->first()->price ?? $this->price;
+        }
+
+        return $this->price;
+    }
+
     public function attributeTitle(): string {
         $listAttr = $this->listAttribute;
         $title = '';
