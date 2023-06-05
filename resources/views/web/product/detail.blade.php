@@ -98,7 +98,7 @@
                                                 <option value="{{ $productChild->id }}"
                                                         data-quantity="{{ $productChild->quantity }}"
                                                         data-price="{{ formatVnd($productChild->price) }}">
-                                                    {{ $productChild->attributeTitle() }} [SL: {{ $productChild->quantity }}]
+                                                    {{ $productChild->attributeTitle() }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -116,7 +116,7 @@
                                             <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                                         </div>
                                     </div>
-                                    <button @if(empty($product->quantity)) disabled @endif class="add-to-cart" type="button">Mua ngay</button>
+                                    <button @if($product->getQuantityActive() <= 0) disabled @endif class="add-to-cart" type="button">Mua ngay</button>
                                 </form>
                             </div>
                         </div>
@@ -220,12 +220,17 @@
 
                         if (data.hasOwnProperty('success') && data.success) {
                             $('.cart-item-count').text(data.data.qty);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công...',
+                                text: data.data.message ?? ''
+                            });
                         } else {
                             // error
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Lỗi...',
-                                text: data.message ?? ''
+                                text: data.data.message ?? ''
                             });
                         }
                     }

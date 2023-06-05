@@ -64,6 +64,13 @@
                 <input type="text" name="quantity" class="form-control" value="{{ $product->quantity ?? '' }}">
                 <p class="alert alert-danger tag-error" id="quantity-error"></p>
             </div>
+
+            @if(!empty($product))
+            <div class="form-group pt-3">
+                <p>Số lượng còn lại: {{ $product->getQuantityActive() }}</p>
+                <p>Số lượng đã bán: {{ $product->quantity - $product->getQuantityActive() }}</p>
+            </div>
+            @endif
         @endif
 
         <div class="form-group pt-3">
@@ -118,6 +125,10 @@
             </div>
 
             <h4 class="mb-0 mt-2">Danh sách sản phẩm con</h4>
+            <div class="form-group pt-3">
+                <label for="password">Cùng giá bán:</label>
+                <input type="checkbox" name="is_same_price" id="is_same_price" value="1" @if(!empty($product) && $product->is_same_price) checked @endif>
+            </div>
             <div class="mt-0 border p-2">
                 <table class="table table-bordered border border-primary mt-2" id="table-product-child">
                     <tr class="text-center">

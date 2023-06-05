@@ -363,7 +363,24 @@ class ProductController extends Controller {
                 $isEmptyAttr = true;
             }
 
-            if (empty($item['price']) || empty($item['quantity']) || $isEmptyAttr) {
+            $isErrorPrice = false;
+
+            if (!empty($item['id'])) {
+                $product = Product::find($item['id']);
+
+                if ($item['quantity'] < $product->quantity - $product->getQuantityActive()) {
+                    $isErrorPrice = true;
+                }
+            }
+
+
+            if (empty($item['price'])
+                || empty($item['quantity'])
+                || $isEmptyAttr
+                || !is_numeric($item['price'])
+                || !is_numeric($item['quantity'])
+                || $isErrorPrice
+            ) {
                 $listProductChildEmptyRows[] = $key + 1;
             }
         }
@@ -428,6 +445,11 @@ class ProductController extends Controller {
             $this->addImages($id);
             $this->updateAttrConfig($id, $data['list_attr'] ?? [], $data['list_attr_private'] ?? []);
             $product = Product::with(['listProductChild', 'listAttribute'])->find($id);
+
+            if (empty($data['is_same_price'])) {
+                $data['is_same_price'] = false;
+            }
+
             $product->fill($data);
 
             if ($request->has('image')) {

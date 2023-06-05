@@ -161,19 +161,6 @@ class OrderController extends Controller
         if (!empty($request->get('status'))) {
             if ($request->get('status') == 'REFUND' && $order->status == 'SUCCESS') {
                 if (!empty($order->success_at) && getDayFromDateToDate($order->success_at, \Carbon\Carbon::now()) <= 7) {
-                    $listProductIdToQuantityInOrder = DB::table('order_products')
-                        ->where('order_id', $id)
-                        ->get()
-                        ->mapWithKeys(function ($item) {
-                            return [$item->product_id => $item->quantity];
-                        })->toArray();
-
-                    foreach ($listProductIdToQuantityInOrder as $productId => $quantity) {
-                        $productUpdate = Product::find($productId);
-                        $productUpdate->quantity += $quantity;
-                        $productUpdate->save();
-                    }
-
                     $order->status = $request->get('status');
                     $order->save();
                 }

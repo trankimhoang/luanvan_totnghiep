@@ -44,6 +44,7 @@
                                             <div class="cart-plus-minus">
                                                 <input class="cart-plus-minus-box quantity-product-row" data-product-id="{{ $product->id }}"
                                                        name="list_product[{{ $product->id }}][quantity]"
+                                                       data-quantity-base="{{ $product->pivot->quantity }}"
                                                        form="form-main"
                                                        value="{{ $product->pivot->quantity }}" type="text">
                                                 <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
@@ -153,6 +154,7 @@
             $('.quantity-product-row').change(function () {
                 const productId = $(this).attr('data-product-id');
                const quantity_new = $(this).val();
+               const quantity_base = $(this).attr('data-quantity-base');
                $.LoadingOverlay('show');
 
                $.ajax({
@@ -170,10 +172,11 @@
                            $('#total-cart').text(data.data.total);
                            $(`.amount[data-product-id='${productId}']`).text(formatVnd(data.data.total_row));
                            $(`.amount[data-product-id='${productId}']`).attr('data-total', data.data.total_row);
+                           $(`.quantity-product-row[data-product-id='${productId}']`).attr('data-quantity-base', $(`.quantity-product-row[data-product-id='${productId}']`).val());
                            rfTotal();
                        } else {
                            // error
-                           $(`.quantity-product-row[data-product-id='${productId}']`).val(quantity_new - 1);
+                           $(`.quantity-product-row[data-product-id='${productId}']`).val(quantity_base);
                            Swal.fire({
                                icon: 'error',
                                title: 'Lỗi...',

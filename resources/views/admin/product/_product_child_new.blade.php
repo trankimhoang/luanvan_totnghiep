@@ -37,13 +37,18 @@
                 @endif
             </div>
             <div class="col-7">
+                @if(!empty($productChild))
+                    <input type="hidden" class="form-control"
+                           value="{{ $productChild->id }}"
+                           name="{{ $nameInput }}[{{ $productIdNew }}][id]">
+                @endif
                 <input type="file" class="form-control"
                        name="{{ $nameInput }}[{{ $productIdNew }}][image]">
             </div>
         </div>
     </td>
     <td valign="middle">
-        <input type="text" class="form-control"
+        <input type="text" class="form-control product-child-price"
                name="{{ $nameInput }}[{{ $productIdNew }}][price]"
                value="{{ $productChild->price ?? '' }}">
     </td>
@@ -51,6 +56,12 @@
         <input type="text" class="form-control"
                name="{{ $nameInput }}[{{ $productIdNew }}][quantity]"
                value="{{ $productChild->quantity ?? '' }}">
+        @if(!empty($productChild))
+            <div class="form-group pt-3">
+                <p>Số lượng còn lại: {{ $productChild->getQuantityActive() }}</p>
+                <p>Số lượng đã bán: {{ $productChild->quantity - $productChild->getQuantityActive() }}</p>
+            </div>
+        @endif
     </td>
     <td class="text-center" valign="middle">
         <button type="button"

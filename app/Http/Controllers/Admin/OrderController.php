@@ -25,27 +25,6 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         if (!empty($request->get('status'))){
-            if ($request->get('status') == 'CONFIRMED' || $request->get('status') == 'CANCEL') {
-                $listProductIdToQuantityInOrder = DB::table('order_products')
-                    ->where('order_id', $id)
-                    ->get()
-                    ->mapWithKeys(function ($item) {
-                        return [$item->product_id => $item->quantity];
-                    })->toArray();
-
-                foreach ($listProductIdToQuantityInOrder as $productId => $quantity) {
-                    $productUpdate = Product::find($productId);
-
-                    if ($request->get('status') == 'CONFIRMED') {
-                        $productUpdate->quantity -= $quantity;
-                    } else if ($request->get('status') == 'CANCEL') {
-                        $productUpdate->quantity += $quantity;
-                    }
-
-                    $productUpdate->save();
-                }
-            }
-
             $order->status = $request->get('status');
         }
 

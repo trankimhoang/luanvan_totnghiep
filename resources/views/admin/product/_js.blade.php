@@ -6,6 +6,13 @@
 </style>
 <script>
     $(document).ready(function () {
+        $('body').on('keyup', '.product-child-price', function () {
+            const is_same_price = $('#is_same_price').prop('checked');
+            if(is_same_price){
+                $('.product-child-price').val($(this).val());
+            }
+        });
+
         $('#btn-add-image').click(function () {
             $('#container-images').append(`<input type="file" name="image_news[]" class="image_new" multiple="multiple" accept="image/png, image/gif, image/jpeg" style="display: none;">`);
             $('.image_new').click();
@@ -205,10 +212,23 @@
                     $('.product-child-list-attr').html(dataHtmlProductChildLisAttr);
                     reRenderNameListAttrProductChild();
                     reloadStt();
+                    reloadChildPrice();
                 }
             })
         });
 
+        $('#is_same_price').change(function () {
+            reloadChildPrice();
+        });
+
+        function reloadChildPrice() {
+            const is_same_price = $('#is_same_price').prop('checked');
+            if(is_same_price){
+                $('.product-child-price').val($('.product-child-price:eq(0)').val());
+            }
+        }
+
+        reloadChildPrice();
 
         $('#image').change(function (event) {
             $(".img-preview").fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
@@ -267,7 +287,7 @@
                             errorRow.push(value);
                         }
 
-                        $('#div-error-product-child-empty').html(`<p class="text-danger">Dòng ${errorRow.join(',')} đang bỏ trống các trường bắt buộc</p>`)
+                        $('#div-error-product-child-empty').html(`<p class="text-danger">Dòng ${errorRow.join(',')} đang bỏ trống các trường bắt buộc hoặc giá, số lượng không hợp lệ</p>`)
                     } else if (response.data.error_product_child_empty_row) {
                         Swal.fire({
                             icon: 'error',

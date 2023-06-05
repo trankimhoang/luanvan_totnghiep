@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Rules\IsValidQuantityProduct;
+use App\Rules\ValidateQuantityProduct;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductUpdateRequest extends FormRequest
@@ -26,7 +28,7 @@ class ProductUpdateRequest extends FormRequest
         $type = $this->request->get('type');
         $rules = [
             'name' => 'required|unique:products,name,' . $this->request->get('id'),
-            'quantity' => 'required|numeric|min:1',
+            'quantity' => ['required', 'numeric', 'min:1', new IsValidQuantityProduct($this->request->get('id'))],
             'price' => 'required|numeric|min:0',
             'category_id' => 'required',
             'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048']

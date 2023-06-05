@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @method static find(int $id)
@@ -23,7 +24,8 @@ class Product extends Model
         'image',
         'status',
         'category_id',
-        'type'
+        'type',
+        'is_same_price'
     ];
 
     public function listProductChild(): \Illuminate\Database\Eloquent\Relations\HasMany {
@@ -111,5 +113,15 @@ class Product extends Model
             ->where('id', '!=', $this->getAttribute('i'))
             ->where('parent_id', '=', null)
             ->get();
+    }
+
+    public function getQuantityActive(){
+        $quantityInOrder = DB::table('order_products')
+            ->join('orders', 'orders.id', '=', 'order_products.order_id')
+            ->where('product_id', $this->id)
+            ->whereNotIn('status', array('CANCEL', 'REFUND'))
+            ->sum('quantity');
+
+        return $this->quantity - $quantityInOrder;
     }
 }

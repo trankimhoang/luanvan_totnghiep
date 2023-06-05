@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,7 @@ class CartController extends Controller
         }
 
         $productPrice = $product->get()->first()->price ?? null;
-        $productQuantity = $product->get()->first()->quantity ?? null;
+        $productQuantity = Product::find($productId)->getQuantityActive() ?? null;
 
         if ($quantity < 1 || !is_numeric($quantity) || ($quantityNew != null && $quantityNew <= 0)){
             return response()->json([
@@ -40,16 +41,38 @@ class CartController extends Controller
             ]);
         }
 
+        $quantityLimit = 5;
+
+        if ($quantity > $quantityLimit) {
+            return response()->json([
+                'success'=>false,
+                'data'=>[
+                    'message'=>'Chỉ được đặt tối đa ' . $quantityLimit . ' sản phẩm',
+                    'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
+                ]
+            ]);
+        }
+
         $cart = DB::table('carts')
             ->where('user_id', $userId)
             ->where('product_id', $productId)
             ->first();
 
-
         $quantityUpdate = 0;
 
         if (!empty($cart)){
             $quantityUpdate = $quantityNew ?? ($cart->quantity + $quantity);
+
+            if ($quantityUpdate > $quantityLimit) {
+                return response()->json([
+                    'success'=>false,
+                    'data'=>[
+                        'message'=>'Chỉ được đặt tối đa ' . $quantityLimit . ' sản phẩm',
+                        'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
+                    ]
+                ]);
+            }
+
             if ($productQuantity < $quantityUpdate){
                 return response()->json([
                     'success'=>false,
@@ -88,7 +111,7 @@ class CartController extends Controller
         return response()->json([
             'success'=>true,
             'data'=>[
-                'message'=>'Them vao gio hang thanh cong',
+                'message'=> 'Thêm vào giỏ hàng thành công',
                 'qty' => \Illuminate\Support\Facades\Auth::guard('web')->user()->countListProductInCart(),
                 'total' => \Illuminate\Support\Facades\Auth::guard('web')->user()->totalMoneyInCart(),
                 'total_row' => $productPrice * $quantityUpdate
