@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\CheckoutRequest;
+use App\Models\City;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
@@ -28,7 +29,11 @@ class OrderController extends Controller
         $listProduct = Product::whereIn('id', array_column($listProductRequest, 'id'))->get();
         $dataOrder['user_id'] = $user->id;
         $dataOrder['created_at'] = Carbon::now();
-        $dataOrder['id'] = time() + rand(1111, 9999999);
+        $dataOrder['id'] = time();
+
+        $city = City::find($request->city_id);
+        $dataOrder['shipping_fee'] = $city->shipping_fee;
+        $dataOrder['city_id'] = $request->city_id;
         $orderProductInsert = [];
         $orderId = DB::table('orders')->insertGetId($dataOrder);
 
@@ -122,6 +127,7 @@ class OrderController extends Controller
     public function checkOut(Request $request) {
         $listProductRequest = $request->get('list_product');
         $listProduct = Product::whereIn('id', array_column($listProductRequest, 'id'))->get();
+        $listCity = City::all();
 
         $total = 0;
         foreach ($listProduct as $product){
@@ -132,7 +138,7 @@ class OrderController extends Controller
 
         $listCoupon = getListCouponForCheckOut($total);
 
-        return view('web.checkout.index', compact('listProductRequest', 'listProduct', 'total', 'listCoupon'));
+        return view('web.checkout.index', compact('listProductRequest', 'listProduct', 'total', 'listCoupon', 'listCity'));
     }
 
     public function listOrderOfUser() {

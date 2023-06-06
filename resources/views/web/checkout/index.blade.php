@@ -32,6 +32,22 @@
                                         @enderror
                                     </div>
                                 </div>
+
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Tỉnh thành @include('admin.include.required_icon')</label>
+                                        <select name="city_id" id="city_id">
+                                            <option value="">---</option>
+                                            @foreach($listCity as $city)
+                                                <option data-shipping-fee="{{ $city->shipping_fee }}" value="{{ $city->id }}" @if(old('city_id') == $city->id) selected @endif>{{ $city->name }} - Phí vận chuyển: {{formatVnd($city->shipping_fee)}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('address')
+                                        <p class="alert alert-danger mt-2">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12">
                                     <div class="checkout-form-list">
                                         <label>Địa chỉ @include('admin.include.required_icon')</label>
@@ -107,6 +123,10 @@
                                     <th>Tổng tiền</th>
                                     <td><span class="amount">{{ formatVnd($total) }}</span></td>
                                 </tr>
+                                <tr class="cart-subtotal shipping_fee">
+                                    <th>Phí vận chuyển</th>
+                                    <td><span></span></td>
+                                </tr>
                                 <tr class="cart-subtotal coupon_discount">
                                     <th>Khuyến mãi</th>
                                     <td><span></span></td>
@@ -140,7 +160,6 @@
                                                     @elseif($coupon->type == 'percent')
                                                         <h6 style="white-space: break-spaces;">Giảm {{ $coupon->discount }}% tối đa {{ formatVnd($coupon->discount_max) }}</h6>
                                                     @endif
-                                                    <h6>Số lượng mã: {{ $coupon->number_use_free }}</h6>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -169,26 +188,52 @@
 @section('js')
     <script>
         $(document).ready(function () {
+            var shipping_fee_temp = 0;
+            var discount_temp = 0;
+
             $('.coupon_discount').hide();
+            $('.shipping_fee').hide();
 
             $('.coupon-select').click(function () {
-                $('.coupon-select').removeClass('badge-danger');
-                $(this).addClass('badge-danger');
+                if ($(this).hasClass('badge-danger')) {
+                    $(this).removeClass('badge-danger');
+                    const totalBase = parseFloat($('.total span').attr('data-total-base'));
+                    $('.total span').text(formatVnd(totalBase + shipping_fee_temp));
+                    $('.coupon_discount').hide();
+                } else {
+                    $('.coupon-select').removeClass('badge-danger');
+                    $(this).addClass('badge-danger');
+                    let discount = $(this).attr('data-discount');
+                    const discountMax = $(this).attr('data-discount-max');
+                    const id = $(this).attr('data-id');
 
-                let discount = $(this).attr('data-discount');
-                const discountMax = $(this).attr('data-discount-max');
-                const id = $(this).attr('data-id');
+                    if (discount > discountMax) {
+                        discount = discountMax;
+                    }
 
-                if (discount > discountMax) {
-                    discount = discountMax;
+                    if (discount > 0) {
+                        discount_temp = discount;
+                        $('.coupon_discount').show();
+                        $('.coupon_discount span').text(formatVnd(-discount));
+                        const totalBase = parseFloat($('.total span').attr('data-total-base'));
+                        $('.total span').text(formatVnd(totalBase - discount + shipping_fee_temp));
+                        $('#coupon_id').val(id);
+                    }
                 }
+            });
 
-                if (discount > 0) {
-                    $('.coupon_discount').show();
-                    $('.coupon_discount span').text(formatVnd(-discount));
-                    const totalBase = $('.total span').attr('data-total-base');
-                    $('.total span').text(formatVnd(totalBase - discount));
-                    $('#coupon_id').val(id);
+            $('#city_id').change(function () {
+                let shippingFee = $(this).find('option:selected').attr('data-shipping-fee');
+
+                if (shippingFee !== '') {
+                    $('.shipping_fee').show();
+                    shippingFee = parseFloat(shippingFee);
+                    shipping_fee_temp = shippingFee;
+                    $('.shipping_fee span').text(formatVnd(shippingFee));
+                    const totalBase = parseFloat($('.total span').attr('data-total-base'));
+                    $('.total span').text(formatVnd(totalBase - discount_temp + shippingFee));
+                } else {
+                    $('.shipping_fee').hide();
                 }
             });
         });

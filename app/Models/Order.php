@@ -14,6 +14,10 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function City(){
+        return $this->belongsTo(City::class);
+    }
+
     public function Products(){
         return $this->belongsToMany(
             Product::class,
@@ -34,6 +38,7 @@ class Order extends Model
             $total -= $this->discount;
         }
 
+        $total += $this->shipping_fee;
         return $total;
     }
 

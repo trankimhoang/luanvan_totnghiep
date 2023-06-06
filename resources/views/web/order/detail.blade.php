@@ -65,23 +65,25 @@
                 </tr>
 
                 <tr>
-                    <th>Tổng tiền</th>
-                    <td>{{ formatVnd($order->total(false)) }}</td>
+                    <th>Tổng tiền sản phẩm</th>
+                    <td>{{ formatVnd($order->total(false) - $order->shipping_fee) }}</td>
                 </tr>
 
                 <tr>
-                    <th>Tên khuyến mãi</th>
+                    <th>Mã khuyến mãi</th>
                     <td>
-                        {{ $order->Coupon->name ?? '' }}
+                        {{ $order->Coupon->name ?? '' }} : {{formatVnd(-$order->discount)}}
                     </td>
                 </tr>
-                <tr>
-                    <th>Khuyến mãi</th>
-                    <td>{{ formatVnd(-$order->discount) }}</td>
-                </tr>
 
                 <tr>
-                    <th>Tổng tiền thanh toán</th>
+                    <th>Phí vận chuyển</th>
+                    <td>{{ formatVnd(+$order->shipping_fee) }}</td>
+                </tr>
+
+
+                <tr>
+                    <th>Tổng tiền cần thanh toán</th>
                     <td>{{ formatVnd($order->total()) }}</td>
                 </tr>
             </table>
@@ -118,7 +120,8 @@
                     <div class="form-group pt-3">
                         <form action="{{ route('web.order_update_status', $order->id) }}" method="post">
                             @csrf
-                            <button type="submit" class="btn btn-danger" name="status" value="CANCEL">Hủy</button>
+                            <input type="hidden" name="status" value="CANCEL">
+                            <button type="submit" class="btn btn-danger" id="btn-cancel">Hủy</button>
                         </form>
                     </div>
                 </div>
@@ -145,4 +148,26 @@
     <div class="container text-right p-3">
         <h4><a href="{{ route('web.index') }}">Tiếp tục mua hàng</a></h4>
     </div>
+@endsection
+
+@section('js')
+    <script>
+        $(document).ready(function () {
+            $('#btn-cancel').click(function () {
+                Swal.fire({
+                    title: 'Bạn có muốn hủy đơn hàng ?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Hủy',
+                    cancelButtonText: 'Không'
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $(this).parents('form').submit();
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
 @endsection

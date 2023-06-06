@@ -16,6 +16,11 @@ return new class extends Migration
         Schema::create('product_attr_config', function (Blueprint $table) {
             $table->unsignedBigInteger('product_id')->comment('id product trong table product');
             $table->unsignedBigInteger('attribute_id')->comment('id attribute trong table attribute');
+
+            $table->foreign('product_id')->references('id')->on('products');
+
+            $table->foreign('attribute_id')->references('id')->on('attributes');
+
             $table->boolean('is_private')->default(false);
         });
     }

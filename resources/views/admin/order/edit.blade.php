@@ -29,6 +29,11 @@
             </tr>
 
             <tr>
+                <th>Tỉnh/thành phố</th>
+                <td>{{ $order->City->name }}</td>
+            </tr>
+
+            <tr>
                 <th>Địa chỉ</th>
                 <td>{{ $order->address }}</td>
             </tr>
@@ -80,22 +85,24 @@
             </tr>
 
             <tr>
-                <th>Tổng tiền</th>
-                <td>{{ formatVnd($order->total(false)) }}</td>
+                <th>Tổng tiền sản phẩm</th>
+                <td>{{ formatVnd($order->total(false) - $order->shipping_fee) }}</td>
             </tr>
 
             <tr>
-                <th>Tên khuyến mãi</th>
+                <th>Mã khuyến mãi</th>
                 <td>
-                    {{ $order->Coupon->name ?? '' }}
+                    {{ $order->Coupon->name ?? '' }} : {{formatVnd(-$order->discount)}}
                 </td>
             </tr>
+
             <tr>
-                <th>Khuyến mãi</th>
-                <td>{{ formatVnd(-$order->discount) }}</td>
+                <th>Phí vận chuyển</th>
+                <td>{{ formatVnd(+$order->shipping_fee) }}</td>
             </tr>
+
             <tr>
-                <th>Tổng tiền thanh toán</th>
+                <th>Tổng tiền cần thanh toán</th>
                 <td>{{ formatVnd($order->total()) }}</td>
             </tr>
         </table>

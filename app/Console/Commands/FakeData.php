@@ -30,6 +30,7 @@ class FakeData extends Command {
     public function handle(): int {
         Artisan::call('db:wipe');
         Artisan::call('migrate --seed');
+        Artisan::call('import-city');
         File::cleanDirectory(public_path('product_images'));
 
         $listCategory = [

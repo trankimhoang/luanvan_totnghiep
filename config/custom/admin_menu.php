@@ -110,6 +110,20 @@ return [
                 'title' => 'Danh sách',
                 'route' => 'admin.coupons.index'
             ],
+            [
+                'title' => 'Thêm mới',
+                'route' => 'admin.coupons.create'
+            ],
+        ]
+    ],
+    [
+        'title' => 'Quản lý phí vận chuyển',
+        'icon' => '<i class="bi bi-menu-button-wide"></i>',
+        'list_child' => [
+            [
+                'title' => 'Danh sách',
+                'route' => 'admin.cities.index'
+            ],
         ]
     ],
 ];

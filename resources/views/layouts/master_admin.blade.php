@@ -200,6 +200,7 @@
                 title: 'Bạn có muốn xóa #' + $(this).attr('data-id') + '?',
                 showCancelButton: true,
                 confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy bỏ'
             }).then((result) => {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
