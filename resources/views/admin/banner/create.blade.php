@@ -22,3 +22,13 @@
         </div>
     </form>
 @endsection
+
+@section('js')
+    <script>
+        $(document).ready(function () {
+            $('#image').change(function (event) {
+                $(".img-preview").fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
+            });
+        });
+    </script>
+@endsection
