@@ -227,11 +227,19 @@
                             });
                         } else {
                             // error
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Lỗi...',
-                                text: data.data.message ?? ''
-                            });
+                            if (data.message) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: data.message ?? ''
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi...',
+                                    text: data.data.message ?? ''
+                                });
+                            }
+
                         }
                     }
                 });

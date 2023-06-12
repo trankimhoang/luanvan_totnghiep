@@ -178,4 +178,5 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Cập nhật thành công');
     }
+
 }
