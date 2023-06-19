@@ -25,8 +25,17 @@ class ProductController extends Controller {
      *
      * @return View
      */
-    public function index(): View {
-        $listProduct = Product::query()->where('parent_id', '=', null)->paginate(10);
+    public function index(Request $request): View {
+        $listProduct = Product::with('Category')
+            ->where('parent_id', '=', null)
+            ->where(function ($query) use($request){
+                if (!empty($request->get('search'))){
+                    $query->where('name', 'like', "%" . $request->get('search') . "%");
+                    $query->orWhere('description', 'like', "%" . $request->get('search') . "%");
+                }
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view('admin.product.index', compact('listProduct'));
     }
 

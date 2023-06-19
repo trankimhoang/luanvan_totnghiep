@@ -1,4 +1,14 @@
 @extends('layouts.master_admin')
+
+@section('search')
+    <div class="search-bar">
+        <form class="search-form d-flex align-items-center" method="GET" action="{{ route('admin.products.index') }}">
+            <input type="text" name="search" placeholder="Tìm kiếm" value="{{ request()->get('search') ?? '' }}">
+            <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+        </form>
+    </div><!-- End Search Bar -->
+@endsection
+
 @section('content')
     <div class="pagetitle">
         <h1>Danh sách sản phẩm</h1>
@@ -56,5 +66,5 @@
             </tr>
         @endforeach
     </table>
-    <div>{{ $listProduct->render() }}</div>
+    <div>{{ $listProduct->appends(request()->input())->links() }}</div>
 @endsection

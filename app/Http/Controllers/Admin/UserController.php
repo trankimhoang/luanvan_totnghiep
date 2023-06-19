@@ -10,8 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    public function index(){
-        $listUser = User::paginate(10);
+    public function index(Request $request){
+        $listUser = User::where(function ($query) use($request){
+            if (!empty($request->get('search'))){
+                $query->where('name', 'like', "%" . $request->get('search') . "%");
+            }
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
         return view('admin.user.index', compact('listUser'));
     }
 

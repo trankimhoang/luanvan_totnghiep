@@ -189,8 +189,8 @@ if (!function_exists('getDayFromDateToDate')) {
     }
 }
 
-function mapOrderStatus($status) {
-    $array = [
+function getOrderStatus(){
+    return [
         'PENDING' => 'Đang chờ xử lí',
         'CONFIRMED' => 'Đã xác nhận',
         'DELIVERY' => 'Đang giao hàng',
@@ -198,6 +198,9 @@ function mapOrderStatus($status) {
         'REFUND' => 'Đã trả lại',
         'CANCEL' => 'Đã hủy'
     ];
+}
+function mapOrderStatus($status) {
+    $array = getOrderStatus();
 
     return $array[$status] ?? '';
 }

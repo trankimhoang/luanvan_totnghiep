@@ -18,9 +18,15 @@ class ShippingFeeController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $listCity = City::paginate(10);
+        $listCity = City::where(function ($query) use($request){
+            if (!empty($request->get('search'))){
+                $query->where('name', 'like', "%" . $request->get('search') . "%");
+            }
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
         return view('admin.city.index', compact('listCity'));
     }
 

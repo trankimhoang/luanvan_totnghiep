@@ -1,5 +1,14 @@
 @extends('layouts.master_admin')
 
+@section('search')
+    <div class="search-bar">
+        <form class="search-form d-flex align-items-center" method="GET" action="{{ route('admin.cities.index') }}">
+            <input type="text" name="search" placeholder="Tìm kiếm" value="{{ request()->get('search') ?? '' }}">
+            <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+        </form>
+    </div><!-- End Search Bar -->
+@endsection
+
 @section('content')
     <div class="pagetitle">
         <h1>Danh sách phí vận chuyển của các tỉnh/thành phố</h1>
@@ -33,5 +42,5 @@
             </tr>
         @endforeach
     </table>
-    <div>{{ $listCity->render() }}</div>
+    <div>{{ $listCity->appends(request()->input())->links() }}</div>
 @endsection

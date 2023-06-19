@@ -30,6 +30,6 @@
                 </tr>
             @endforeach
         </table>
-        <div>{{ $listOrder->render() }}</div>
+        <div>{{ $listOrder->appends(request()->input())->links() }}</div>
     </div>
 @endsection

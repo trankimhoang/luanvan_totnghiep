@@ -48,6 +48,8 @@
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
+    @yield('search')
+
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
 

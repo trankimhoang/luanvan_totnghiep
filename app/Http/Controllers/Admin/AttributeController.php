@@ -19,9 +19,15 @@ class AttributeController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $listAttribute = Attribute::paginate(10);
+        $listAttribute = Attribute::where(function ($query) use($request){
+            if (!empty($request->get('search'))){
+                $query->where('name', 'like', "%" . $request->get('search') . "%");
+            }
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
         return view('admin.attribute.index', compact('listAttribute'));
     }
 

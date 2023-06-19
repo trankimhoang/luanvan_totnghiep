@@ -11,8 +11,21 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function index(){
-        $listOrder = Order::orderBy('created_at', 'desc')->paginate(10);
+    public function index(Request $request){
+        $listOrder = Order::where(function ($query) use($request){
+                if (!empty($request->get('search'))){
+                    $query->where('id', 'like', "%" . $request->get('search') . "%");
+                }
+
+                if (!empty($request->get('payment_type_search'))){
+                    $query->where('payment_type', '=', $request->get('payment_type_search'));
+                }
+                if (!empty($request->get('order_status_search'))){
+                    $query->where('status', '=', $request->get('order_status_search'));
+                }
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);;
         return view('admin.order.index', compact('listOrder'));
     }
 

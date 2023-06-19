@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\AdminUpdateRequest;
 use App\Http\Requests\Admin\CreateAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -18,9 +19,14 @@ class AdminController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $listAdmin = Admin::all();
+        $listAdmin = Admin::where(function ($query) use($request){
+            if (!empty($request->get('search'))){
+                $query->where('name', 'like', "%" . $request->get('search') . "%");
+                $query->orWhere('email', 'like', "%" . $request->get('search') . "%");
+            }
+        })->orderBy('created_at', 'desc')->get();
         return view('admin.admin.index', compact('listAdmin'));
     }
 

@@ -8,7 +8,9 @@ use App\Http\Requests\Admin\CategoryUpdateRequest;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
+
 
 class CategoryController extends Controller
 {
@@ -17,9 +19,15 @@ class CategoryController extends Controller
      *
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $listCategory = Category::paginate(10);
+        $listCategory = Category::where(function ($query) use($request){
+            if (!empty($request->get('search'))){
+                $query->where('name', 'like', "%" . $request->get('search') . "%");
+            }
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
         return view('admin.category.index', compact('listCategory'));
     }
 
