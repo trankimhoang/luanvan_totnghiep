@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -85,6 +86,10 @@ class OrderController extends Controller
                 return redirect()->to($payUrlMomo);
             }
         }
+
+        Mail::send('emails.create_order', ['order' => $order], function ($mess) use ($order){
+             $mess->to($order->User->email, 'Thông báo')->subject('[' . env('APP_NAME') . ']Thông báo đặt hàng thành công #' . $order->id);
+        });
 
         return redirect()->route('web.order_detail', $orderId)->with('success', 'Đặt hàng thành công');
     }
