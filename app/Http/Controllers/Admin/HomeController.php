@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -28,6 +29,21 @@ class HomeController extends Controller
 
         $totalCategory = Category::all()->count();
 
-        return view('admin.home.index', compact('sumOrderSuccess', 'total', 'totalUser', 'totalProductActive', 'totalCategory'));
+
+        $listOrderOfMonthData = [];
+        $listOrderOfMonth = DB::table('orders')
+            ->whereYear('created_at', '=', Carbon::now()->year)
+            ->get();
+
+        foreach ($listOrderOfMonth as $item) {
+            if (empty($listOrderOfMonthData[Carbon::parse($item->created_at)->format('m')])) {
+                $listOrderOfMonthData[Carbon::parse($item->created_at)->format('m')] = 1;
+            } else {
+                $listOrderOfMonthData[Carbon::parse($item->created_at)->format('m')]++;
+            }
+        }
+
+
+        return view('admin.home.index', compact('sumOrderSuccess', 'total', 'totalUser', 'totalProductActive', 'totalCategory', 'listOrderOfMonthData'));
     }
 }
