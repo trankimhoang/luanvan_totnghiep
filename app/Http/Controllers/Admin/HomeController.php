@@ -31,7 +31,8 @@ class HomeController extends Controller
 
 
         $listOrderOfMonthData = [];
-        $listOrderOfMonth = DB::table('orders')
+        $listOrderMoneyOfMonthData = [];
+        $listOrderOfMonth = Order::with(['Products'])
             ->whereYear('created_at', '=', Carbon::now()->year)
             ->get();
 
@@ -41,9 +42,16 @@ class HomeController extends Controller
             } else {
                 $listOrderOfMonthData[Carbon::parse($item->created_at)->format('m')]++;
             }
+
+            if ($item->status == 'SUCCESS') {
+                if (empty($listOrderMoneyOfMonthData[Carbon::parse($item->created_at)->format('m')])) {
+                    $listOrderMoneyOfMonthData[Carbon::parse($item->created_at)->format('m')] = $item->total();
+                } else {
+                    $listOrderMoneyOfMonthData[Carbon::parse($item->created_at)->format('m')] += $item->total();
+                }
+            }
         }
 
-
-        return view('admin.home.index', compact('sumOrderSuccess', 'total', 'totalUser', 'totalProductActive', 'totalCategory', 'listOrderOfMonthData'));
+        return view('admin.home.index', compact('sumOrderSuccess', 'total', 'totalUser', 'totalProductActive', 'totalCategory', 'listOrderOfMonthData', 'listOrderMoneyOfMonthData'));
     }
 }
