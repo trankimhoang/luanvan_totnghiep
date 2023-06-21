@@ -6,7 +6,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Sửa</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Tổng quan</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.coupons.index') }}">Danh sách</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->

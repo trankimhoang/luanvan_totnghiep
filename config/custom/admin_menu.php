@@ -6,9 +6,13 @@ return [
         'icon' => '<i class="bi bi-grid"></i>'
     ],
     [
-        'title' => 'Quản lý Sản phẩm',
+        'title' => 'Quản lý sản phẩm',
         'icon' => '<i class="bi bi-menu-button-wide"></i>',
         'list_child' => [
+            [
+                'title' => 'Danh sách',
+                'route' => 'admin.products.index'
+            ],
             [
                 'title' => 'Thêm mới (đơn)',
                 'route' => 'admin.products.create'
@@ -20,24 +24,6 @@ return [
                     'type' => 'configurable'
                 ]
             ],
-            [
-                'title' => 'Danh sách',
-                'route' => 'admin.products.index'
-            ],
-        ]
-    ],
-    [
-        'title' => 'Quản lý quản trị viên',
-        'icon' => '<i class="bi bi-menu-button-wide"></i>',
-        'list_child' => [
-            [
-                'title' => 'Thêm mới',
-                'route' => 'admin.admins.create'
-            ],
-            [
-                'title' => 'Danh sách',
-                'route' => 'admin.admins.index'
-            ],
         ]
     ],
     [
@@ -45,26 +31,26 @@ return [
         'icon' => '<i class="bi bi-menu-button-wide"></i>',
         'list_child' => [
             [
-                'title' => 'Thêm mới',
-                'route' => 'admin.attributes.create'
-            ],
-            [
                 'title' => 'Danh sách',
                 'route' => 'admin.attributes.index'
+            ],
+            [
+                'title' => 'Thêm mới',
+                'route' => 'admin.attributes.create'
             ],
         ]
     ],
     [
-        'title' => 'Quản lý chuyên mục',
+        'title' => 'Quản lý loại sản phẩm',
         'icon' => '<i class="bi bi-menu-button-wide"></i>',
         'list_child' => [
             [
-                'title' => 'Thêm mới',
-                'route' => 'admin.categories.create'
-            ],
-            [
                 'title' => 'Danh sách',
                 'route' => 'admin.categories.index'
+            ],
+            [
+                'title' => 'Thêm mới',
+                'route' => 'admin.categories.create'
             ],
         ]
     ],
@@ -73,12 +59,12 @@ return [
         'icon' => '<i class="bi bi-menu-button-wide"></i>',
         'list_child' => [
             [
-                'title' => 'Thêm mới',
-                'route' => 'admin.banners.create'
-            ],
-            [
                 'title' => 'Danh sách',
                 'route' => 'admin.banners.index'
+            ],
+            [
+                'title' => 'Thêm mới',
+                'route' => 'admin.banners.create'
             ],
         ]
     ],
@@ -123,6 +109,20 @@ return [
             [
                 'title' => 'Danh sách',
                 'route' => 'admin.cities.index'
+            ],
+        ]
+    ],
+    [
+        'title' => 'Quản lý quản trị viên',
+        'icon' => '<i class="bi bi-menu-button-wide"></i>',
+        'list_child' => [
+            [
+                'title' => 'Danh sách',
+                'route' => 'admin.admins.index'
+            ],
+            [
+                'title' => 'Thêm mới',
+                'route' => 'admin.admins.create'
             ],
         ]
     ],

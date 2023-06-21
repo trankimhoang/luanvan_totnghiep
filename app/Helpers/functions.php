@@ -199,8 +199,19 @@ function getOrderStatus(){
         'CANCEL' => 'Đã hủy'
     ];
 }
+
+function getOrderStatusShow(){
+    return [
+        'PENDING' => '<span class="badge rounded-pill bg-warning text-dark">Đang chờ xử lí</span>',
+        'CONFIRMED' => '<span class="badge rounded-pill bg-info text-dark">Đã xác nhận</span>',
+        'DELIVERY' => '<span class="badge rounded-pill bg-primary">Đang giao hàng</span>',
+        'SUCCESS' => '<span class="badge rounded-pill bg-success">Thành công</span>',
+        'REFUND' => '<span class="badge rounded-pill bg-secondary">Đã trả lại</span>',
+        'CANCEL' => '<span class="badge rounded-pill bg-danger">Đã hủy</span>'
+    ];
+}
 function mapOrderStatus($status) {
-    $array = getOrderStatus();
+    $array = getOrderStatusShow();
 
     return $array[$status] ?? '';
 }

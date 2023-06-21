@@ -21,7 +21,7 @@
     </div><!-- End Page Title -->
 
     <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-2">Thêm sản phẩm</a>
-    <table class="table table-bordered border border-primary">
+    <table class="table table-bordered border border-primary" style="text-align: center">
         <tr>
             <th>ID</th>
             <th>Tên sản phẩm</th>
@@ -29,10 +29,8 @@
             <th>Ảnh đại diện</th>
             <th>Chuyên mục</th>
             <th>Mô tả</th>
-            <th>Giá bán</th>
-            <th>Số lượng</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
+            <th nowrap>Trạng thái</th>
+            <th nowrap>Hành động</th>
         </tr>
         @foreach($listProduct as $product)
             <tr>
@@ -44,8 +42,6 @@
                 </td>
                 <td>{{ $product->Category->name ?? '' }}</td>
                 <td>{{ $product->description }}</td>
-                <td>{{ $product->price }}</td>
-                <td>{{ $product->quantity }}</td>
                 <td>
                     {{ mapStatusProduct($product->status) }}
                 </td>

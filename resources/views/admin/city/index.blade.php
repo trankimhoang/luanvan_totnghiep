@@ -19,7 +19,7 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    <table class="table table-bordered border border-primary">
+    <table class="table table-bordered border border-primary" style="text-align: center">
         <tr>
             <th>ID</th>
             <th>Tên tỉnh/thành phố</th>

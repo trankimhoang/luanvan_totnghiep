@@ -108,6 +108,13 @@ class OrderController extends Controller
                         'payment_status' => 'PAID',
                         'payment_response' => json_encode($request->toArray())
                     ]);
+
+                $order = Order::find($orderId);
+
+                Mail::send('emails.create_order', ['order' => $order], function ($mess) use ($order){
+                    $mess->to($order->User->email, 'Thông báo')->subject('[' . env('APP_NAME') . ']Thông báo đặt hàng thành công #' . $order->id);
+                });
+
                 return redirect()->route('web.order_detail', $orderId)->with('success', 'Thanh toán thành công');
             }
         }

@@ -6,7 +6,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">Chỉnh sửa</li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Tổng quan</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.orders.index') }}">Danh sách</a></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -164,7 +164,7 @@
                 <form action="{{ route('admin.orders.update', $order->id) }}" method="post">
                     @csrf
                     @method('put')
-                    <button type="submit" class="btn btn-danger" name="status" value="CANCEL">Hủy</button>
+                    <button type="submit" class="btn btn-danger mt-2" name="status" value="CANCEL">Hủy</button>
                 </form>
 
             </div>
@@ -181,7 +181,7 @@
                 <form action="{{ route('admin.orders.update', $order->id) }}" method="post">
                     @csrf
                     @method('put')
-                    <button type="submit" class="btn btn-danger" name="status" value="CANCEL">Hủy</button>
+                    <button type="submit" class="btn btn-danger mt-2" name="status" value="CANCEL">Hủy</button>
                 </form>
 
             </div>
@@ -198,7 +198,7 @@
                 <form action="{{ route('admin.orders.update', $order->id) }}" method="post">
                     @csrf
                     @method('put')
-                    <button type="submit" class="btn btn-danger" name="status" value="CANCEL">Hủy</button>
+                    <button type="submit" class="btn btn-danger mt-2" name="status" value="CANCEL">Hủy</button>
                 </form>
 
             </div>

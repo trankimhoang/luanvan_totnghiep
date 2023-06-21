@@ -31,7 +31,7 @@
 
                 <tr>
                     <th>Trạng thái đơn hàng</th>
-                    <td>{{ mapOrderStatus($order->status) }}</td>
+                    <td>{!! mapOrderStatus($order->status) !!}</td>
                 </tr>
 
                 <tr>
@@ -69,12 +69,14 @@
                     <td>{{ formatVnd($order->total(false) - $order->shipping_fee) }}</td>
                 </tr>
 
-                <tr>
-                    <th>Mã khuyến mãi</th>
-                    <td>
-                        {{ $order->Coupon->name ?? '' }} : {{formatVnd(-$order->discount)}}
-                    </td>
-                </tr>
+                @if(!empty($order->Coupon->name))
+                    <tr>
+                        <th>Mã khuyến mãi</th>
+                        <td>
+                            {{ $order->Coupon->name ?? '' }} : {{formatVnd(-$order->discount)}}
+                        </td>
+                    </tr>
+                @endif
 
                 <tr>
                     <th>Phí vận chuyển</th>

@@ -80,15 +80,13 @@
                 <div class="col-lg-12">
                     <div class="li-section-title">
                         <h2>
-                            <span>Sản phẩm mới</span>
+                            <span>Sản phẩm</span>
                         </h2>
                     </div>
                     <div class="row">
-                        <div class="special-product-active owl-carousel">
-                            @foreach($listProduct as $product)
-                                @include('web.include.item_product')
-                            @endforeach
-                        </div>
+                        @foreach($listProduct as $product)
+                            @include('web.include.item_product_search')
+                        @endforeach
                     </div>
                 </div>
                 <!-- Li's Section Area End Here -->

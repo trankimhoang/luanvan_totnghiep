@@ -20,7 +20,7 @@
         </nav>
     </div><!-- End Page Title -->
     <a href="{{ route('admin.admins.create') }}" class="btn btn-primary mb-2">Thêm quản trị viên</a>
-    <table class="table table-bordered border border-primary">
+    <table class="table table-bordered border border-primary" style="text-align: center">
         <tr>
             <th>ID</th>
             <th>Tên quản trị viên</th>

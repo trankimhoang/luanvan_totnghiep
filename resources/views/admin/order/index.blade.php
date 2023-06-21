@@ -31,7 +31,7 @@
         </nav>
     </div><!-- End Page Title -->
 
-    <table class="table table-bordered border border-primary">
+    <table class="table table-bordered border border-primary" style="text-align: center">
         <tr>
             <th>Mã đơn hàng</th>
             <th>Người đặt hàng</th>
@@ -46,7 +46,7 @@
                 <td>{{ $order->id }}</td>
                 <td>{{ $order->User->name }}</td>
                 <th>{{ $order->payment_type }}</th>
-                <td>{{ mapOrderStatus($order->status) }}</td>
+                <td>{!! mapOrderStatus($order->status) !!}</td>
                 <td>{{ $order->created_at }}</td>
                 <td>{{ $order->updated_at }}</td>
                 <td>

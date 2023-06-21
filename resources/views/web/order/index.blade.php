@@ -15,7 +15,7 @@
                 <tr>
                     <td>{{ $order->id }}</td>
                     <th>{{ $order->payment_type }}</th>
-                    <td>{{ mapOrderStatus($order->status) }}</td>
+                    <td>{!! mapOrderStatus($order->status) !!}</td>
                     <td>{{ $order->created_at }}</td>
                     <td>{{ $order->updated_at }}</td>
                     <td>
