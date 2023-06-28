@@ -302,3 +302,15 @@ function getNumberUseFreeCoupon($couponId) {
     return $numberUse - $numberHaveUse;
 }
 
+if (!function_exists('checkUrlIsHttps')) {
+    function checkUrlIsHttps($url): bool {
+        $url = parse_url($url);
+
+        if (!empty($url['scheme']) && $url['scheme'] == 'https') {
+            return true;
+        }
+
+        return false;
+    }
+}
+

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (checkUrlIsHttps(env('APP_URL'))) {
+            URL::forceScheme('https');
+            $this->app['request']->server->set('HTTPS', true);
+        }
+
         Paginator::useBootstrap();
         $this->app->setLocale('vi');
     }
