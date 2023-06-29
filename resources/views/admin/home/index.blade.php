@@ -29,7 +29,7 @@
                                         <i class="bi bi-cart"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ $sumOrderSuccess }}</h6>
+                                        <p style="font-weight: bold;">{{ $sumOrderSuccess }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ formatVnd($total) }}</h6>
+                                        <p style="font-weight: bold;">{{ formatVnd($total) }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ $totalUser }}</h6>
+                                        <p style="font-weight: bold;">{{ $totalUser }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -87,31 +87,12 @@
                                         <i class="ri-book-3-line"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ $totalProductActive }}</h6>
+                                        <p style="font-weight: bold;">{{ $totalProductActive }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div><!-- End Product Card -->
-
-                    <!-- Category Card -->
-                    <div class="col-xxl-3 col-xl-12">
-                        <div class="card info-card customers-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Danh mục</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div
-                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="ri-folder-4-line"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>{{ $totalCategory }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- End Category Card -->
 
                 </div>
             </div><!-- End Left side columns -->
