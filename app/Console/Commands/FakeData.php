@@ -406,7 +406,7 @@ class FakeData extends Command {
             'SUCCESS' => 'Thành công',
         ]);
 
-        for ($i = 1; $i <= 5000; ++$i) {
+        for ($i = 1; $i <= 2000; ++$i) {
             $time = strtotime(rand(1, date('m')) . '/' . rand(1, 28) . '/' . 2023);
             $paymentTypeFake = $paymentType[rand(0, count($paymentType) - 1)];
             $statusFake = $statusOrder[rand(0, count($statusOrder) - 1)];
