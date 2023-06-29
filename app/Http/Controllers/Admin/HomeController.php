@@ -18,7 +18,7 @@ class HomeController extends Controller
 
         $total = 0;
 
-        $listOrder = Order::where('status', '=', 'SUCCESS')->get();
+        $listOrder = Order::with(['Products'])->where('status', '=', 'SUCCESS')->get();
         foreach ($listOrder as $order){
             $total += $order->total();
         }

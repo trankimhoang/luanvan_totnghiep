@@ -50,7 +50,7 @@
 
             <tr>
                 <th>Trạng thái đơn hàng</th>
-                <td>{{ mapOrderStatus($order->status) }}</td>
+                <td>{!! mapOrderStatus($order->status) !!}</td>
             </tr>
 
             <tr>
@@ -62,9 +62,11 @@
                 <tr>
                     <th>Thông tin thanh toán</th>
                     <td>
-                        @foreach(json_decode($order->payment_response, true) as $key => $value)
-                            <p>{{ $key }}: {{ $value }}</p>
-                        @endforeach
+                        @if(is_array(json_decode($order->payment_response, true)))
+                            @foreach(json_decode($order->payment_response, true) as $key => $value)
+                                <p>{{ $key }}: {{ $value }}</p>
+                            @endforeach
+                        @endif
                     </td>
                 </tr>
             @endif

@@ -165,12 +165,17 @@ function getListAttrSearch($listProductId = []): array {
     return $listAttrData;
 }
 
-function mapStringIsPaid($paymentStatus = 'UNPAID') {
-    $array = [
+
+function getStatusPayment() {
+    return [
         'UNPAID' => 'Chưa thanh toán',
         'PAID' => 'Đã thanh toán',
         'REFUND' => 'Đã hoàn tiền'
     ];
+}
+
+function mapStringIsPaid($paymentStatus = 'UNPAID') {
+    $array = getStatusPayment();
 
     return $array[$paymentStatus] ?? '';
 }
@@ -217,7 +222,7 @@ function mapOrderStatus($status) {
 }
 
 function formatVnd($number) {
-    return number_format($number, 0, '', ',') . 'đ';
+    return number_format($number, 0, '', ',');
 }
 
 function getListCouponType() {

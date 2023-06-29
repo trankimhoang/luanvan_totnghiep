@@ -2,10 +2,13 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class FakeData extends Command {
     /**
@@ -374,6 +377,94 @@ class FakeData extends Command {
 
             DB::table('product_images')
                 ->insert($arrayProductImage);
+        }
+
+
+        DB::table('users')
+            ->insert([
+                'id' => 1,
+                'name' => 'Hoang',
+                'email' => 'trankimhoang11052000@gmail.com',
+                'password' => Hash::make(1234567),
+                'address' => '123',
+                'phone' => '0584246834',
+                'status' => 1
+            ]);
+
+        $listOrderFake = [];
+
+
+        $paymentType = [
+            0 => 'MOMO',
+            1 => 'COD'
+        ];
+
+        $statusOrder = array_keys([
+            'PENDING' => 'Đang chờ xử lí',
+            'CONFIRMED' => 'Đã xác nhận',
+            'DELIVERY' => 'Đang giao hàng',
+            'SUCCESS' => 'Thành công',
+        ]);
+
+        for ($i = 1; $i <= 20000; ++$i) {
+            $time = strtotime(rand(1, date('m')) . '/' . rand(1, 28) . '/' . 2023);
+            $paymentTypeFake = $paymentType[rand(0, count($paymentType) - 1)];
+            $statusFake = $statusOrder[rand(0, count($statusOrder) - 1)];
+
+            $listOrderFake[] = [
+                'id' => time() + $i,
+                'note' => 'note ' . $i,
+                'user_id' => 1,
+                'address' => 'address ' . $i,
+                'phone' => '0584246834',
+                'payment_type' => $paymentTypeFake,
+                'status' => $statusFake,
+                'created_at' => date('Y-m-d',$time),
+                'name' => 'Hoang',
+                'email' => 'hoang@gmail.com',
+                'payment_status' => ($paymentTypeFake == 'MOMO' || $statusFake == 'SUCCESS') ? 'PAID' : 'UNPAID',
+                'payment_response' => 'test',
+                'success_at' => Carbon::now(),
+                'admin_note' => 'test ' . $i,
+                'ship_code' => '12345test',
+                'coupon_id' => null,
+                'discount' => 0,
+                'city_id' => 14,
+                'shipping_fee' => 0
+            ];
+        }
+
+        foreach (array_chunk($listOrderFake, 2000) as $listOrderFakeChuck) {
+            DB::table('orders')
+                ->insert($listOrderFakeChuck);
+        }
+
+        $listOrderProduct = [];
+
+        $listProduct = DB::table('products')
+            ->get()->mapWithKeys(function ($item) {
+                return [$item->id => $item->price];
+            })->toArray();
+
+
+        foreach ($listOrderFake as $order) {
+            foreach ($listProduct as $productId => $productPrice) {
+                $isSelect = rand(0, 1);
+
+                if (!empty($isSelect)) {
+                    $listOrderProduct[] = [
+                        'order_id' => $order['id'],
+                        'product_id' => $productId,
+                        'quantity' => rand(1, 3),
+                        'price' => $productPrice
+                    ];
+                }
+            }
+        }
+
+        foreach (array_chunk($listOrderProduct, 2000) as $listOrderProductChuck) {
+            DB::table('order_products')
+                ->insert($listOrderProductChuck);
         }
 
         return 1;

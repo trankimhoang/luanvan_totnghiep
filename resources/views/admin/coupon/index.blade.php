@@ -36,9 +36,9 @@
             <tr>
                 <td>{{ $coupon->id }}</td>
                 <td>{{ $coupon->name }}</td>
-                <td>{{ $coupon->discount }}</td>
+                <td>{{ formatVnd($coupon->discount) }}</td>
                 <td>{{ getListCouponType()[$coupon->type] ?? '' }}</td>
-                <td>{{ $coupon->discount_max }}</td>
+                <td>{{ formatVnd($coupon->discount_max) }}</td>
                 <td>{{ $coupon->number_use }}</td>
                 <td>{{ $coupon->start }}</td>
                 <td>{{ $coupon->end }}</td>

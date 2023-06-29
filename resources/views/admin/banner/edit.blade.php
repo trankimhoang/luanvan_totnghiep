@@ -14,7 +14,7 @@
         @method('put')
         <div class="form-group">
             <label for="id">ID</label>
-            <input type="text" name="id" class="form-control" value="{{ old('id', $banner->id) }}" readonly>
+            <input type="text" name="id" class="form-control" value="{{ old('id', $banner->id) }}" disabled>
         </div>
 
         <div class="form-group pt-3">

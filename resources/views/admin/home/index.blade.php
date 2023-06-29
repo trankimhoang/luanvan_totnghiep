@@ -116,7 +116,7 @@
                 </div>
             </div><!-- End Left side columns -->
 
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Thống kê số đơn đặt hàng theo tháng</h5>
@@ -183,7 +183,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Thống kê doanh thu theo tháng</h5>
