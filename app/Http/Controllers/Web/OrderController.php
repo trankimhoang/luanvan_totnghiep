@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
-class OrderController extends Controller
+class  OrderController extends Controller
 {
     public function createOrder(CheckoutRequest $request) {
         if (!empty($request->get('coupon_id'))) {

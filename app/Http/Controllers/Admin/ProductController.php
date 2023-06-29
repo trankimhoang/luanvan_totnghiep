@@ -522,7 +522,7 @@ class ProductController extends Controller {
             $this->addListProductChildNew($id);
             // end product child
 
-            Session::flash('success', 'Cap nhat thanh cong');
+            Session::flash('success', 'Cập nhật thành công');
             return response()->json([
                 'success' => true,
                 'url' => route('admin.products.edit', $id)
