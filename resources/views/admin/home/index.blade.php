@@ -21,7 +21,7 @@
                     <div class="col-xxl-3 col-md-6">
                         <div class="card info-card sales-card">
                             <div class="card-body">
-                                <h5 class="card-title">Tổng đơn hàng thành công</h5>
+                                <h5 class="card-title">Đơn thành công</h5>
 
                                 <div class="d-flex align-items-center">
                                     <div
