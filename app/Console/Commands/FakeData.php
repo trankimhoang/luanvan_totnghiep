@@ -35,6 +35,29 @@ class FakeData extends Command {
         Artisan::call('migrate --seed');
         Artisan::call('import-city');
         File::cleanDirectory(public_path('product_images'));
+        File::cleanDirectory(public_path('banner_images'));
+
+        $listBanner = [];
+
+        foreach (File::glob(storage_path('banner_fake/*')) as $key => $image) {
+            $key++;
+
+            if (!File::isDirectory(public_path('banner_images/' . $key))) {
+                File::makeDirectory(public_path('banner_images/' . $key), 0777, true, true);
+            }
+
+            $imageName = explode('/', $image);
+            $imageName = $imageName[array_key_last($imageName)];
+            File::copy($image, public_path('banner_images/' . $key . '/' . $imageName));
+
+            $listBanner[] = [
+                'image' => 'banner_images/' . $key . '/' . $imageName,
+                'status' => 1
+            ];
+        }
+
+        DB::table('banners')
+            ->insert($listBanner);
 
         $listCategory = [
             [
@@ -160,7 +183,8 @@ class FakeData extends Command {
 
         $listProductChild = [];
 
-        foreach ($listProductParent as $item) {
+        foreach ($listProductParent as $key => $item) {
+            $listProductParent[$key]['quantity'] *= 3000;
             if ($item['type'] == 'configurable') {
                 $idMax = $listProductChild[array_key_last($listProductChild)]['id'] ?? 0;
 
@@ -175,7 +199,7 @@ class FakeData extends Command {
                         'id' => $idMax++,
                         'name' => '',
                         'price' => $item['price'] + rand(-500000, 500000),
-                        'quantity' => 1000,
+                        'quantity' => 1000 * 3000,
                         'parent_id' => $item['id'],
                         'image' => '',
                         'status' => 1,
@@ -466,6 +490,11 @@ class FakeData extends Command {
             DB::table('order_products')
                 ->insert($listOrderProductChuck);
         }
+
+
+
+
+
 
         return 1;
     }

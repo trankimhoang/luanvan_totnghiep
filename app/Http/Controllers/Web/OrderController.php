@@ -30,7 +30,7 @@ class  OrderController extends Controller
         $listProduct = Product::whereIn('id', array_column($listProductRequest, 'id'))->get();
         $dataOrder['user_id'] = $user->id;
         $dataOrder['created_at'] = Carbon::now();
-        $dataOrder['id'] = time();
+        $dataOrder['id'] = time() * rand(1111111, 99999999);
 
         $city = City::find($request->city_id);
         $dataOrder['shipping_fee'] = $city->shipping_fee;
