@@ -87,6 +87,7 @@
                         @foreach($listProduct as $product)
                             @include('web.include.item_product_search')
                         @endforeach
+                        <div style="margin-top: 100px;">{{ $listProduct->appends(request()->input())->links() }}</div>
                     </div>
                 </div>
                 <!-- Li's Section Area End Here -->

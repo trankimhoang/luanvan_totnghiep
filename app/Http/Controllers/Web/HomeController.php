@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function index() {
         $listCategory = Category::all();
-        $listProduct = Product::with(['Category'])->where('parent_id', '=', null)->where('status', '=', 1)->get();
+        $listProduct = Product::with(['Category'])->where('parent_id', '=', null)->where('status', '=', 1)->paginate(8);
         $listBanner = Banner::where('status', 1)->get();
         return view('web.home.index', compact('listCategory', 'listProduct', 'listBanner'));
     }

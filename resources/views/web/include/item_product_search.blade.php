@@ -18,6 +18,11 @@
                     <span class="new-price">{{ formatVnd($product->getPrice()) }}</span>
                 </div>
             </div>
+            <div class="add-actions">
+                <ul class="add-actions-link">
+                    <li class="add-cart active"><a href="{{ route('web.detail', $product->id) }}">Xem ngay</a></li>
+                </ul>
+            </div>
         </div>
     </div>
     <!-- single-product-wrap end -->
