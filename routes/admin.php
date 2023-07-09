@@ -26,6 +26,10 @@ Route::middleware(['guest:admin'])->group(function (){
 Route::middleware(['auth:admin'])->group(function (){
     Route::get('logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
 
+
+
+    Route::get('ajax-index', [\App\Http\Controllers\Admin\HomeController::class, 'indexAjax'])->name('index.ajax');
+
     Route::get('index', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('index');
 
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
