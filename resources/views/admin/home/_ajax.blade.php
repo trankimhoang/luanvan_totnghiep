@@ -1,4 +1,86 @@
 <div class="col-lg-12">
+    <div class="row">
+
+        <!-- Sales Card -->
+        <div class="col-xxl-3 col-md-6">
+            <div class="card info-card sales-card">
+                <div class="card-body">
+                    <h5 class="card-title">Đơn thành công</h5>
+
+                    <div class="d-flex align-items-center">
+                        <div
+                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-cart"></i>
+                        </div>
+                        <div class="ps-3">
+                            <p style="font-weight: bold;">{{ $sumOrderSuccess }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Sales Card -->
+
+        <!-- Revenue Card -->
+        <div class="col-xxl-3 col-md-6">
+            <div class="card info-card revenue-card">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng doanh thu</h5>
+                    <div class="d-flex align-items-center">
+                        <div
+                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="ps-3">
+                            <p style="font-weight: bold;">{{ formatVnd($total) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Revenue Card -->
+
+        <!-- Customers Card -->
+        <div class="col-xxl-3 col-xl-12">
+
+            <div class="card info-card customers-card">
+                <div class="card-body">
+                    <h5 class="card-title">Khách hàng đăng kí</h5>
+
+                    <div class="d-flex align-items-center">
+                        <div
+                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="ps-3">
+                            <p style="font-weight: bold;">{{ $totalUser }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- End Customers Card -->
+
+        <!-- Product Card -->
+        <div class="col-xxl-3 col-xl-12">
+            <div class="card info-card products-card">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm hoạt động</h5>
+
+                    <div class="d-flex align-items-center">
+                        <div
+                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="ri-book-3-line"></i>
+                        </div>
+                        <div class="ps-3">
+                            <p style="font-weight: bold;">{{ $totalProductActive }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Product Card -->
+
+    </div>
+</div>
+<div class="col-lg-12">
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Thống kê số đơn đặt hàng theo tháng</h5>

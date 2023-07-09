@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\DB;
 class HomeController extends Controller
 {
     public function index() {
+        return view('admin.home.index');
+    }
+
+    public function indexAjax() {
         $sumOrderSuccess = DB::table('orders')->where('status', '=', 'SUCCESS')->count();
 
         $total = 0;
@@ -29,10 +33,6 @@ class HomeController extends Controller
 
         $totalCategory = Category::all()->count();
 
-        return view('admin.home.index', compact('sumOrderSuccess', 'total', 'totalUser', 'totalProductActive', 'totalCategory'));
-    }
-
-    public function indexAjax() {
         $listOrderOfMonthData = [];
         $listOrderMoneyOfMonthData = [];
         $listOrderOfMonth = Order::with(['Products'])
@@ -55,6 +55,6 @@ class HomeController extends Controller
             }
         }
 
-        return view('admin.home._ajax', compact('listOrderOfMonthData', 'listOrderMoneyOfMonthData'));
+        return view('admin.home._ajax', compact('sumOrderSuccess', 'total', 'totalUser', 'totalProductActive', 'totalCategory', 'listOrderOfMonthData', 'listOrderMoneyOfMonthData'));
     }
 }
