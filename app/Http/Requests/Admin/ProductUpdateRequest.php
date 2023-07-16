@@ -31,7 +31,6 @@ class ProductUpdateRequest extends FormRequest
             'quantity' => ['required', 'numeric', 'min:1', new IsValidQuantityProduct($this->request->get('id'))],
             'price' => 'required|numeric|min:0',
             'category_id' => 'required',
-            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048']
         ];
 
         if ($type == 'configurable') {
